@@ -1,0 +1,22 @@
+### Inscription d'un utilisateur
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "fullName": "John Doe",
+  "email": "johndoe@example.com",
+  "password": "SecurePassword123"
+}
+
+### Connexion d'un utilisateur
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "johndoe@example.com",
+  "password": "SecurePassword123"
+}
+
+### Tester une route protégée 
+GET http://localhost:3000/users/me
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsImlhdCI6MTc0MDU5NjQ3M30.lEjrwpECGQxgNiHT0dlpMCJC7dcKFLd3oUAHkmBHtuA
