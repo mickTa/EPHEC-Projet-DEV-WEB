@@ -8,3 +8,11 @@ exports.post = async (req, res, next) => {
         next(error);
     }
 };
+
+
+exports.getMe = async (req, res) => {
+    if (!req.user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+    res.json(req.user);
+};

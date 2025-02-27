@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "fullName": "John Doe",
-  "email": "johndoe@example.com",
+  "email": "Mickael@example.com",
   "password": "SecurePassword123"
 }
 
@@ -13,10 +13,17 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "johndoe@example.com",
+  "email": "Mickael@example.com",
   "password": "SecurePassword123"
 }
 
-### Tester une route protégée 
+### Tester une route protégée (Remplace `TOKEN_ICI` par le token reçu après login)
 GET http://localhost:3000/users/me
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDcsImlhdCI6MTc0MDU5NjQ3M30.lEjrwpECGQxgNiHT0dlpMCJC7dcKFLd3oUAHkmBHtuA
+Authorization: Bearer TOKEN_ICI
+
+
+
+### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
+GET http://localhost:3000/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+
