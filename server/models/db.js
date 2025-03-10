@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-const databaseUrl = "postgres://your_username_here:your_password_here@54.36.182.213:5432/qufest_db";
+const databaseUrl = "";
 
 const connection = new Sequelize(databaseUrl, {
     dialect: "postgres",
