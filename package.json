@@ -1,6 +1,17 @@
 {
+  "name": "projet-complet",
+  "version": "1.0.0",
   "dependencies": {
+    "axios": "^1.8.3",
     "pg": "^8.13.3",
     "pg-hstore": "^2.3.4"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "cd client && npm start",
+    "server": "cd server && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
