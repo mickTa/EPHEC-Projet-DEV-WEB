@@ -3,8 +3,8 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "fullName": "newuser",
-  "email": "newuser@example.com",
+  "fullName": "user2",
+  "email": "user2@example.com",
   "password": "Secure12*"
 }
 
@@ -13,11 +13,11 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "Mickael2438@example.com",
-  "password": "SecurePassword12349"
+  "email": "user2@example.com",
+  "password": "Secure12*"
 }
 
-### Tester une route protégée (Remplace `TOKEN_ICI` par le token reçu après login)
+### Tester une route protégée 
 GET http://localhost:3000/users/me
 Authorization: Bearer TOKEN_ICI
 
@@ -27,3 +27,12 @@ Authorization: Bearer TOKEN_ICI
 GET http://localhost:3000/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
 
+### Changement de mot de passe d'un utilisateur connecté
+POST http://localhost:3000/users/changePassword
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDQsImlhdCI6MTc0MjQxNzgzMH0.Pc_70h7MXxdar155f2h7yPvzPq1-zaaaTsLWlpOKtkA
+
+{
+  "oldPassword": "Secure12*",
+  "newPassword": "NewSecure99!"
+}
