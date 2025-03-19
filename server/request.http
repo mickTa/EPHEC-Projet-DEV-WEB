@@ -3,9 +3,9 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "fullName": "Johnny Doe",
-  "email": "Mickael2438@example.com",
-  "password": "SecurePassword12349"
+  "fullName": "newuser",
+  "email": "newuser@example.com",
+  "password": "Secure12*"
 }
 
 ### Connexion d'un utilisateur
