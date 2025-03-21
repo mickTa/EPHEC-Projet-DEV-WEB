@@ -4,8 +4,8 @@ Content-Type: application/json
 
 {
   "fullName": "newuser",
-  "email": "newuser@example.com",
-  "password": "Secure12*"
+  "email": "newusdser@example.com",
+  "password": "Secsdure12*"
 }
 
 ### Connexion d'un utilisateur
