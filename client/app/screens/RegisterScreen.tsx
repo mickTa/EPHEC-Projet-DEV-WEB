@@ -8,7 +8,7 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Utilisation de expo-router
+  const router = useRouter();
 
   const handleRegister = async () => {
     if (!fullName || !email || !password) {
@@ -22,7 +22,7 @@ export default function RegisterScreen() {
       console.log("Données envoyées:", { fullName, email, password });
 
       const response = await axios.post(
-        "http://adresse-ip-de-la-machine:3000/users",
+        "http://adresse-de-la-machine:3000/users",
         {
           fullName,
           email,
