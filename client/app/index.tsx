@@ -35,6 +35,10 @@ export default function Index() {
           <Button title="Voir mon Profil" onPress={goToProfile} />
         </View>
 
+        <View style={styles.events}>
+          <EventContainer title="Event1" text="Insert small description of the event or even a corresponding image" />
+        </View>
+
       </View>
 
       <View style={styles.tabsContainer}>
@@ -44,7 +48,6 @@ export default function Index() {
         <Text style={styles.tab} onPress={goToProfile}>Profile</Text>
       </View>
 
-      <EventContainer title="Event1" text="Small description of the item" />
     </>
   );
 }
@@ -88,4 +91,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
+  events: {
+    flex: 1,
+    margin: 20,
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });

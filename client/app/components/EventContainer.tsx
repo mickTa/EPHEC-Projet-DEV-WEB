@@ -19,6 +19,7 @@ const EventContainer: React.FC<EventContainerProps> = ({ title, text }) => {
 
 const styles = StyleSheet.create({
   eventContainer: { //todo: structure
+    padding: 10,
     flex: 1,
     //justifyContent: "center",
     alignItems: "center",
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
+    maxWidth: "75%",
   },
   eventDesc: { //todo: structure
     flex: 1,
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+    maxWidth: "75%",
   }
 });
 
