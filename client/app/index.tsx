@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     maxHeight: 85,
     width: "70%",
-    marginTop: 20,
+    marginTop: 5,
     flex: 1,
     justifyContent: "space-between"
   },
