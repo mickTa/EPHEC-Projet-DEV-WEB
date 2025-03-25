@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
 import EventContainer from './components/EventContainer';
+import TabContainer from "./components/TabContainer";
 import { useRouter } from "expo-router"; // Utilisation d'expo-router pour la navigation
 
 export default function Index() {
@@ -43,12 +44,12 @@ export default function Index() {
 
       </ScrollView>
 
-      {/*<View style={styles.tabsContainer}>
-        <Text style={styles.tab}>Home</Text>
-        <Text style={styles.tab}>Tab2</Text>
-        <Text style={styles.tab}>Tab3</Text>
-        <Text style={styles.tab} onPress={goToProfile}>Profile</Text>
-      </View>*/}
+      <TabContainer
+          tab1URL="../assets/images/react-logo.png"
+          tab2URL="../assets/images/react-logo.png"
+          tab3URL="../assets/images/react-logo.png"
+          onPressTab={() => goToLogin}
+      />
 
     </>
   );
@@ -77,22 +78,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between"
   },
-  //todo: create and implement component
-  //------------------------------------
-  tab: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  tabsContainer: {
-    width: "100%",
-    backgroundColor: "lightgray",
-    maxHeight: "7%",
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  //------------------------------------
   events: {
     flex: 1,
     margin: 20,
