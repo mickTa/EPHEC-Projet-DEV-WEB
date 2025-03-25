@@ -22,12 +22,24 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bienvenue sur l'application !</Text>
+      
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Bienvenue sur l'application !</Text>
+      </View>
+
       <View style={styles.buttonContainer}>
         <Button title="Aller à la Connexion" onPress={goToLogin} />
         <Button title="S'inscrire" onPress={goToRegister} />
         <Button title="Voir mon Profil" onPress={goToProfile} />
       </View>
+
+      <View style={styles.tabsContainer}>
+        <Text style={styles.tab}>Home</Text>
+        <Text style={styles.tab}>Tab2</Text>
+        <Text style={styles.tab}>Tab3</Text>
+        <Text style={styles.tab} onPress={goToProfile}>Profile</Text>
+      </View>
+
     </View>
   );
 }
@@ -35,17 +47,40 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
+    //padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    //marginBottom: 20,
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    maxHeight: "10%",
   },
   buttonContainer: {
-    width: "100%",
+    maxHeight: "20%",
+    width: "70%",
     marginTop: 20,
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  tab: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  tabsContainer: {
+    width: "100%",
+    backgroundColor: "lightgray",
+    maxHeight: "7%",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
 });
