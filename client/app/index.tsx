@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
+import EventContainer from './components/EventContainer';
 import { useRouter } from "expo-router"; // Utilisation d'expo-router pour la navigation
 
 export default function Index() {
@@ -21,16 +22,19 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>
-      
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Bienvenue sur l'application !</Text>
-      </View>
+    <>
+      <View style={styles.container}>
 
-      <View style={styles.buttonContainer}>
-        <Button title="Aller à la Connexion" onPress={goToLogin} />
-        <Button title="S'inscrire" onPress={goToRegister} />
-        <Button title="Voir mon Profil" onPress={goToProfile} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Bienvenue sur l'application !</Text>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button title="Aller à la Connexion" onPress={goToLogin} />
+          <Button title="S'inscrire" onPress={goToRegister} />
+          <Button title="Voir mon Profil" onPress={goToProfile} />
+        </View>
+
       </View>
 
       <View style={styles.tabsContainer}>
@@ -40,14 +44,15 @@ export default function Index() {
         <Text style={styles.tab} onPress={goToProfile}>Profile</Text>
       </View>
 
-    </View>
+      <EventContainer title="Event1" text="Small description of the item" />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
+    //justifyContent: "space-between",
     alignItems: "center",
     //padding: 20,
   },
