@@ -30,7 +30,7 @@ export default function ProfileScreen() {
         }
 
         const response = await axios.get(
-          "http://adresse-ip-de-la-machine:3000/users/me",
+          "http://adresse-de-la-machine:3000/users/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,
