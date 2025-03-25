@@ -8,14 +8,14 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Utilisation de expo-router
+  const router = useRouter();
 
   const handleLogin = async () => {
     setLoading(true);
     try {
       // Envoi des informations de connexion au backend
       const response = await axios.post(
-        "http://adresse-ip-de-la-machine:3000/auth/login",
+        "http://adresse-de-la-machine:3000/auth/login",
         {
           email,
           password,
