@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     //justifyContent: "center",
     alignItems: "center",
     maxWidth: "75%",
-    maxHeight: "40%",
+    minHeight: 250,
     backgroundColor: "lightgray",
   },
   title: {

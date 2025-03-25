@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
 import EventContainer from './components/EventContainer';
 import { useRouter } from "expo-router"; // Utilisation d'expo-router pour la navigation
 
@@ -23,30 +23,32 @@ export default function Index() {
 
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
 
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Bienvenue sur l'application !</Text>
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="Aller à la Connexion" onPress={goToLogin} />
+          <Button title="Se Connecter" onPress={goToLogin} />
           <Button title="S'inscrire" onPress={goToRegister} />
-          <Button title="Voir mon Profil" onPress={goToProfile} />
         </View>
 
         <View style={styles.events}>
+          <Text style={styles.title}>Événements à la une</Text>
           <EventContainer title="Event1" text="Insert small description of the event or even a corresponding image" />
+          <EventContainer title="Event2" text="Insert small description of the event or even a corresponding image" />
+          <EventContainer title="Event3" text="Insert small description of the event or even a corresponding image" />
         </View>
 
-      </View>
+      </ScrollView>
 
-      <View style={styles.tabsContainer}>
+      {/*<View style={styles.tabsContainer}>
         <Text style={styles.tab}>Home</Text>
         <Text style={styles.tab}>Tab2</Text>
         <Text style={styles.tab}>Tab3</Text>
         <Text style={styles.tab} onPress={goToProfile}>Profile</Text>
-      </View>
+      </View>*/}
 
     </>
   );
@@ -55,29 +57,28 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //justifyContent: "space-between",
-    alignItems: "center",
-    //padding: 20,
+    //alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    //marginBottom: 20,
   },
   titleContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    maxHeight: "10%",
+    maxHeight: 150
   },
   buttonContainer: {
-    maxHeight: "20%",
+    maxHeight: 85,
     width: "70%",
     marginTop: 20,
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
+  //todo: create and implement component
+  //------------------------------------
   tab: {
     fontSize: 16,
     fontWeight: "bold",
@@ -91,10 +92,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
+  //------------------------------------
   events: {
     flex: 1,
     margin: 20,
     alignItems: "center",
-    justifyContent: "center"
+    marginTop: 75,
+    marginBottom: 200,
+    gap: 30
   }
 });
