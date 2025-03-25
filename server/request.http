@@ -1,5 +1,6 @@
 ### Inscription d'un utilisateur
 POST http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
 Content-Type: application/json
 
 {
@@ -27,3 +28,15 @@ Authorization: Bearer TOKEN_ICI
 GET http://localhost:3000/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
 
+### Test de création d'évenement
+POST http://localhost:3000/events
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+Content-Type: application/json
+
+{
+  "nom":"test",
+  "organisateur":"huiezhfiufez",
+  "dateDebut":"2025-06-15T14:30:00",
+  "dateFin":"2025-06-15T14:40:00",
+  "adresse":"dansTonCul"
+}
