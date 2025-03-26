@@ -1,0 +1,18 @@
+myhostname = mail.qufest.com
+mydomain = qufest.com
+myorigin = $mydomain
+inet_interfaces = all
+inet_protocols = ipv4
+
+smtpd_use_tls = yes
+smtpd_tls_security_level = may
+smtpd_tls_cert_file = /etc/ssl/certs/mailserver.crt
+smtpd_tls_key_file = /etc/ssl/private/mailserver.key
+smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+relayhost = 
+
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_type = cyrus
+smtpd_sasl_path = private/auth

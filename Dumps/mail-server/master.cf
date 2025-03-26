@@ -1,0 +1,2 @@
+smtp      inet  n       -       n       -       -       smtpd
+smtp      inet  n       -       n       -       -       qmgr
