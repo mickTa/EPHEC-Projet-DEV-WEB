@@ -41,3 +41,27 @@ Content-Type: application/json
   "adress":"somewhere",
   "description":"blablabla"
 }
+
+### Test de création de PaymentGroup
+
+POST http://localhost:3000/payment-group
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+Content-Type: application/json
+
+{
+  "name": "Downtown clubs",
+  "description": "Credits for all of our clubs downtown",
+  "walletLink": "https://www.paypal.me/clubberz"
+}
+
+### Test de création de Wallet
+
+POST http://localhost:3000/wallet
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "paymentGroupId": 1,
+  "amount": 100.50
+}

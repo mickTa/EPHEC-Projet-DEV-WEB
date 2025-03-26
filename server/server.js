@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const securityRoutes = require("./routes/security");
 const userRoutes = require("./routes/users");
 const eventRoutes=require("./routes/events");
+const paymentGroupRoutes = require('./routes/paymentGroups');
+const walletRoutes = require('./routes/userPaymentGroupWallets');
 const cors = require("cors");
 
 dotenv.config();
@@ -14,6 +16,8 @@ app.use(cors());
 app.use("/auth", securityRoutes);
 app.use("/users", userRoutes);
 app.use("/events",eventRoutes);
+app.use('/payment-group', paymentGroupRoutes);
+app.use('/wallet', walletRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
