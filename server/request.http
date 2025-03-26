@@ -34,9 +34,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxN
 Content-Type: application/json
 
 {
-  "nom":"test",
-  "organisateur":"huiezhfiufez",
-  "dateDebut":"2025-06-15T14:30:00",
-  "dateFin":"2025-06-15T14:40:00",
-  "adresse":"dansTonCul"
+  "name":"test",
+  "organizer":"huiezhfiufez",
+  "startDate":"2025-06-15T14:30:00",
+  "endDate":"2025-06-15T14:40:00",
+  "adress":"somewhere"
 }
