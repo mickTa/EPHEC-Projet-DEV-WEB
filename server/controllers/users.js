@@ -31,8 +31,8 @@ exports.changePassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, await bcrypt.genSalt());
 
         // Mise à jour du mot de passe
-        req.user.password = hashedPassword;
-        await req.user.save();
+        await req.user.update({ password: hashedPassword });
+
 
         console.log("Nouveau mot de passe hashé :", hashedPassword);
 

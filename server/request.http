@@ -3,8 +3,8 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "fullName": "user2",
-  "email": "user2@example.com",
+  "fullName": "usertest2",
+  "email": "usertest2@example.com",
   "password": "Secure12*"
 }
 
@@ -13,8 +13,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "user2@example.com",
-  "password": "Secure12*"
+  "email": "usertest2@example.com",
+  "password": "NewSecure99!"
 }
 
 ### Tester une route protégée 
@@ -25,12 +25,12 @@ Authorization: Bearer TOKEN_ICI
 
 ### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
 GET http://localhost:3000/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImlhdCI6MTc0MjQ2Njc3NH0.5NGNywiL0jj2bTqqvkMqCOWKKuuxFh0DFYjfuXqwWL4
 
 ### Changement de mot de passe d'un utilisateur connecté
 POST http://localhost:3000/users/changePassword
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDQsImlhdCI6MTc0MjQxNzgzMH0.Pc_70h7MXxdar155f2h7yPvzPq1-zaaaTsLWlpOKtkA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsImlhdCI6MTc0MzAxODc3Nn0.C0sN9pdrD0--zKclc-NTzSpOuGKf_2I24myUmchLjwY
 
 {
   "oldPassword": "Secure12*",

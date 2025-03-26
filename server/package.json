@@ -9,11 +9,12 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3",
-    "sequelize": "^6.37.5",
-    "dotenv": "^16.0.3"
+    "pg": "^8.14.1",
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
