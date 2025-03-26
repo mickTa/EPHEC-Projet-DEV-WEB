@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-module.exports=(role)=>{
+module.exports=({authorized,forbidden}={undefined,undefined})=>{
   return async (req, res, next) => {
     const header = req.headers.authorization ?? req.headers.Authorization;
     if (!header) {
@@ -18,7 +18,8 @@ module.exports=(role)=>{
 
       req.user = await User.findByPk(payload.id);
       if (!req.user) return res.sendStatus(401);
-      if (role&&!role.includes(req.user.role)) return res.sendStatus(401);
+      if (forbidden&&forbidden.includes(req.user.role)) return res.sendStatus(401);
+      if (authorized&&!authorized.includes(req.user.role)) return res.sendStatus(401);
 
       next();
     } catch (e) {
