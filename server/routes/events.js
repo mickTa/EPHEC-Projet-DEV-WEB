@@ -4,6 +4,6 @@ const checkAuth=require("../middlewares/checkAuth");
 
 const router = new Router();
 
-router.post("/",checkAuth,EventController.NewEvent);
+router.post("/",checkAuth(),EventController.NewEvent);
 
 module.exports = router;
