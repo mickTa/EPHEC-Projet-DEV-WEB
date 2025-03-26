@@ -24,3 +24,28 @@ VALUES
 
 -- Ensure the sequence for SERIAL is correct
 SELECT setval(pg_get_serial_sequence('users', 'id'), COALESCE((SELECT MAX(id) FROM "users"), 1), false);
+
+
+-- Drop table if it exists
+DROP TABLE IF EXISTS "paymentGroups";
+
+CREATE TABLE "paymentGroups" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR(255) NOT NULL,
+  "description" TEXT DEFAULT NULL,
+  "walletLink" VARCHAR(255) NOT NULL
+);
+
+
+-- Drop table if it exists
+DROP TABLE IF EXISTS "userPaymentGroupsWallets";
+
+CREATE TABLE "userPaymentGroupsWallets" (
+  "id" SERIAL PRIMARY KEY,
+  "userId" INT REFERENCES "users"("id") ON DELETE CASCADE,
+  "paymentGroupId" INT REFERENCES "paymentGroups"("id") ON DELETE CASCADE,
+  "amount" DECIMAL(10,2) DEFAULT 0,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  UNIQUE ("userId", "paymentGroupId") -- Ensures a user can't register twice for the same event
+);
