@@ -11,13 +11,13 @@ const TabContainer: React.FC<TabContainerProps> = ({ onPressEventTab1, onPressEv
     return (
         <View style={styles.tabsBox}>
             <Pressable onPress={onPressEventTab1}>
-                <Image source={require("../img/react-logo.png")} style={styles.icon} />
+                <Image source={require("../img/home-icon.png")} style={styles.icon} />
             </Pressable>
             <Pressable onPress={onPressEventTab2}>
-                <Image source={require("../img/react-logo.png")} style={styles.icon} />
+                <Image source={require("../img/timetable-icon.png")} style={styles.icon} />
             </Pressable>
             <Pressable onPress={onPressEventTab3}>
-                <Image source={require("../img/react-logo.png")} style={styles.icon} />
+                <Image source={require("../img/profile-icon.png")} style={styles.icon} />
             </Pressable>
         </View>
     )
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
       marginBottom: 0
     },
     icon: {
-        height: 30,
-        width: 30
+        height: 40,
+        width: 40
     }
 });
 
