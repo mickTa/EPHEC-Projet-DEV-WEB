@@ -44,12 +44,7 @@ export default function Index() {
 
       </ScrollView>
 
-      <TabContainer
-          tab1URL="../assets/images/react-logo.png"
-          tab2URL="../assets/images/react-logo.png"
-          tab3URL="../assets/images/react-logo.png"
-          onPressTab={() => goToLogin}
-      />
+      <TabContainer />
 
     </>
   );

@@ -1,20 +1,13 @@
 import React, { ReactNode } from "react";
-import { IconType } from "react-icons";
-import { View, Text, StyleSheet } from "react-native";
+//import { IconType } from "react-icons";
+import { View, Text, StyleSheet, Image } from "react-native";
 
-interface TabContainerProps {
-    tab1URL: string;
-    tab2URL: string;
-    tab3URL: string;
-    onPressTab: () => {}
-}
-
-const TabContainer: React.FC<TabContainerProps> = ({ tab1URL, tab2URL, tab3URL, onPressTab }) => {
+const TabContainer = () => {
     return (
         <View style={styles.tabsBox}>
-            <img src={tab1URL} height={"25px"} width={"25px"} onClick={onPressTab} />
-            <img src={tab2URL} height={"25px"} width={"25px"} onClick={onPressTab} />
-            <img src={tab3URL} height={"25px"} width={"25px"} onClick={onPressTab} />
+            <Image source={require("../img/react-logo.png")} style={styles.icon} />
+            <Image source={require("../img/react-logo.png")} style={styles.icon} />
+            <Image source={require("../img/react-logo.png")} style={styles.icon} />
         </View>
     )
 };
@@ -31,6 +24,10 @@ const styles = StyleSheet.create({
       justifyContent: "space-around",
       alignItems: "center",
       marginBottom: 0
+    },
+    icon: {
+        height: 30,
+        width: 30
     }
 });
 
