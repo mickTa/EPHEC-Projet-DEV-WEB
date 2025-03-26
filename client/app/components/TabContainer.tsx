@@ -1,7 +1,5 @@
 import React, { ReactNode } from "react";
-//import { IconType } from "react-icons";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import Index from '../index';
 
 interface TabContainerProps {
     onPressEventTab1: () => void;

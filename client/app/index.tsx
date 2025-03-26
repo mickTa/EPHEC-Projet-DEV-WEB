@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
 import EventContainer from './components/EventContainer';
 import TabContainer from "./components/TabContainer";
+import CustomButton from "./components/CustomButton";
+
 import { useRouter } from "expo-router"; // Utilisation d'expo-router pour la navigation
 
 export default function Index() {
@@ -29,8 +31,8 @@ export default function Index() {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="Se Connecter" onPress={goToLogin} />
-          <Button title="S'inscrire" onPress={goToRegister} />
+          <CustomButton title="Se Connecter" onPressEvent={goToLogin} />
+          <CustomButton title="S'inscrire" onPressEvent={goToRegister} />
         </View>
 
         <View style={styles.events}>
@@ -39,6 +41,8 @@ export default function Index() {
           <EventContainer title="Event2" text="Insert small description of the event or even a corresponding image" />
           <EventContainer title="Event3" text="Insert small description of the event or even a corresponding image" />
         </View>
+
+        
 
       </ScrollView>
 
@@ -74,7 +78,8 @@ const styles = StyleSheet.create({
     width: "70%",
     marginTop: 5,
     flex: 1,
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    gap: 10
   },
   events: {
     flex: 1,
