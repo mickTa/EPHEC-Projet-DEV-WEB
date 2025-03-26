@@ -39,7 +39,7 @@ User.addHook("beforeCreate", async (user) => {
 });
 
 User.addHook("beforeUpdate", async (user, { fields }) => {
-  if (fields.includes("password")) {
+  if (fields.includes("password") && !user.password.startsWith("$2a$")) {
     user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
   }
 });
