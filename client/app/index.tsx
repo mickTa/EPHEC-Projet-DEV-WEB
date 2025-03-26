@@ -5,23 +5,21 @@ import TabContainer from "./components/TabContainer";
 import { useRouter } from "expo-router"; // Utilisation d'expo-router pour la navigation
 
 export default function Index() {
+
   const router = useRouter(); // Hook pour gérer la navigation
 
-  // Fonction pour la navigation vers la page de connexion
   const goToLogin = () => {
-    router.push("/screens/LoginScreen"); // Rediriger vers /login
+    router.push("/screens/LoginScreen");
   };
 
-  // Fonction pour la navigation vers la page d'inscription
   const goToRegister = () => {
-    router.push("/screens/RegisterScreen"); // Rediriger vers /register
+    router.push("/screens/RegisterScreen");
   };
 
-  // Fonction pour la navigation vers la page du profil
   const goToProfile = () => {
-    router.push("/screens/profile"); // Rediriger vers /profile
+    router.push("/screens/profile");
   };
-
+  
   return (
     <>
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -44,7 +42,12 @@ export default function Index() {
 
       </ScrollView>
 
-      <TabContainer />
+      <TabContainer 
+        onPressEventTab1={goToProfile}
+        onPressEventTab2={goToRegister}
+        onPressEventTab3={goToLogin}
+      />
+
 
     </>
   );
