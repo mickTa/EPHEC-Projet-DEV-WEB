@@ -24,7 +24,8 @@ CREATE TABLE "events" (
   "organizer" VARCHAR(255),
   "startDate" TIMESTAMP,
   "endDate" TIMESTAMP,
-  "adress" VARCHAR(255)
+  "adress" VARCHAR(255),
+  "description" VARCHAR(511)
 );
 
 -- Insert test data

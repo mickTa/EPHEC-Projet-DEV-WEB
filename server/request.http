@@ -38,5 +38,6 @@ Content-Type: application/json
   "organizer":"huiezhfiufez",
   "startDate":"2025-06-15T14:30:00",
   "endDate":"2025-06-15T14:40:00",
-  "adress":"somewhere"
+  "adress":"somewhere",
+  "description":"blablabla"
 }
