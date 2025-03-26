@@ -5,19 +5,22 @@ class Event extends Model{}
 
 Event.init(
   {
-    nom:{
-        type:DataTypes.STRING,
-    },
-    organisateur:{
+    name:{
       type:DataTypes.STRING,
     },
-    dateDebut:{
+    organizer:{
+      type:DataTypes.STRING,
+    },
+    startDate:{
       type:DataTypes.DATE,
     },
-    dateFin:{
+    endDate:{
       type:DataTypes.DATE,
     },
-    adresse:{
+    adress:{
+      type:DataTypes.STRING,
+    },
+    description:{
       type:DataTypes.STRING,
     }
   },

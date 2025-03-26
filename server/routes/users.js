@@ -4,7 +4,7 @@ const checkAuth = require("../middlewares/checkAuth");
 
 const router = new Router();
 
-router.get("/me", checkAuth, UserController.getMe);
+router.get("/me", checkAuth({forbidden:["ORGANIZER"]}), UserController.getMe);
 
 // Route pour l'inscription
 router.post("/", UserController.post);
