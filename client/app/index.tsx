@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     maxHeight: 150
   },
   buttonContainer: {
-    maxHeight: 100,
+    maxHeight: 85,
     width: "70%",
     marginTop: 5,
     flex: 1,
