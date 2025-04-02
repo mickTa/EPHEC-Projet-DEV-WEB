@@ -9,3 +9,13 @@ exports.NewEvent = async (req, res)=>{
       res.status(500).json({ error: err.message });
   }
 };
+
+exports.getAllEvents = async (req, res) => {
+  try {
+    const events = await Event.findAll();
+    res.status(200).json(events);
+  } catch (err) {
+    console.error("Erreur Sequelize :", err);
+    res.status(500).json({ error: err.message });
+  }
+};

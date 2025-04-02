@@ -44,13 +44,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxN
 Content-Type: application/json
 
 {
-  "name":"test",
-  "organizer":"huiezhfiufez",
+  "name":"QuFest Welcome",
+  "organizer":"Qufest Team",
   "startDate":"2025-06-15T14:30:00",
   "endDate":"2025-06-15T14:40:00",
-  "adress":"somewhere",
-  "description":"blablabla"
+  "adress":"EPHEC Louvain-La-Neuve",
+  "description":"This events accepts everyone"
 }
+
+
+### Test de récupération des événements
+GET http://localhost:3000/events
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+
 
 ### Test de création de PaymentGroup
 

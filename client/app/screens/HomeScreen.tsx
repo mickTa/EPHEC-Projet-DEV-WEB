@@ -47,9 +47,9 @@ export default function HomeScreen() {
       
       <View style={styles.footer}>
         <TabContainer
-          onPressEventTab1={goToProfile}
+          onPressEventTab1={goToWalletQR}
           onPressEventTab2={goToProfile}
-          onPressEventTab3={goToWalletQR}
+          onPressEventTab3={goToProfile}
         />
       </View>
     </View>
