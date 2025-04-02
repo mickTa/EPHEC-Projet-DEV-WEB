@@ -21,6 +21,10 @@ export default function Index() {
   const goToProfile = () => {
     router.push("/screens/profile");
   };
+
+  const goToWalletQR = () => {
+    router.push("/screens/WalletQRCodeScreen");
+  };
   
   return (
     <>
@@ -33,6 +37,7 @@ export default function Index() {
         <View style={styles.buttonContainer}>
           <CustomButton title="Se Connecter" onPressEvent={goToLogin} />
           <CustomButton title="S'inscrire" onPressEvent={goToRegister} />
+          <CustomButton title="QR Code" onPressEvent={goToWalletQR} />
         </View>
 
         <View style={styles.events}>

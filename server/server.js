@@ -5,6 +5,7 @@ const userRoutes = require("./routes/users");
 const eventRoutes=require("./routes/events");
 const paymentGroupRoutes = require('./routes/paymentGroups');
 const walletRoutes = require('./routes/userPaymentGroupWallets');
+const qrCodeRoutes = require('./routes/qrCodeRoutes');
 const cors = require("cors");
 
 dotenv.config();
@@ -18,6 +19,8 @@ app.use("/users", userRoutes);
 app.use("/events",eventRoutes);
 app.use('/payment-group', paymentGroupRoutes);
 app.use('/wallet', walletRoutes);
+app.use('/api', qrCodeRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

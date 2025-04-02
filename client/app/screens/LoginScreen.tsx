@@ -15,7 +15,7 @@ export default function LoginScreen() {
     try {
       // Envoi des informations de connexion au backend
       const response = await axios.post(
-        "http://adresse-de-la-machine:3000/auth/login",
+        "http://localhost:3000/auth/login",
         {
           email,
           password,
