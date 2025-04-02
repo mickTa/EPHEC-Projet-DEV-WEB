@@ -35,7 +35,7 @@ export default function Index() {
         </View>
 
         <View style={styles.buttonContainer}>
-          <CustomButton title="Se Connecter" onPressEvent={goToLogin} />
+          <CustomButton title="Se connecter" onPressEvent={goToLogin} />
           <CustomButton title="S'inscrire" onPressEvent={goToRegister} />
           <CustomButton title="QR Code" onPressEvent={goToWalletQR} />
         </View>
@@ -53,8 +53,8 @@ export default function Index() {
 
       <TabContainer 
         onPressEventTab1={goToProfile}
-        onPressEventTab2={goToRegister}
-        onPressEventTab3={goToLogin}
+        onPressEventTab2={goToProfile}
+        onPressEventTab3={goToProfile}
       />
 
 
