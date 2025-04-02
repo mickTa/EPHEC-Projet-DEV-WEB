@@ -14,13 +14,10 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       // Envoi des informations de connexion au backend
-      const response = await axios.post(
-        "http://localhost:3000/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("http://localhost:3000/auth/login", {
+        email,
+        password,
+      });
 
       const token = response.data.token;
       if (token) {
@@ -31,7 +28,7 @@ export default function LoginScreen() {
         Alert.alert("Connexion réussie !");
 
         // Rediriger l'utilisateur vers son profil après connexion réussie
-        router.push("/screens/HomeScreen");
+        router.replace("/screens/HomeScreen");
       }
     } catch (error) {
       console.error("Erreur de connexion", error);

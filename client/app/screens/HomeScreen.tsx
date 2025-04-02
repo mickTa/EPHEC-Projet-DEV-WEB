@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import EventContainer from "../components/EventContainer";
 import TabContainer from "../components/TabContainer";
 import CustomButton from "../components/CustomButton";
@@ -8,7 +15,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<{ name: string; description: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,14 +46,14 @@ export default function HomeScreen() {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("jwtToken");
-      router.push("/");
+      router.replace("/");
     } catch (error) {
       console.error("Erreur lors de la déconnexion", error);
     }
   };
 
   const goToProfile = () => {
-    router.push("/screens/profile");
+    router.push("/screens/ProfileScreen");
   };
 
   const goToWalletQR = () => {
@@ -67,12 +76,16 @@ export default function HomeScreen() {
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
             events.map((event, index) => (
-              <EventContainer key={index} title={event.name} text={event.description} />
+              <EventContainer
+                key={index}
+                title={event.name}
+                text={event.description}
+              />
             ))
           )}
         </View>
       </ScrollView>
-      
+
       <View style={styles.footer}>
         <TabContainer
           onPressEventTab1={goToWalletQR}

@@ -21,20 +21,17 @@ export default function RegisterScreen() {
       // Log pour vérifier les données envoyées
       console.log("Données envoyées:", { fullName, email, password });
 
-      const response = await axios.post(
-        "http://localhost:3000/users",
-        {
-          fullName,
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("http://localhost:3000/users", {
+        fullName,
+        email,
+        password,
+      });
 
       console.log("Réponse du serveur:", response.data);
 
       if (response.status === 201) {
         Alert.alert("Inscription réussie !");
-        router.push("/screens/LoginScreen"); // Rediriger vers la page de login après l'inscription
+        router.replace("/"); // Rediriger vers la page de login après l'inscription
       } else {
         Alert.alert("Échec de l'inscription", "Veuillez réessayer.");
       }

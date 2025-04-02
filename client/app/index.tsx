@@ -19,16 +19,16 @@ export default function Index() {
   }, []);
 
   const goToLogin = () => {
-    router.push("/screens/LoginScreen");
+    router.replace("/screens/LoginScreen");
   };
 
   const goToRegister = () => {
-    router.push("/screens/RegisterScreen");
+    router.replace("/screens/RegisterScreen");
   };
 
   if (isLoggedIn) {
     // Rediriger vers la page d'accueil si l'utilisateur est connecté
-    router.push("/screens/HomeScreen");
+    router.replace("/screens/HomeScreen");
   }
 
   return (

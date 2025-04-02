@@ -11,7 +11,15 @@ export default function RootLayout() {
         name="screens/LoginScreen"
         options={{ title: "Connexion" }}
       />
-      <Stack.Screen name="screens/profile" options={{ title: "Mon Profil" }} />
+      <Stack.Screen
+        name="screens/ProfileScreen"
+        options={{ title: "Mon Profil" }}
+      />
+      <Stack.Screen name="screens/HomeScreen" options={{ title: "Accueil" }} />
+      <Stack.Screen
+        name="screens/WalletQRCodeScreen"
+        options={{ title: "Portefeuille" }}
+      />
     </Stack>
   );
 }
