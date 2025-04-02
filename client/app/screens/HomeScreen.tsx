@@ -1,4 +1,3 @@
-// HomeScreen.tsx (avec bouton de déconnexion)
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import EventContainer from "../components/EventContainer";
@@ -13,11 +12,8 @@ export default function HomeScreen() {
   // Fonction de déconnexion
   const handleLogout = async () => {
     try {
-      // Suppression du token JWT
       await AsyncStorage.removeItem("jwtToken");
-
-      // Redirection vers la page d'index
-      router.push("/"); // Utilise la route "/"
+      router.push("/");
     } catch (error) {
       console.error("Erreur lors de la déconnexion", error);
     }
@@ -32,36 +28,41 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Bienvenue à la page d'accueil</Text>
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Déconnexion</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Bienvenue à la page d'accueil</Text>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>Déconnexion</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.events}>
-        <Text style={styles.title}>Événements à la une</Text>
-        <EventContainer title="Event1" text="Insert small description of the event or even a corresponding image" />
-        <EventContainer title="Event2" text="Insert small description of the event or even a corresponding image" />
-        <EventContainer title="Event3" text="Insert small description of the event or even a corresponding image" />
+        <View style={styles.events}>
+          <Text style={styles.title}>Événements à la une</Text>
+          <EventContainer title="Event1" text="Insert small description of the event or even a corresponding image" />
+          <EventContainer title="Event2" text="Insert small description of the event or even a corresponding image" />
+          <EventContainer title="Event3" text="Insert small description of the event or even a corresponding image" />
+        </View>
+      </ScrollView>
+      
+      <View style={styles.footer}>
+        <TabContainer
+          onPressEventTab1={goToProfile}
+          onPressEventTab2={goToProfile}
+          onPressEventTab3={goToWalletQR}
+        />
       </View>
-
-      <TabContainer
-        onPressEventTab1={goToProfile}
-        onPressEventTab2={goToProfile}
-        onPressEventTab3={goToWalletQR}
-      />
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollContent: {
     flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 100,
+    paddingBottom: 80,
   },
   title: {
     fontSize: 24,
@@ -73,7 +74,6 @@ const styles = StyleSheet.create({
     margin: 20,
     alignItems: "center",
     marginTop: 75,
-    marginBottom: 200,
     gap: 30,
   },
   header: {
@@ -91,5 +91,12 @@ const styles = StyleSheet.create({
   logoutText: {
     color: "white",
     fontWeight: "bold",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "white",
   },
 });
