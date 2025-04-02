@@ -65,6 +65,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.profilePic}></View>
       <Text style={styles.title}>Bienvenue, {userData.fullName}!</Text>
       <Text>Email: {userData.email}</Text>
       <Text>Rôle: {userData.role}</Text>
@@ -77,11 +78,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 20
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 20
   },
+  profilePic: {
+    height: 180,
+    width: 180,
+    borderRadius: "100%",
+    backgroundColor: "gray",
+    marginBottom: 60
+  }
 });
