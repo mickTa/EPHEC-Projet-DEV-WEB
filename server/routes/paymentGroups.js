@@ -4,6 +4,6 @@ const checkAuth = require('../middlewares/checkAuth');
 
 const router = new Router();
 
-router.post('/', checkAuth, paymentGroupController.NewPaymentGroup);
+router.post('/', paymentGroupController.NewPaymentGroup);
 
 module.exports = router;

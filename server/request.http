@@ -18,12 +18,6 @@ Content-Type: application/json
   "password": "SecurePassword12349"
 }
 
-### Tester une route protégée (Remplace `TOKEN_ICI` par le token reçu après login)
-GET http://localhost:3000/users/me
-Authorization: Bearer TOKEN_ICI
-
-
-
 ### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
 GET http://localhost:3000/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
@@ -45,23 +39,26 @@ Content-Type: application/json
 ### Test de création de PaymentGroup
 
 POST http://localhost:3000/payment-group
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
 Content-Type: application/json
 
 {
-  "name": "Downtown clubs",
+  "name": "Pirate Bay",
   "description": "Credits for all of our clubs downtown",
-  "walletLink": "https://www.paypal.me/clubberz"
+  "walletLink": "https://www.paypal.me/piratebay"
 }
 
 ### Test de création de Wallet
 
 POST http://localhost:3000/wallet
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
 Content-Type: application/json
 
 {
-  "userId": 1,
-  "paymentGroupId": 1,
-  "amount": 100.50
+  "userId": 2,
+  "paymentGroupId": 2,
+  "amount": 90
 }
+
+
+### Test to get all wallets of a user
+GET http://localhost:3000/users/me/wallets
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
