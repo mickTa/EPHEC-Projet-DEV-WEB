@@ -31,7 +31,7 @@ export default function LoginScreen() {
         Alert.alert("Connexion réussie !");
 
         // Rediriger l'utilisateur vers son profil après connexion réussie
-        router.push("/screens/profile");
+        router.push("/screens/HomeScreen");
       }
     } catch (error) {
       console.error("Erreur de connexion", error);

@@ -1,14 +1,22 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
-import EventContainer from './components/EventContainer';
-import TabContainer from "./components/TabContainer";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Button } from "react-native";
 import CustomButton from "./components/CustomButton";
-
-import { useRouter } from "expo-router"; // Utilisation d'expo-router pour la navigation
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
-  const router = useRouter(); // Hook pour gérer la navigation
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = await AsyncStorage.getItem("jwtToken");
+      if (token) {
+        setIsLoggedIn(true);
+      }
+    };
+    checkLoginStatus();
+  }, []);
 
   const goToLogin = () => {
     router.push("/screens/LoginScreen");
@@ -18,80 +26,37 @@ export default function Index() {
     router.push("/screens/RegisterScreen");
   };
 
-  const goToProfile = () => {
-    router.push("/screens/profile");
-  };
+  if (isLoggedIn) {
+    // Rediriger vers la page d'accueil si l'utilisateur est connecté
+    router.push("/screens/HomeScreen");
+  }
 
-  const goToWalletQR = () => {
-    router.push("/screens/WalletQRCodeScreen");
-  };
-  
   return (
-    <>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
-
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Bienvenue sur l'application !</Text>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <CustomButton title="Se connecter" onPressEvent={goToLogin} />
-          <CustomButton title="S'inscrire" onPressEvent={goToRegister} />
-          <CustomButton title="QR Code" onPressEvent={goToWalletQR} />
-        </View>
-
-        <View style={styles.events}>
-          <Text style={styles.title}>Événements à la une</Text>
-          <EventContainer title="Event1" text="Insert small description of the event or even a corresponding image" />
-          <EventContainer title="Event2" text="Insert small description of the event or even a corresponding image" />
-          <EventContainer title="Event3" text="Insert small description of the event or even a corresponding image" />
-        </View>
-
-        
-
-      </ScrollView>
-
-      <TabContainer 
-        onPressEventTab1={goToProfile}
-        onPressEventTab2={goToProfile}
-        onPressEventTab3={goToProfile}
-      />
-
-
-    </>
+    <View style={styles.container}>
+      <Text style={styles.title}>Bienvenue sur l'application !</Text>
+      <View style={styles.buttonContainer}>
+        <CustomButton title="Se connecter" onPressEvent={goToLogin} />
+        <CustomButton title="S'inscrire" onPressEvent={goToRegister} />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-  },
-  titleContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    maxHeight: 150
+    marginBottom: 20,
   },
   buttonContainer: {
-    maxHeight: 85,
     width: "70%",
     marginTop: 5,
-    flex: 1,
     justifyContent: "space-between",
-    gap: 10
+    gap: 10,
   },
-  events: {
-    flex: 1,
-    margin: 20,
-    alignItems: "center",
-    marginTop: 75,
-    marginBottom: 200,
-    gap: 30
-  }
 });
