@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import EventContainer from "../components/EventContainer";
 import TabContainer from "../components/TabContainer";
 import CustomButton from "../components/CustomButton";
@@ -8,8 +8,32 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fonction de déconnexion
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const token = await AsyncStorage.getItem("jwtToken");
+        const response = await fetch("http://localhost:3000/events", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        setEvents(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("jwtToken");
@@ -39,9 +63,13 @@ export default function HomeScreen() {
 
         <View style={styles.events}>
           <Text style={styles.title}>Événements à la une</Text>
-          <EventContainer title="Event1" text="Insert small description of the event or even a corresponding image" />
-          <EventContainer title="Event2" text="Insert small description of the event or even a corresponding image" />
-          <EventContainer title="Event3" text="Insert small description of the event or even a corresponding image" />
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            events.map((event, index) => (
+              <EventContainer key={index} title={event.name} text={event.description} />
+            ))
+          )}
         </View>
       </ScrollView>
       

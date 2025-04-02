@@ -44,7 +44,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxN
 Content-Type: application/json
 
 {
-  "name":"QuFest Welcome",
+  "name":"QuFest Welcome 2",
   "organizer":"Qufest Team",
   "startDate":"2025-06-15T14:30:00",
   "endDate":"2025-06-15T14:40:00",
