@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const { UserPaymentGroupsWallet, User } = require('../models');
 const bcrypt = require("bcryptjs");
 
 function validatePassword(password) {
@@ -68,3 +68,25 @@ exports.getMe = async (req, res) => {
   }
   res.json(req.user);
 };
+
+exports.getUserWallets = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const wallets = await UserPaymentGroupsWallet.findAll({
+      where: { userId: req.user.id },
+      order: [['createdAt', 'DESC']] // Newest first
+    });
+
+    res.json(wallets);
+  } catch (error) {
+    console.error("Error fetching user wallets:", error);
+    res.status(500).json({ 
+      error: "Failed to retrieve wallets",
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
