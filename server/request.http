@@ -6,7 +6,7 @@ Content-Type: application/json
 {
   "fullName": "usertest2",
   "email": "usertest2@example.com",
-  "password": "Secure12*"
+  "password": "Secure12*",
   "fullName": "newuser",
   "email": "newusdser@example.com",
   "password": "Secsdure12*"
@@ -17,14 +17,14 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "usertest2@example.com",
-  "password": "NewSecure99!"
+  "email": "bobby@example.com",
+  "password": "Abscdef12&*"
 }
 
 
 ### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
 GET http://localhost:3000/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImlhdCI6MTc0MjQ2Njc3NH0.5NGNywiL0jj2bTqqvkMqCOWKKuuxFh0DFYjfuXqwWL4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTc0MzYxNTAzMn0.L0Ctuk2pSdZ_gHon4xMVubzWPzGd3bpcSHRfONEon_o
 
 ### Changement de mot de passe d'un utilisateur connecté
 POST http://localhost:3000/users/changePassword
