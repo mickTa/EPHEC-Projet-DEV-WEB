@@ -92,7 +92,7 @@ export default function ProfileScreen() {
         </View>
         
       </View>
-      {/*
+      {/* TODO : manage this bs
       <TabContainer
           onPressEventTab1={goToWalletQR}
           onPressEventTab2={goToProfile}
