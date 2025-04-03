@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ActivityIndicator, StyleSheet, Alert } from "react-native";
+import EventContainer from "../components/EventContainer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -69,6 +70,14 @@ export default function ProfileScreen() {
       <Text style={styles.title}>Bienvenue, {userData.fullName}!</Text>
       <Text>Email: {userData.email}</Text>
       <Text>Rôle: {userData.role}</Text>
+      <View>
+        <Text style={styles.title}>Vos derniers achats :</Text>
+        <EventContainer
+          title={"Event bought"}
+          text={"This is an event you bought"}
+        />
+      </View>
+      
     </View>
   );
 }
@@ -86,10 +95,10 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   profilePic: {
-    height: 180,
-    width: 180,
+    height: 140,
+    width: 140,
     borderRadius: "100%",
-    backgroundColor: "gray",
-    marginBottom: 60
+    backgroundColor: "lightgray",
+    marginBottom: 40
   }
 });
