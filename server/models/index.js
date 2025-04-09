@@ -1,16 +1,16 @@
-// models/index.js
-const sequelize = require('./db');
-const User = require('./user');
-const UserPaymentGroupsWallet = require('./userPaymentGroupWallet');
-// Import other models as needed
+const PaymentGroup = require("./paymentGroups");
+const Event = require("./event");
 
-// Set up associations
-UserPaymentGroupsWallet.belongsTo(User, { foreignKey: 'userId' });
-// Add other associations as needed
+// Exemple d’association possible
+UserPaymentGroupsWallet.belongsTo(PaymentGroup, {
+  foreignKey: "paymentGroupId",
+});
+Event.belongsTo(User, { foreignKey: "organizerId" }); // Si tu veux lier l'event à un user
 
 module.exports = {
   sequelize,
   User,
-  UserPaymentGroupsWallet
-  // Export other models
+  PaymentGroup,
+  Event,
+  UserPaymentGroupsWallet,
 };

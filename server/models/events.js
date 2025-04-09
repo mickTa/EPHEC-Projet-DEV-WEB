@@ -1,34 +1,58 @@
-const{Model,DataTypes}=require("sequelize");
-const connection=require("./db");
+const { Model, DataTypes } = require("sequelize");
+const connection = require("./db");
 
-class Event extends Model{}
+class Event extends Model {}
 
 Event.init(
   {
-    name:{
-      type:DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    organizer:{
-      type:DataTypes.STRING,
+    organizer: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    startDate:{
-      type:DataTypes.DATE,
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    endDate:{
-      type:DataTypes.DATE,
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    adress:{
-      type:DataTypes.STRING,
+    adress: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
-    description:{
-      type:DataTypes.STRING,
-    }
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   },
   {
-    tableName:"events",
-    sequelize:connection,
+    tableName: "events",
+    sequelize: connection,
     timestamps: false,
   }
 );
 
-module.exports=Event;
+module.exports = Event;
