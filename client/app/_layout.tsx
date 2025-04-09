@@ -20,6 +20,10 @@ export default function RootLayout() {
         name="screens/WalletQRCodeScreen"
         options={{ title: "Portefeuille" }}
       />
+      <Stack.Screen
+        name="screens/EventFormScreen"
+        options={{ title: "Créer un Événement" }}
+      />
     </Stack>
   );
 }

@@ -23,7 +23,10 @@ export default function ModifyPasswordScreen() {
     }
 
     if (newPassword !== confirmPassword) {
-      return Alert.alert("Erreur", "Les nouveaux mots de passe ne correspondent pas.");
+      return Alert.alert(
+        "Erreur",
+        "Les nouveaux mots de passe ne correspondent pas."
+      );
     }
 
     Alert.alert(
@@ -40,7 +43,7 @@ export default function ModifyPasswordScreen() {
             try {
               const token = await AsyncStorage.getItem("jwtToken");
               const response = await axios.post(
-                "http://192.168.129.117:3000/users/changePassword",
+                "http://localhost:3000/users/changePassword",
                 {
                   oldPassword,
                   newPassword,
@@ -60,8 +63,14 @@ export default function ModifyPasswordScreen() {
                 Alert.alert("Erreur", "Échec du changement de mot de passe.");
               }
             } catch (error) {
-              console.error("Erreur lors du changement de mot de passe:", error);
-              Alert.alert("Erreur", "Vérifiez l'ancien mot de passe ou réessayez.");
+              console.error(
+                "Erreur lors du changement de mot de passe:",
+                error
+              );
+              Alert.alert(
+                "Erreur",
+                "Vérifiez l'ancien mot de passe ou réessayez."
+              );
             }
           },
         },

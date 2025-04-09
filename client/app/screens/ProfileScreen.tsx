@@ -38,14 +38,11 @@ export default function ProfileScreen() {
           return;
         }
 
-        const response = await axios.get(
-          "http://192.168.129.117:3000/users/me",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3000/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setUserData(response.data);
       } catch (error) {
@@ -84,7 +81,9 @@ export default function ProfileScreen() {
           style={styles.changePasswordButton}
           onPress={() => router.push("./ModifyPasswordScreen")}
         >
-          <Text style={styles.changePasswordText}>Modifier le mot de passe</Text>
+          <Text style={styles.changePasswordText}>
+            Modifier le mot de passe
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.events}>

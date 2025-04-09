@@ -21,7 +21,7 @@ export default function RegisterScreen() {
       // Log pour vérifier les données envoyées
       console.log("Données envoyées:", { fullName, email, password });
 
-      const response = await axios.post("http://192.168.129.117:3000/users", {
+      const response = await axios.post("http://localhost:3000/users", {
         fullName,
         email,
         password,

@@ -24,7 +24,7 @@ export default function HomeScreen() {
     const fetchEvents = async () => {
       try {
         const token = await AsyncStorage.getItem("jwtToken");
-        const response = await fetch("http://192.168.129.117:3000/events", {
+        const response = await fetch("http://localhost:3000/events", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,6 +54,10 @@ export default function HomeScreen() {
 
   const goToProfile = () => {
     router.push("/screens/ProfileScreen");
+  };
+
+  const goToEvents = () => {
+    router.push("/screens/EventFormScreen");
   };
 
   const goToWalletQR = () => {
@@ -89,7 +93,7 @@ export default function HomeScreen() {
       <View style={styles.footer}>
         <TabContainer
           onPressEventTab1={goToWalletQR}
-          onPressEventTab2={goToProfile}
+          onPressEventTab2={goToEvents}
           onPressEventTab3={goToProfile}
         />
       </View>
