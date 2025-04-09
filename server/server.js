@@ -1,5 +1,7 @@
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./docs/swagger.yaml");
 const swaggerSpec = require("./docs/swagger");
 const dotenv = require("dotenv");
 const securityRoutes = require("./routes/security");
@@ -22,7 +24,7 @@ app.use("/events", eventRoutes);
 app.use("/payment-group", paymentGroupRoutes);
 app.use("/wallet", walletRoutes);
 app.use("/api", qrCodeRoutes);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

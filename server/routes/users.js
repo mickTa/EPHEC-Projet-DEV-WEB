@@ -16,35 +16,6 @@ router.get(
 );
 router.post("/changePassword", checkAuth(), UserController.changePassword);
 
-/**
- * @swagger
- * /users:
- *   post:
- *     summary: Inscription d'un nouvel utilisateur
- *     tags:
- *       - Utilisateurs
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               fullName:
- *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 format: password
- *     responses:
- *       201:
- *         description: Utilisateur créé avec succès
- *       400:
- *         description: Erreur de validation
- */
-
 // Route pour l'inscription
 router.post("/", UserController.post);
 
