@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import EventContainer from "../components/EventContainer";
 import TabContainer from "../components/TabContainer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 
-// Définir un type pour les données utilisateur
 interface UserData {
   fullName: string;
   email: string;
@@ -13,9 +20,9 @@ interface UserData {
 }
 
 export default function ProfileScreen() {
-  // Typage explicite de `userData` avec `UserData | null`
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -32,7 +39,7 @@ export default function ProfileScreen() {
         }
 
         const response = await axios.get(
-          "http://localhost:3000/users/me",
+          "http://192.168.129.117:3000/users/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -68,13 +75,20 @@ export default function ProfileScreen() {
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.profilePic}></View>
+        <View style={styles.profilePic} />
         <Text style={styles.title}>Bienvenue, {userData.fullName}!</Text>
-        <Text>Email: {userData.email}</Text>
-        <Text>Rôle: {userData.role}</Text>
+        <Text style={styles.info}>Email : {userData.email}</Text>
+        <Text style={styles.info}>Rôle : {userData.role}</Text>
+
+        <TouchableOpacity
+          style={styles.changePasswordButton}
+          onPress={() => router.push("./ModifyPasswordScreen")}
+        >
+          <Text style={styles.changePasswordText}>Modifier le mot de passe</Text>
+        </TouchableOpacity>
+
         <View style={styles.events}>
           <Text style={styles.title}>Vos derniers achats :</Text>
-          {/* insert for loop */}
           <View style={styles.inlineEvents}>
             <View style={styles.inlineEvent}>
               <Text>Event #1 : Event name</Text>
@@ -87,18 +101,10 @@ export default function ProfileScreen() {
             <View style={styles.inlineEvent}>
               <Text>Event #3 : Event name</Text>
               <Text>50,00€</Text>
-            </View>    
-          </View>    
+            </View>
+          </View>
         </View>
-        
       </View>
-      {/* TODO : manage this bs
-      <TabContainer
-          onPressEventTab1={goToWalletQR}
-          onPressEventTab2={goToProfile}
-          onPressEventTab3={goToProfile}
-      />
-      */}
     </>
   );
 }
@@ -106,40 +112,51 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    padding: 20,
     alignItems: "center",
-    padding: 20
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20
+    backgroundColor: "#fff",
   },
   profilePic: {
     height: 140,
     width: 140,
-    borderRadius: "100%",
+    borderRadius: 70,
     backgroundColor: "lightgray",
-    marginBottom: 40
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  info: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  changePasswordButton: {
+    marginTop: 20,
+    backgroundColor: "#4682B4",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  changePasswordText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
   events: {
     marginTop: 40,
     width: "100%",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   inlineEvents: {
-    marginTop: 40,
-    flex: 1,
+    marginTop: 20,
     width: "100%",
-    flexDirection: "column",
-    //justifyContent: "space-between"
   },
   inlineEvent: {
-    flex: 1,
-    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
 });

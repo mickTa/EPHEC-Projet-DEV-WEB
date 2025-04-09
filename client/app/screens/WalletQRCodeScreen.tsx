@@ -15,7 +15,7 @@ const WalletQRCodeScreen = () => {
 
   const handleGenerateQRCode = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/generate-qr', {
+      const response = await fetch('http://192.168.129.117:3000/api/generate-qr', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

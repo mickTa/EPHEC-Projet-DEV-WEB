@@ -24,7 +24,7 @@ export default function HomeScreen() {
     const fetchEvents = async () => {
       try {
         const token = await AsyncStorage.getItem("jwtToken");
-        const response = await fetch("http://localhost:3000/events", {
+        const response = await fetch("http://192.168.129.117:3000/events", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
