@@ -1,5 +1,8 @@
-const PaymentGroup = require("./paymentGroups");
-const Event = require("./event");
+const sequelize = require("./db");
+const User = require("./user");
+const PaymentGroup = require("./PaymentGroup");
+const UserPaymentGroupsWallet = require("./userPaymentGroupWallet");
+const Event = require("./events");
 
 // Exemple d’association possible
 UserPaymentGroupsWallet.belongsTo(PaymentGroup, {
