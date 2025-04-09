@@ -1,0 +1,221 @@
+openapi: 3.0.0
+info:
+  title: Event and payment management API
+  version: 1.0.0
+  description: API documentation for backend routes using Swagger
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /users:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, fullName]
+              properties:
+                fullName:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        "201":
+          description: User created
+        "400":
+          description: Invalid input
+
+  /auth/login:
+    post:
+      summary: Authenticate user and return JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Authenticated successfully
+        "401":
+          description: Unauthorized
+
+  /users/me:
+    get:
+      summary: Get the currently authenticated user's data
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User data
+        "401":
+          description: Unauthorized
+
+  /users/changePassword:
+    post:
+      summary: Change current user's password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [oldPassword, newPassword]
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        "200":
+          description: Password changed
+        "400":
+          description: Validation error
+        "401":
+          description: Unauthorized
+
+  /users/me/wallets:
+    get:
+      summary: Get all wallets for the current user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of wallets
+        "401":
+          description: Unauthorized
+
+  /events:
+    post:
+      summary: Create a new event
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                [name, organizer, startDate, endDate, adress, description]
+              properties:
+                name:
+                  type: string
+                organizer:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+                adress:
+                  type: string
+                description:
+                  type: string
+      responses:
+        "201":
+          description: Event created
+        "401":
+          description: Unauthorized
+
+    get:
+      summary: Get all events
+      responses:
+        "200":
+          description: List of events
+
+  /payment-group:
+    post:
+      summary: Create a payment group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, walletLink]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                walletLink:
+                  type: string
+      responses:
+        "201":
+          description: Payment group created
+
+  /wallet:
+    post:
+      summary: Create a wallet (user-paymentGroup association)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, paymentGroupId, amount]
+              properties:
+                userId:
+                  type: integer
+                paymentGroupId:
+                  type: integer
+                amount:
+                  type: number
+                  format: float
+      responses:
+        "201":
+          description: Wallet created
+
+  /qr/generate-qr:
+    post:
+      summary: Generate a QR code for a wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wallet:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    userId:
+                      type: integer
+                    paymentGroupId:
+                      type: integer
+                    amount:
+                      type: number
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+      responses:
+        "200":
+          description: QR code generated
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
