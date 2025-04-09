@@ -16,6 +16,20 @@ export default function RegisterScreen() {
       return;
     }
 
+    try {
+      const response = await axios.post("http://192.168.129.117:3000/validatePassword", { password });
+
+      if (!response.data.valid) {
+        // If the backend returns that the password is invalid
+        Alert.alert("Erreur de mot de passe", "Le mot de passe ne répond pas aux critères.");
+        return;
+      }
+    } catch (error) {
+      console.error("Erreur de validation du mot de passe", error);
+      Alert.alert("Erreur", "Impossible de valider le mot de passe. Veuillez réessayer.");
+      return;
+    }
+
     setLoading(true);
     try {
       // Log pour vérifier les données envoyées
