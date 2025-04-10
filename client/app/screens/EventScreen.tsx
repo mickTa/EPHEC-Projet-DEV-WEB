@@ -1,28 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
-import { useRouter } from "expo-router";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TabContainer from "../components/TabContainer";
 
 export default function EventScreen() {
   const router = useRouter();
-  const [event, setEvent] = useState<{ name: string; description: string } | null>(null);
+  const [event, setEvent] = useState<{
+    name: string;
+    description: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const { eventId } = router.query;
+  const { eventId } = useLocalSearchParams();
 
   useEffect(() => {
     const fetchEvent = async () => {
       if (eventId) {
         try {
           const token = await AsyncStorage.getItem("jwtToken");
-          const response = await fetch(`http://192.168.129.117:3000/events/${eventId}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
+          const response = await fetch(
+            `http://192.168.129.117:3000/events/${eventId}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
           const data = await response.json();
           setEvent(data);
         } catch (error) {
@@ -40,7 +52,9 @@ export default function EventScreen() {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={styles.title}>{event ? event.name : "Chargement..."}</Text>
+          <Text style={styles.title}>
+            {event ? event.name : "Chargement..."}
+          </Text>
         </View>
 
         {loading ? (
@@ -53,7 +67,11 @@ export default function EventScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TabContainer onPressEventTab1={() => router.push("/screens/WalletQRCodeScreen")} />
+        <TabContainer
+          onPressEventTab1={() => router.push("/screens/WalletQRCodeScreen")}
+          onPressEventTab2={() => console.log("Tab 2 pressed")}
+          onPressEventTab3={() => console.log("Tab 3 pressed")}
+        />
       </View>
     </View>
   );
@@ -66,6 +84,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 80,
+  },
+  header: {
+    padding: 20,
+    backgroundColor: "#f8f8f8",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
   },
   title: {
     fontSize: 24,

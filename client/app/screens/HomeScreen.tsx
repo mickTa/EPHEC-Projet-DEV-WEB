@@ -15,7 +15,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [events, setEvents] = useState<{ name: string; description: string; id: string }[]>([]);
+  const [events, setEvents] = useState<
+    { name: string; description: string; id: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,9 +61,8 @@ export default function HomeScreen() {
   };
 
   const goToEventDetails = (eventId: string) => {
-    router.push(`/screens/EventScreen?eventId=${eventId}`);
+    router.push({ pathname: "/screens/EventFormScreen", params: { eventId } });
   };
-  
 
   return (
     <View style={styles.container}>
@@ -79,7 +80,10 @@ export default function HomeScreen() {
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
             events.map((event) => (
-              <TouchableOpacity key={event.id} onPress={() => goToEventDetails(event.id)}>
+              <TouchableOpacity
+                key={event.id}
+                onPress={() => goToEventDetails(event.id)}
+              >
                 <EventContainer title={event.name} text={event.description} />
               </TouchableOpacity>
             ))
