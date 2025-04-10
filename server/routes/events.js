@@ -6,6 +6,6 @@ const router = new Router();
 
 router.post("/",checkAuth(),EventController.NewEvent);
 router.get("/", EventController.getAllEvents);
-
+router.put("/",checkAuth(),EventController.UpdateEvent)
 
 module.exports = router;

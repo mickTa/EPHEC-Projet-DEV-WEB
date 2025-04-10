@@ -84,3 +84,18 @@ Content-Type: application/json
 ### Test to get all wallets of a user
 GET http://localhost:3000/users/me/wallets
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+
+###
+PUT http://localhost:3000/events
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+Content-Type: application/json
+
+{
+  "id":24,
+  "name":"fejpfjezpfeopz",
+  "organizer":"fjzoifeifjeziof",
+  "startDate":"2023-06-15T14:30:00",
+  "endDate":"2023-06-15T14:30:00",
+  "adress":"ejizofjioezfjioze",
+  "description":"djzaidazdjizao"
+}

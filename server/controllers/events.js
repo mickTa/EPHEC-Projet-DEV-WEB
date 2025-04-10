@@ -21,3 +21,15 @@ exports.getAllEvents = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.UpdateEvent=async(req,res)=>{
+  newEvent=req.body;
+  try{
+    const event=await Event.findByPk(newEvent.id);
+    delete newEvent.id;
+    await event.update(newEvent);
+    res.status(200).json()
+  }catch(err){
+    res.status(500).json({error: err.message})
+  }
+}
