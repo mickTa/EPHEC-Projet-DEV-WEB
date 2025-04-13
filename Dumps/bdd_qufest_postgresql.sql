@@ -1,5 +1,3 @@
--- PostgreSQL dump converted from MySQL
-
 -- Reset tables
 DROP TABLE IF EXISTS "users";
 DROP TABLE IF EXISTS "events";
@@ -12,30 +10,32 @@ CREATE TABLE "users" (
   "email" VARCHAR(255) DEFAULT NULL,
   "password" VARCHAR(255) DEFAULT NULL,
   "birthday" VARCHAR(255) DEFAULT NULL,
-  "role" VARCHAR(10) CHECK ("role" IN ('USER', 'ADMIN')) DEFAULT 'USER',t
-  "cguActivated" BOOLEAN DEFAULT FALSE,
+  "role" VARCHAR(10) CHECK ("role" IN ('USER', 'ADMIN', 'ORGANIZER')) DEFAULT 'USER',
+  "paymentGroupId" INT REFERENCES "paymentGroups"("id") ON DELETE SET NULL DEFAULT NULL,
   "createdAt" TIMESTAMP NOT NULL,
   "updatedAt" TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "events" (
   "id" SERIAL PRIMARY KEY,
-  "name" VARCHAR(255),
-  "organizer" VARCHAR(255),
-  "startDate" TIMESTAMP,
-  "endDate" TIMESTAMP,
-  "adress" VARCHAR(255),
-  "description" VARCHAR(511)
+  "name" VARCHAR(255) NOT NULL,
+  "organizerId" INT NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+  "startDate" TIMESTAMP NOT NULL,
+  "endDate" TIMESTAMP NOT NULL,
+  "address" VARCHAR(255) NOT NULL,
+  "description" VARCHAR(511) NOT NULL,
+  "paymentGroupId" INT NOT NULL REFERENCES "paymentGroups"("id") ON DELETE CASCADE
 );
 
 -- Insert test data
-INSERT INTO "users" ("id", "activated", "fullName", "email", "password", "birthday", "role", "cguActivated", "createdAt", "updatedAt") 
-VALUES 
-(1, FALSE, 'John Doe', 'johndoe@example.com', '$2a$10$/FP1KvbK6LK15vdmPsAp5Omz6GSkaCTMhRhVUGvAwE67M7vCIfFI.', NULL, 'USER', FALSE, '2025-02-27 10:02:23', '2025-02-27 10:02:23');
+INSERT INTO "users" ("id", "activated", "fullName", "email", "password", "birthday", "role", "paymentGroupId", "createdAt", "updatedAt")
+VALUES
+(1, TRUE, 'John Doe', 'john.doe@example.com', 'hashedpassword123', '1990-01-01', 'USER', NULL, '2023-01-01 10:00:00', '2023-01-01 10:00:00'),
 
-INSERT INTO "events" ("id", "name", "organizer", "startDate", "endDate", "adress") 
-VALUES 
-(1, "test", 'huiezhfiufez', '2025-06-15 12:30:00', '2025-06-15 12:40:00', 'somewhere');
+
+INSERT INTO "events" ("id", "name", "organizerId", "startDate", "endDate", "address", "description", "paymentGroupId")
+VALUES
+(1, 'Sample Event', 1, '2023-06-01 10:00:00', '2023-06-02 18:00:00', '123 Main St, Cityville', 'This is a sample event description.', 1),
 
 -- Ensure the sequence for SERIAL is correct
 SELECT setval(pg_get_serial_sequence('users', 'id'), COALESCE((SELECT MAX(id) FROM "users"), 1), false);
