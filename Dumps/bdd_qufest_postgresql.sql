@@ -32,7 +32,7 @@ INSERT INTO "users" ("id", "activated", "fullName", "email", "password", "birthd
 VALUES
 (1, TRUE, 'John Doe', 'john.doe@example.com', 'hashed_password_123', '1990-01-01', 'USER', NULL, '2023-01-01 12:00:00', '2023-01-01 12:00:00'),
 (2, TRUE, 'Jane Smith', 'jane.smith@example.com', 'hashed_password_456', '1985-05-15', 'ADMIN', NULL, '2023-01-02 12:00:00', '2023-01-02 12:00:00'),
-(3, FALSE, 'Alice Johnson', 'alice.johnson@example.com', 'hashed_password_789', '1995-07-20', 'ORGANIZER', NULL, '2023-01-03 12:00:00', '2023-01-03 12:00:00')
+(3, FALSE, 'Alice Johnson', 'alice.johnson@example.com', 'hashed_password_789', '1995-07-20', 'ORGANIZER', NULL, '2023-01-03 12:00:00', '2023-01-03 12:00:00');
 
 
 INSERT INTO "events" ("id", "name", "organizerId", "startDate", "endDate", "address", "description")
