@@ -1,4 +1,5 @@
-const { UserPaymentGroupsWallet, User } = require("../models");
+const User = require("../models/user");
+const Wallet = require("../models/wallet");
 const bcrypt = require("bcryptjs");
 
 function validatePassword(password) {
@@ -80,7 +81,7 @@ exports.getUserWallets = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const wallets = await UserPaymentGroupsWallet.findAll({
+    const wallets = await Wallet.findAll({
       where: { userId: req.user.id },
       order: [["createdAt", "DESC"]], // Newest first
       limit,

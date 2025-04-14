@@ -17,38 +17,36 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "bobby@example.com",
-  "password": "Abscdef12&*"
+  "email": "newusdser@example.com",
+  "password": "Secsdure12*"
 }
 
 
 ### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
 GET http://localhost:3000/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTc0MzYxNTAzMn0.L0Ctuk2pSdZ_gHon4xMVubzWPzGd3bpcSHRfONEon_o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzQ0NjIxMTg5fQ.aiv50Pqwg_QrCmAOLIxOU1N3N8jSh1eWs_7W5HM0rsw
 
 ### Changement de mot de passe d'un utilisateur connecté
 POST http://localhost:3000/users/changePassword
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsImlhdCI6MTc0MzAxODc3Nn0.C0sN9pdrD0--zKclc-NTzSpOuGKf_2I24myUmchLjwY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzQ0NjIxMTg5fQ.aiv50Pqwg_QrCmAOLIxOU1N3N8jSh1eWs_7W5HM0rsw
 
 {
   "oldPassword": "Secure12*",
   "newPassword": "NewSecure99!"
 }
 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
-
 ### Test de création d'évenement
 POST http://localhost:3000/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzQ0NjIxMTg5fQ.aiv50Pqwg_QrCmAOLIxOU1N3N8jSh1eWs_7W5HM0rsw
 Content-Type: application/json
 
 {
-  "name":"QuFest Welcome 2",
-  "organizer":"Qufest Team",
+  "name":"t Welcome 2",
+  "organizerId":3,
   "startDate":"2025-06-15T14:30:00",
   "endDate":"2025-06-15T14:40:00",
-  "adress":"EPHEC Louvain-La-Neuve",
+  "address":"EPHEC Louvain-La-Neuve",
   "description":"This events accepts everyone"
 }
 
@@ -58,44 +56,18 @@ GET http://localhost:3000/events
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
 
 
-### Test de création de PaymentGroup
-
-POST http://localhost:3000/payment-group
-Content-Type: application/json
-
-{
-  "name": "Pirate Bay",
-  "description": "Credits for all of our clubs downtown",
-  "walletLink": "https://www.paypal.me/piratebay"
-}
-
 ### Test de création de Wallet
 
 POST http://localhost:3000/wallet
 Content-Type: application/json
 
 {
-  "userId": 2,
-  "paymentGroupId": 2,
-  "amount": 90
+  "userId": 5,
+  "organizerId": 3,
+  "amount": 30
 }
 
 
 ### Test to get all wallets of a user
 GET http://localhost:3000/users/me/wallets
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
-
-###
-PUT http://localhost:3000/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
-Content-Type: application/json
-
-{
-  "id":24,
-  "name":"fejpfjezpfeopz",
-  "organizer":"fjzoifeifjeziof",
-  "startDate":"2023-06-15T14:30:00",
-  "endDate":"2023-06-15T14:30:00",
-  "adress":"ejizofjioezfjioze",
-  "description":"djzaidazdjizao"
-}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzQ0NjIxMTg5fQ.aiv50Pqwg_QrCmAOLIxOU1N3N8jSh1eWs_7W5HM0rsw

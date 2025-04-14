@@ -5,24 +5,38 @@ class Event extends Model {}
 
 Event.init(
   {
-    name: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
-    organizer: {
-      type: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    organizerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "users",
+        key: "id"
+      },
+      onDelete: "CASCADE"
     },
     startDate: {
       type: DataTypes.DATE,
+      allowNull: false
     },
     endDate: {
       type: DataTypes.DATE,
+      allowNull: false
     },
-    adress: {
-      type: DataTypes.STRING,
+    address: {
+      type: DataTypes.STRING(255),
     },
     description: {
-      type: DataTypes.STRING,
-    },
+      type: DataTypes.STRING(511),
+    }
   },
   {
     tableName: "events",

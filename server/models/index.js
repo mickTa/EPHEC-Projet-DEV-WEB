@@ -1,19 +1,20 @@
 const sequelize = require("./db");
 const User = require("./user");
-const PaymentGroup = require("./PaymentGroup");
-const UserPaymentGroupsWallet = require("./userPaymentGroupWallet");
+const Wallet = require("./wallet");
 const Event = require("./events");
 
-// Exemple d’association possible
-UserPaymentGroupsWallet.belongsTo(PaymentGroup, {
-  foreignKey: "paymentGroupId",
+Wallet.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Wallet, { foreignKey: "userId" });
+
+Event.belongsTo(User, { 
+  foreignKey: "organizerId", 
+  as: "organizer" // Alias for better readability
 });
-// Event.belongsTo(User, { foreignKey: "organizerId" }); // Pour lier l'event à un user (à faire plus tard)
+User.hasMany(Event, { foreignKey: "organizerId" });
 
 module.exports = {
   sequelize,
   User,
-  PaymentGroup,
+  Wallet,
   Event,
-  UserPaymentGroupsWallet,
 };

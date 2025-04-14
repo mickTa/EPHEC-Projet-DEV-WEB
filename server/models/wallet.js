@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const connection = require("./db");
 
-class UserPaymentGroupsWallet extends Model {}
+class Wallet extends Model {}
 
-UserPaymentGroupsWallet.init(
+Wallet.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -16,35 +16,45 @@ UserPaymentGroupsWallet.init(
       references: {
         model: "users",
         key: "id"
-      }
+      },
+      onDelete: "CASCADE"
     },
-    paymentGroupId: {
+    organizerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "paymentGroups",
+        model: "users",
         key: "id"
-      }
+      },
+      onDelete: "CASCADE"
     },
     amount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     }
   },
   {
-    tableName: "userPaymentGroupsWallets",
+    tableName: "wallets",
     sequelize: connection,
     timestamps: true,
-    createdAt: "createdAt",
-    updatedAt: "updatedAt",
     indexes: [
       {
         unique: true,
-        fields: ['userId', 'paymentGroupId']
+        fields: ['userId', 'organizerId']
       }
     ]
   }
 );
 
-module.exports = UserPaymentGroupsWallet;
+module.exports = Wallet;
