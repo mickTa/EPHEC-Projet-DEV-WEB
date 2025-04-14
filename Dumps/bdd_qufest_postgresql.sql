@@ -1,5 +1,3 @@
--- PostgreSQL dump converted from MySQL
-
 -- Reset tables
 DROP TABLE IF EXISTS "users";
 
