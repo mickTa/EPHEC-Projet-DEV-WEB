@@ -15,13 +15,16 @@ const WalletQRCodeScreen = () => {
 
   const handleGenerateQRCode = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/generate-qr", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ wallet }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/api/generate-qr",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ wallet }),
+        }
+      );
 
       const data = await response.json();
       setQrCode(data.qrCode);

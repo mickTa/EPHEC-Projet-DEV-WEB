@@ -20,7 +20,7 @@ const useAuth = () => {
       const token = await AsyncStorage.getItem("jwtToken");
       if (token) {
         const response = await axios.get<User>(
-          "http://localhost:3000/users/me",
+          "http://localhost:3000/api/users/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -41,7 +41,7 @@ const useAuth = () => {
     setLoading(true);
     try {
       const response = await axios.post<{ token: string }>(
-        "http://localhost:3000/auth/login",
+        "http://localhost:3000/api/auth/login",
         {
           email,
           password,

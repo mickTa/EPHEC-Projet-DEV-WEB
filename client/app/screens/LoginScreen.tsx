@@ -22,10 +22,13 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       // Envoi des informations de connexion au backend
-      const response = await axios.post("http://localhost:3000/auth/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
       const token = response.data.token;
       if (token) {

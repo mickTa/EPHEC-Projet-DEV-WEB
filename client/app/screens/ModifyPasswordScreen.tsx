@@ -43,7 +43,7 @@ export default function ModifyPasswordScreen() {
             try {
               const token = await AsyncStorage.getItem("jwtToken");
               const response = await axios.post(
-                "http://localhost:3000/users/changePassword",
+                "http://localhost:3000/api/users/changePassword",
                 {
                   oldPassword,
                   newPassword,

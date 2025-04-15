@@ -16,10 +16,10 @@ app.use(express.json());
 
 // Définition des routes
 app.use(cors());
-app.use("/auth", securityRoutes);
-app.use("/users", userRoutes);
-app.use("/events", eventRoutes);
-app.use("/wallet", walletRoutes);
+app.use("/api/auth", securityRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/wallet", walletRoutes);
 app.use("/api", qrCodeRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

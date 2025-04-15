@@ -1,5 +1,5 @@
 ### Inscription d'un utilisateur
-POST http://localhost:3000/users
+POST http://localhost:3000/api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
 Content-Type: application/json
 
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ### Connexion d'un utilisateur
-POST http://localhost:3000/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -24,11 +24,11 @@ Content-Type: application/json
 
 
 ### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
-GET http://localhost:3000/users/me
+GET http://localhost:3000/api/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
 
 ### Changement de mot de passe d'un utilisateur connecté
-POST http://localhost:3000/users/changePassword
+POST http://localhost:3000/api/users/changePassword
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
 
@@ -38,7 +38,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxN
 }
 
 ### Test de création d'évenement
-POST http://localhost:3000/events
+POST http://localhost:3000/api/events
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
 Content-Type: application/json
 
@@ -53,13 +53,13 @@ Content-Type: application/json
 
 
 ### Test de récupération des événements
-GET http://localhost:3000/events
+GET http://localhost:3000/api/events
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
 
 
 ### Test de création de Wallet
 
-POST http://localhost:3000/wallet
+POST http://localhost:3000/api/wallet
 Content-Type: application/json
 
 {
@@ -70,5 +70,5 @@ Content-Type: application/json
 
 
 ### Test to get all wallets of a user
-GET http://localhost:3000/users/me/wallets
+GET http://localhost:3000/api/users/me/wallets
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk

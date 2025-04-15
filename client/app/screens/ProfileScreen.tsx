@@ -38,7 +38,7 @@ export default function ProfileScreen() {
           return;
         }
 
-        const response = await axios.get("http://localhost:3000/users/me", {
+        const response = await axios.get("http://localhost:3000/api/users/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
