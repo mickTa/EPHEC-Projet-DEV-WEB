@@ -72,3 +72,12 @@ Content-Type: application/json
 ### Test to get all wallets of a user
 GET http://localhost:3000/api/users/me/wallets
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
+
+
+### Test to decrypt a wallet qr code
+POST http://localhost:3000/api/decrypt-qr
+Content-Type: application/json
+
+{
+  "encryptedData": "961475a5f0118f87c09acb6f2e039234:4199f08db8511399d0fb5dc14330f0c0146a13f1dc5b02aced4c36c8d6f2a6ca0e84cecb4eb1e38de470781034cf537c764482f8bdf926c26928ae42354b95ee4c7fbc8bba5963ae2c9d44d5e81d3e11ab90687940ec3539964226d18d063cbf674166377b8b02993b80379539bf4337"
+}
