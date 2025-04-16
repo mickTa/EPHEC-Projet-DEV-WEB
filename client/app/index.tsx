@@ -18,6 +18,12 @@ export default function Index() {
     checkLoginStatus();
   }, []);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace("/screens/HomeScreen");
+    }
+  }, [isLoggedIn]);
+
   const goToLogin = () => {
     router.replace("/screens/LoginScreen");
   };
@@ -25,11 +31,6 @@ export default function Index() {
   const goToRegister = () => {
     router.replace("/screens/RegisterScreen");
   };
-
-  if (isLoggedIn) {
-    // Rediriger vers la page d'accueil si l'utilisateur est connecté
-    router.replace("/screens/HomeScreen");
-  }
 
   return (
     <View style={styles.container}>
