@@ -24,8 +24,6 @@ module.exports.generateWalletQRCode = async (wallet) => {
       throw new Error('QR_ENCRYPTION_KEY is not configured');
     }
 
-    // Ensure the key is exactly 32 bytes long
-    // If it's shorter, pad it. If longer, hash it to get 32 bytes.
     secretKey = crypto.createHash('sha256').update(secretKey).digest();
 
     // Generate initialization vector
@@ -68,3 +66,46 @@ module.exports.generateWalletQRCode = async (wallet) => {
   }
 };
 
+module.exports.decryptWalletQRCode = async (encryptedData) => {
+  try {
+    const parts = encryptedData.split(':');
+    
+    if (parts.length !== 2) {
+      throw new Error(`Invalid format. Expected 2 parts (IV:EncryptedData), got ${parts.length}`);
+    }
+
+    const [ivHex, encryptedHex] = parts;
+    
+    // Get encryption key
+    let secretKey = process.env.QR_ENCRYPTION_KEY;
+    if (!secretKey) throw new Error('Missing QR_ENCRYPTION_KEY');
+    
+    // Hash to ensure 32-byte key
+    secretKey = crypto.createHash('sha256').update(secretKey).digest();
+    
+    // Decrypt the data
+    const iv = Buffer.from(ivHex, 'hex');
+    const encryptedText = Buffer.from(encryptedHex, 'hex');
+    
+    const decipher = crypto.createDecipheriv(
+      'aes-256-cbc',
+      secretKey,
+      iv
+    );
+    
+    let decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    
+    const walletData = JSON.parse(decrypted.toString());
+    
+    // Check expiration
+    if (walletData.expiresAt && walletData.expiresAt < Date.now()) {
+      throw new Error('QR code expired');
+    }
+    
+    return walletData;
+  } catch (error) {
+    console.error("Decryption failed:", error.message);
+    throw error;
+  }
+};
