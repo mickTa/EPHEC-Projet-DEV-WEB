@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { randomBytes } from 'crypto';
 
-const baseURL = 'http://localhost:3000';
+const baseURL = 'http://localhost:3000/api';
 const tokens = {
   user: null,
   admin: null,
