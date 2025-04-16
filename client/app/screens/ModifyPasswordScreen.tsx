@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import {
+  Image,
   View,
   Text,
   TextInput,
   Alert,
   StyleSheet,
   TouchableOpacity,
+  SafeAreaView,
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
@@ -79,7 +82,16 @@ export default function ModifyPasswordScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.replace("/screens/ProfileScreen")}
+      >
+        <Image
+          source={require("../img/arrow-left.png")}
+          style={styles.backButtonIcon}
+        />
+      </TouchableOpacity>
       <Text style={styles.title}>Modifier le mot de passe</Text>
 
       <TextInput
@@ -112,7 +124,7 @@ export default function ModifyPasswordScreen() {
       >
         <Text style={styles.changePasswordText}>Changer le mot de passe</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -150,5 +162,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  backButton: {
+    position: "absolute",
+    top: Platform.OS === "ios" ? 50 : 30,
+    left: 20,
+    zIndex: 10,
+  },
+  backButtonIcon: {
+    width: 24,
+    height: 24,
   },
 });

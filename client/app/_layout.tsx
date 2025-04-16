@@ -5,24 +5,31 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen
         name="screens/RegisterScreen"
-        options={{ title: "Inscription" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="screens/LoginScreen"
-        options={{ title: "Connexion" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="screens/ProfileScreen"
-        options={{ title: "Mon Profil" }}
+        options={{ headerShown: false }}
       />
-      <Stack.Screen name="screens/HomeScreen" options={{ title: "Accueil" }} />
+      <Stack.Screen
+        name="screens/HomeScreen"
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="screens/WalletQRCodeScreen"
-        options={{ title: "Portefeuille" }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="screens/EventFormScreen"
-        options={{ title: "Créer un Événement" }}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="screens/ModifyPasswordScreen"
+        options={{ headerShown: false }}
       />
     </Stack>
   );

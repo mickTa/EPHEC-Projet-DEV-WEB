@@ -7,6 +7,10 @@ import {
   StyleSheet,
   Alert,
   TouchableOpacity,
+  Platform,
+  SafeAreaView,
+  ActivityIndicator,
+  Image,
 } from "react-native";
 import axios from "axios";
 import { useRouter } from "expo-router";
@@ -26,20 +30,15 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      // Log pour vérifier les données envoyées
-      console.log("Données envoyées:", { fullName, email, password });
-
       const response = await axios.post("http://localhost:3000/api/users", {
         fullName,
         email,
         password,
       });
 
-      console.log("Réponse du serveur:", response.data);
-
       if (response.status === 201) {
         Alert.alert("Inscription réussie !");
-        router.replace("/"); // Rediriger vers la page de login après l'inscription
+        router.replace("/"); // Rediriger vers la page de login
       } else {
         Alert.alert("Échec de l'inscription", "Veuillez réessayer.");
       }
@@ -60,76 +59,88 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => router.replace("/")}
       >
-        <Text style={styles.backButtonText}>Retour</Text>
+        <Image
+          source={require("../img/arrow-left.png")}
+          style={styles.backButtonIcon}
+        />
       </TouchableOpacity>
-      <Text style={styles.title}>Inscription</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nom Complet"
-        value={fullName}
-        onChangeText={setFullName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mot de passe"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button
-        title={loading ? "Inscription..." : "S'inscrire"}
-        onPress={handleRegister}
-        disabled={loading} // Empêche la soumission multiple si la demande est en cours
-      />
-    </View>
+
+      <View style={styles.content}>
+        <Text style={styles.title}>Inscription</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Nom Complet"
+          value={fullName}
+          onChangeText={setFullName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Mot de passe"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="#007bff"
+            style={{ marginTop: 20 }}
+          />
+        ) : (
+          <Button title="S'inscrire" onPress={handleRegister} />
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  input: {
-    width: "100%",
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
+    backgroundColor: "#fff",
   },
   backButton: {
     position: "absolute",
-    top: 40,
+    top: Platform.OS === "ios" ? 50 : 30,
     left: 20,
-    padding: 10,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 5,
-    zIndex: 1,
+    zIndex: 10,
   },
-  backButtonText: {
-    fontSize: 16,
-    color: "#007bff",
+  backButtonIcon: {
+    width: 24,
+    height: 24,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 30,
+  },
+  input: {
+    height: 45,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 15,
   },
 });
