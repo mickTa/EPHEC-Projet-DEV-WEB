@@ -43,37 +43,24 @@ export default function HomeScreen() {
     fetchEvents();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem("jwtToken");
-      router.replace("/");
-    } catch (error) {
-      console.error("Erreur lors de la déconnexion", error);
-    }
-  };
-
   const goToProfile = () => {
-    router.push("/screens/ProfileScreen");
+    router.replace("/screens/ProfileScreen");
   };
 
   const goToEvents = () => {
-    router.push("/screens/EventFormScreen");
+    router.replace("/screens/EventFormScreen");
   };
 
   const goToWalletQR = () => {
-    router.push("/screens/WalletQRCodeScreen");
+    router.replace("/screens/WalletQRCodeScreen");
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Accueil</Text>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Bienvenue à la page d'accueil</Text>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Text style={styles.logoutText}>Déconnexion</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.events}>
           <Text style={styles.title}>Événements à la une</Text>
           {loading ? (
@@ -108,6 +95,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 80,
+    paddingTop: 100,
   },
   title: {
     fontSize: 24,
@@ -118,30 +106,37 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 20,
     alignItems: "center",
-    marginTop: 75,
     gap: 30,
   },
   header: {
-    width: "100%",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  logoutButton: {
-    backgroundColor: "#ff4d4d",
-    padding: 10,
-    borderRadius: 5,
-  },
-  logoutText: {
-    color: "white",
-    fontWeight: "bold",
-  },
+
   footer: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: "white",
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
