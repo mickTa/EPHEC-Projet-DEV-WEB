@@ -7,10 +7,8 @@ const WalletQRCodeScreen = () => {
   const wallet = {
     id: 1,
     userId: 123,
-    paymentGroupId: 456,
+    organizerId: 456,
     amount: 100.5,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
   };
 
   const handleGenerateQRCode = async () => {
