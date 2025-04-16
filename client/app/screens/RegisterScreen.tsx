@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 export default function RegisterScreen() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -20,10 +21,10 @@ export default function RegisterScreen() {
       const response = await axios.post("http://192.168.129.117:3000/validatePassword", { password });
 
       if (!response.data.valid) {
-        // If the backend returns that the password is invalid
-        Alert.alert("Erreur de mot de passe", "Le mot de passe ne répond pas aux critères.");
+        setErrorMessage("Le mot de passe ne répond pas aux critères.");
         return;
       }
+
     } catch (error) {
       console.error("Erreur de validation du mot de passe", error);
       Alert.alert("Erreur", "Impossible de valider le mot de passe. Veuillez réessayer.");
@@ -86,9 +87,15 @@ export default function RegisterScreen() {
         style={styles.input}
         placeholder="Mot de passe"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setPassword(text);
+          setErrorMessage(""); // Clear error on typing
+        }}
         secureTextEntry
       />
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
       <Button
         title={loading ? "Inscription..." : "S'inscrire"}
         onPress={handleRegister}
@@ -119,4 +126,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+    textAlign: "center"
+  }
 });
