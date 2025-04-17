@@ -9,11 +9,18 @@ router.get(
   checkAuth({ forbidden: ["ORGANIZER"] }),
   UserController.getMe
 );
+
+router.get(
+  "/getByIndex/:id",
+  UserController.getUserById
+);
+
 router.get(
   "/me/wallets",
   checkAuth({ forbidden: ["ORGANIZER"] }),
   UserController.getUserWallets
 );
+
 router.post("/changePassword", checkAuth(), UserController.changePassword);
 
 // Route pour l'inscription

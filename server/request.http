@@ -23,6 +23,11 @@ Content-Type: application/json
 }
 
 
+### Get user by id test
+GET http://localhost:3000/api/users/getByIndex/13
+Content-type: application/json
+
+
 ### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
 GET http://localhost:3000/api/users/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
@@ -64,8 +69,8 @@ Content-Type: application/json
 
 {
   "userId": 5,
-  "organizerId": 3,
-  "amount": 30
+  "organizerId": 13,
+  "amount": 300
 }
 
 

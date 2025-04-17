@@ -73,6 +73,24 @@ exports.getMe = async (req, res) => {
   res.json(req.user);
 };
 
+exports.getUserById = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({
+      error: "Failed to retrieve user",
+      details:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+}
+
 exports.getUserWallets = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const offset = parseInt(req.query.offset) || 0;
