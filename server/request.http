@@ -68,9 +68,9 @@ POST http://localhost:3000/api/wallet
 Content-Type: application/json
 
 {
-  "userId": 5,
+  "userId": 7,
   "organizerId": 13,
-  "amount": 300
+  "amount": 150
 }
 
 
