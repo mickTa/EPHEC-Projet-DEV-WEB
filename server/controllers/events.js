@@ -22,6 +22,15 @@ exports.getAllEvents = async (req, res) => {
   }
 };
 
+exports.getMyEvents=async(req,res)=>{
+  try{
+    const myEvents=await Event.findAll({where:{organizerId:req.body.id}});
+    res.status(200).json(myEvents);
+  }catch(err){
+    res.status(500).json({error: err.message})
+  }
+};
+
 exports.UpdateEvent=async(req,res)=>{
   newEvent=req.body;
   try{
