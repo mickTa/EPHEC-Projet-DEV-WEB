@@ -6,7 +6,7 @@ const router = new Router();
 
 router.get(
   "/me",
-  checkAuth({ forbidden: ["ORGANIZER"] }),
+  checkAuth(),
   UserController.getMe
 );
 
