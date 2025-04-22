@@ -5,6 +5,7 @@ import {
   Button,
   FlatList,
   Text,
+  TextInput,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
@@ -27,36 +28,39 @@ const WalletQRCodeScreen = () => {
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [addMoneyModalVisible, setAddMoneyModalVisible] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
+  const [amountToAdd, setAmountToAdd] = useState('');
 
   useEffect(() => {
-    const fetchWallets = async () => {
-      try {
-        const token = await AsyncStorage.getItem("jwtToken");
-        const response = await fetch(
-          "http://localhost:3000/api/users/me/wallets",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-        setWallets(data);
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des portefeuilles",
-          error
-        );
-        setError("Impossible de récupérer les portefeuilles.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchWallets();
   }, []);
+
+  const fetchWallets = async () => {
+    try {
+      const token = await AsyncStorage.getItem("jwtToken");
+      const response = await fetch(
+        "http://localhost:3000/api/users/me/wallets",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      setWallets(data);
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des portefeuilles",
+        error
+      );
+      setError("Impossible de récupérer les portefeuilles.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGenerateQRCode = async (wallet: Wallet) => {
     try {
@@ -75,7 +79,47 @@ const WalletQRCodeScreen = () => {
     }
   };
 
-  const closeModal = () => setQrCode(null);
+  const closeQRModal = () => setQrCode(null);
+
+  const openAddMoneyModal = (wallet: Wallet) => {
+    setSelectedWallet(wallet);
+    setAddMoneyModalVisible(true);
+  };
+
+  const handleAddMoney = async () => {
+    if (!selectedWallet || !amountToAdd || isNaN(parseFloat(amountToAdd))) {
+      alert("Please enter a valid amount and select a wallet.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://localhost:3000/api/wallet/addMoney", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          walletId: selectedWallet.id,
+          amount: amountToAdd, // ensure numeric
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        const errorMessage = data?.message || 'Failed to add money. Please try again.';
+        throw new Error(errorMessage);
+      }
+  
+      // Success case
+      fetchWallets();
+      setAddMoneyModalVisible(false);
+      setAmountToAdd('');
+    } catch (err) {
+      console.error("Add money error:", err);
+      alert(err.message || "An unexpected error occurred.");
+    }
+  };
 
   const renderWalletItem = ({ item }: { item: Wallet }) => (
     <View style={styles.walletItem}>
@@ -87,6 +131,11 @@ const WalletQRCodeScreen = () => {
         title="Générer le QR Code"
         onPress={() => handleGenerateQRCode(item)}
       />
+      <Button
+          title="Ajouter des crédits"
+          onPress={() => openAddMoneyModal(item)}
+          color="#4CAF50"
+        />
     </View>
   );
 
@@ -132,11 +181,11 @@ const WalletQRCodeScreen = () => {
         visible={!!qrCode}
         transparent={true}
         animationType="fade"
-        onRequestClose={closeModal}
+        onRequestClose={closeQRModal}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+            <TouchableOpacity style={styles.closeButton} onPress={closeQRModal}>
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
 
@@ -150,16 +199,83 @@ const WalletQRCodeScreen = () => {
           </View>
         </View>
       </Modal>
+
+      {/* Add Money Modal */}
+      <Modal
+        visible={addMoneyModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setAddMoneyModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.addMoneyModalContent}>
+            <Text style={styles.modalTitle}>Ajouter des crédits</Text>
+            
+            <Text style={styles.walletInfo}>
+              Wallet ID: {selectedWallet?.id}
+            </Text>
+            <Text style={styles.walletInfo}>
+              Current Balance: {selectedWallet?.amount}
+            </Text>
+            
+            <TextInput
+              style={styles.input}
+              placeholder="Amount"
+              keyboardType="numeric"
+              value={amountToAdd}
+              onChangeText={setAmountToAdd}
+              autoFocus={true}
+            />
+            
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => {
+                  setAddMoneyModalVisible(false);
+                  setAmountToAdd('');
+                }}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.modalButton, styles.confirmButton]}
+                onPress={() => {
+                  handleAddMoney();
+                }}
+              >
+                <Text style={styles.buttonText}>Add Money</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  // Layout and container styles
   container: {
     flex: 1,
     paddingTop: Platform.OS === "ios" ? 50 : 30,
     backgroundColor: "#fff",
   },
+  content: {
+    flex: 1,
+    paddingTop: 90,
+    paddingHorizontal: 16,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  listContent: {
+    paddingBottom: 20,
+  },
+
+  // Header styles
   header: {
     position: "absolute",
     top: 0,
@@ -191,11 +307,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flex: 1,
   },
-  content: {
-    flex: 1,
-    paddingTop: 90,
-    paddingHorizontal: 16,
-  },
+
+  // Wallet item styles
   walletItem: {
     padding: 16,
     marginBottom: 12,
@@ -203,15 +316,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#e9ecef",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  listContent: {
-    paddingBottom: 20,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    gap: 10,
   },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
+  // Text styles
   emptyText: {
     textAlign: "center",
     marginTop: 20,
@@ -223,6 +341,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
+  walletInfo: {
+    marginBottom: 10,
+    fontSize: 14,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  qrCodeLabel: {
+    fontSize: 18,
+    fontWeight: "500",
+    marginTop: 10,
+  },
+
+  // Modal styles
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.7)",
@@ -236,15 +371,11 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
   },
-  qrCodeImage: {
-    width: 200,
-    height: 200,
-    marginVertical: 20,
-  },
-  qrCodeLabel: {
-    fontSize: 18,
-    fontWeight: "500",
-    marginTop: 10,
+  addMoneyModalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 20,
   },
   closeButton: {
     alignSelf: "flex-end",
@@ -254,6 +385,44 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#333",
+  },
+
+  // Input and button styles
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 12,
+    marginBottom: 20,
+    borderRadius: 5,
+    fontSize: 16,
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  modalButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 5,
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: "#ab202a",
+  },
+  confirmButton: {
+    backgroundColor: "#4CAF50",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+
+  // QR Code styles
+  qrCodeImage: {
+    width: 200,
+    height: 200,
+    marginVertical: 20,
   },
 });
 
