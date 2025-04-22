@@ -32,10 +32,7 @@ export default function ProfileScreen() {
         const token = await AsyncStorage.getItem("jwtToken");
 
         if (!token) {
-          Alert.alert(
-            "Erreur",
-            "Vous devez être connecté pour accéder à cette page."
-          );
+          router.replace("/");
           return;
         }
 
@@ -46,10 +43,21 @@ export default function ProfileScreen() {
         setUserData(response.data);
       } catch (error) {
         console.error("Erreur récupération utilisateur:", error);
-        Alert.alert(
-          "Erreur",
-          "Une erreur est survenue lors de la récupération de vos données."
-        );
+        if (
+          axios.isAxiosError(error) &&
+          error.response &&
+          error.response.status === 401
+        ) {
+          // Token expiré ou invalide
+          await AsyncStorage.removeItem("jwtToken");
+          Alert.alert("Session expirée", "Veuillez vous reconnecter.");
+          router.replace("/");
+        } else {
+          Alert.alert(
+            "Erreur",
+            "Une erreur est survenue lors de la récupération de vos données."
+          );
+        }
       } finally {
         setLoading(false);
       }
