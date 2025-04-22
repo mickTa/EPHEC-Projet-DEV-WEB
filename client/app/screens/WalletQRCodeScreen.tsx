@@ -12,7 +12,9 @@ import {
   Modal,
   SafeAreaView,
   Platform,
+  Alert,
 } from "react-native";
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 
@@ -30,7 +32,7 @@ const WalletQRCodeScreen = () => {
   const [error, setError] = useState<string | null>(null);
   const [addMoneyModalVisible, setAddMoneyModalVisible] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
-  const [amountToAdd, setAmountToAdd] = useState('');
+  const [amountToAdd, setAmountToAdd] = useState("");
 
   useEffect(() => {
     fetchWallets();
@@ -39,6 +41,11 @@ const WalletQRCodeScreen = () => {
   const fetchWallets = async () => {
     try {
       const token = await AsyncStorage.getItem("jwtToken");
+
+      if (!token) {
+        router.replace("/");
+        return;
+      }
       const response = await fetch(
         "http://localhost:3000/api/users/me/wallets",
         {
@@ -52,11 +59,23 @@ const WalletQRCodeScreen = () => {
       const data = await response.json();
       setWallets(data);
     } catch (error) {
-      console.error(
-        "Erreur lors de la récupération des portefeuilles",
-        error
-      );
+      console.error("Erreur lors de la récupération des portefeuilles", error);
       setError("Impossible de récupérer les portefeuilles.");
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status === 401
+      ) {
+        // Token expiré ou invalide
+        await AsyncStorage.removeItem("jwtToken");
+        Alert.alert("Session expirée", "Veuillez vous reconnecter.");
+        router.replace("/");
+      } else {
+        Alert.alert(
+          "Erreur",
+          "Une erreur est survenue lors de la récupération de vos données."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -91,33 +110,41 @@ const WalletQRCodeScreen = () => {
       alert("Please enter a valid amount and select a wallet.");
       return;
     }
-  
+
     try {
-      const response = await fetch("http://localhost:3000/api/wallet/addMoney", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          walletId: selectedWallet.id,
-          amount: amountToAdd, // ensure numeric
-        }),
-      });
-  
+      const response = await fetch(
+        "http://localhost:3000/api/wallet/addMoney",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            walletId: selectedWallet.id,
+            amount: amountToAdd, // ensure numeric
+          }),
+        }
+      );
+
       const data = await response.json();
-  
+
       if (!response.ok) {
-        const errorMessage = data?.message || 'Failed to add money. Please try again.';
+        const errorMessage =
+          data?.message || "Failed to add money. Please try again.";
         throw new Error(errorMessage);
       }
-  
+
       // Success case
       fetchWallets();
       setAddMoneyModalVisible(false);
-      setAmountToAdd('');
+      setAmountToAdd("");
     } catch (err) {
       console.error("Add money error:", err);
-      alert(err.message || "An unexpected error occurred.");
+      if (err instanceof Error) {
+        alert(err.message);
+      } else {
+        alert("An unexpected error occurred.");
+      }
     }
   };
 
@@ -132,10 +159,10 @@ const WalletQRCodeScreen = () => {
         onPress={() => handleGenerateQRCode(item)}
       />
       <Button
-          title="Ajouter des crédits"
-          onPress={() => openAddMoneyModal(item)}
-          color="#4CAF50"
-        />
+        title="Ajouter des crédits"
+        onPress={() => openAddMoneyModal(item)}
+        color="#4CAF50"
+      />
     </View>
   );
 
@@ -210,14 +237,14 @@ const WalletQRCodeScreen = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.addMoneyModalContent}>
             <Text style={styles.modalTitle}>Ajouter des crédits</Text>
-            
+
             <Text style={styles.walletInfo}>
               Wallet ID: {selectedWallet?.id}
             </Text>
             <Text style={styles.walletInfo}>
               Current Balance: {selectedWallet?.amount}
             </Text>
-            
+
             <TextInput
               style={styles.input}
               placeholder="Amount"
@@ -226,18 +253,18 @@ const WalletQRCodeScreen = () => {
               onChangeText={setAmountToAdd}
               autoFocus={true}
             />
-            
+
             <View style={styles.modalButtonContainer}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
                 onPress={() => {
                   setAddMoneyModalVisible(false);
-                  setAmountToAdd('');
+                  setAmountToAdd("");
                 }}
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 style={[styles.modalButton, styles.confirmButton]}
                 onPress={() => {
@@ -316,15 +343,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#e9ecef",
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
     gap: 10,
   },

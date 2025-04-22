@@ -54,7 +54,7 @@ const EventFormScreen = () => {
     try {
       const token = await AsyncStorage.getItem("jwtToken");
       if (!token) {
-        Alert.alert("Erreur", "Veuillez vous connecter d'abord.");
+        router.replace("/");
         return;
       }
 
@@ -104,6 +104,22 @@ const EventFormScreen = () => {
         );
       } else {
         Alert.alert("Erreur", "Problème avec la connexion au serveur.");
+      }
+
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status === 401
+      ) {
+        // Token expiré ou invalide
+        await AsyncStorage.removeItem("jwtToken");
+        Alert.alert("Session expirée", "Veuillez vous reconnecter.");
+        router.replace("/");
+      } else {
+        Alert.alert(
+          "Erreur",
+          "Une erreur est survenue lors de la récupération de vos données."
+        );
       }
       setLoading(false);
     } finally {
