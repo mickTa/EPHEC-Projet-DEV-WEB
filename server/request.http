@@ -95,3 +95,12 @@ Content-Type: application/json
 {
   "id": "3"
 }
+
+### Add money to wallet
+POST http://localhost:3000/api/wallet/addMoney
+Content-Type: application/json
+
+{
+  "walletId": 1,
+  "amount": 10
+}
