@@ -44,11 +44,10 @@ exports.UpdateEvent=async(req,res)=>{
 }
 
 exports.getEventById = async (req, res) => {
+  const id = req.params.id;
   try {
-    const event = await Event.findByPk(req.params.id);
-    if (!event) {
-      return res.status(404).json({ message: "Événement non trouvé" });
-    }
+    const event = await Event.findByPk(id);
+    if (!event) return res.status(404).json({ error: "Événement non trouvé" });
     res.status(200).json(event);
   } catch (err) {
     console.error("Erreur Sequelize :", err);
