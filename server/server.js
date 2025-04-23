@@ -8,6 +8,7 @@ const userRoutes = require("./routes/users");
 const eventRoutes = require("./routes/events");
 const walletRoutes = require("./routes/wallets");
 const qrCodeRoutes = require("./routes/qrCodeRoutes");
+const paymentRequestRoutes = require("./routes/paymentRequest");
 const cors = require("cors");
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api", qrCodeRoutes);
+app.use("/api/payment-request", paymentRequestRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 3000;

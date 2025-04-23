@@ -55,6 +55,10 @@ export default function HomeScreen() {
     router.replace("/screens/WalletQRCodeScreen");
   };
 
+  const goToHome = () => {
+    router.replace("/screens/HomeScreen");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -79,9 +83,10 @@ export default function HomeScreen() {
 
       <View style={styles.footer}>
         <TabContainer
-          onPressEventTab1={goToWalletQR}
+          onPressEventTab1={goToHome}
           onPressEventTab2={goToEvents}
           onPressEventTab3={goToProfile}
+          onPressEventTab4={goToWalletQR}
         />
       </View>
     </View>

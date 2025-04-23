@@ -31,6 +31,10 @@ export default function RootLayout() {
         name="screens/ModifyPasswordScreen"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="screens/SendPaymentRequestScreen"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }
