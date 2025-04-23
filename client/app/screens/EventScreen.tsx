@@ -40,9 +40,29 @@ export default function EventScreen() {
     fetchEvent();
   }, [id]);
 
-  const handleRegister = () => {
-    Alert.alert("Inscription", "Tu es inscrit à l'événement !");
-    // TODO: Appel POST à l'API pour enregistrer l'inscription
+  const handleRegister = async () => {
+    try {
+      const token = await AsyncStorage.getItem("jwtToken");
+
+      const response = await fetch(`http://localhost:3000/api/events/${id}/register`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Inscription réussie", "Tu es bien inscrit à l'événement !");
+      } else {
+        Alert.alert("Erreur", result.message || "Impossible de s'inscrire.");
+      }
+    } catch (error) {
+      console.error("Erreur pendant l'inscription :", error);
+      Alert.alert("Erreur", "Une erreur s’est produite lors de l’inscription.");
+    }
   };
 
   if (loading) return <ActivityIndicator style={{ marginTop: 100 }} size="large" />;
