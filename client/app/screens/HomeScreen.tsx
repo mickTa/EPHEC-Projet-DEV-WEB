@@ -14,6 +14,12 @@ import CustomButton from "../components/CustomButton";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
 export default function HomeScreen() {
   const router = useRouter();
   const [events, setEvents] = useState<{ name: string; description: string }[]>(
@@ -25,14 +31,14 @@ export default function HomeScreen() {
     const fetchEvents = async () => {
       try {
         const token = await AsyncStorage.getItem("jwtToken");
-        const response = await fetch("http://localhost:3000/api/events", {
+        const response = await axios.get(`${API_BASE_URL}/events`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-        const data = await response.json();
+        const data = response.data;
         setEvents(data);
       } catch (error) {
         console.error("Erreur lors de la récupération des événements", error);
@@ -58,6 +64,9 @@ export default function HomeScreen() {
 
   const goToHome = () => {
     router.replace("/screens/HomeScreen");
+  };
+  const goToScanQrCode = () => {
+    router.replace("/screens/SendPaymentRequestScreen");
   };
 
   return (
@@ -86,8 +95,9 @@ export default function HomeScreen() {
         <TabContainer
           onPressEventTab1={goToHome}
           onPressEventTab2={goToEvents}
-          onPressEventTab3={goToProfile}
-          onPressEventTab4={goToWalletQR}
+          onPressEventTab3={goToWalletQR}
+          onPressEventTab4={goToScanQrCode}
+          onPressEventTab5={goToProfile}
         />
       </View>
     </View>

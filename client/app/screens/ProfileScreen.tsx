@@ -15,6 +15,12 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
 interface UserData {
   fullName: string;
   email: string;
@@ -36,7 +42,7 @@ export default function ProfileScreen() {
           return;
         }
 
-        const response = await axios.get("http://localhost:3000/api/users/me", {
+        const response = await axios.get(`${API_BASE_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

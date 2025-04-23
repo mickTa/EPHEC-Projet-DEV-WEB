@@ -1,40 +1,16 @@
 import { Stack } from "expo-router";
 
-export default function RootLayout() {
+export default function ScreensLayout() {
   return (
-    <Stack>
-      <Stack.Screen
-        name="screens/RegisterScreen"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="screens/LoginScreen"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="screens/ProfileScreen"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="screens/HomeScreen"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="screens/WalletQRCodeScreen"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="screens/EventFormScreen"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="screens/ModifyPasswordScreen"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="screens/SendPaymentRequestScreen"
-        options={{ headerShown: false }}
-      />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="screens/RegisterScreen" />
+      <Stack.Screen name="screens/LoginScreen" />
+      <Stack.Screen name="screens/ProfileScreen" />
+      <Stack.Screen name="screens/HomeScreen" />
+      <Stack.Screen name="screens/WalletQRCodeScreen" />
+      <Stack.Screen name="screens/EventFormScreen" />
+      <Stack.Screen name="screens/ModifyPasswordScreen" />
+      <Stack.Screen name="screens/SendPaymentRequestScreen" />
     </Stack>
   );
 }

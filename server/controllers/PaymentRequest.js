@@ -1,25 +1,20 @@
-const db = require("../models/db");
+const { PaymentRequest } = require("../models/PaymentRequest");
 
 exports.createPaymentRequest = async (req, res) => {
+  const { userId, walletId, amount, description } = req.body;
+
   try {
-    const { userId, organizerId, eventId, amount, description } = req.body;
+    const newRequest = await PaymentRequest.create({
+      userId,
+      walletId,
+      amount,
+      description,
+      status: "PENDING", // En attente de validation
+    });
 
-    if (!userId || !organizerId || !amount) {
-      return res.status(400).json({ error: "Champs requis manquants." });
-    }
-
-    const result = await db.query(
-      `INSERT INTO "payment_requests" ("userId", "organizerId", "eventId", "amount", "description", "status", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, 'PENDING', NOW(), NOW())
-       RETURNING *`,
-      [userId, organizerId, eventId || null, amount, description || ""]
-    );
-
-    res
-      .status(201)
-      .json({ message: "Demande de paiement créée", request: result.rows[0] });
+    return res.json({ success: true, request: newRequest });
   } catch (error) {
-    console.error("Erreur création demande paiement :", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    console.error("Erreur création demande paiement:", error);
+    return res.status(500).json({ success: false, error: "Erreur serveur" });
   }
 };

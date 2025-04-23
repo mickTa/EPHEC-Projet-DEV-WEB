@@ -15,6 +15,12 @@ import {
 import axios from "axios";
 import { useRouter } from "expo-router";
 
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
 export default function RegisterScreen() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,7 +36,7 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/api/users", {
+      const response = await axios.post(`${API_BASE_URL}/users`, {
         fullName,
         email,
         password,

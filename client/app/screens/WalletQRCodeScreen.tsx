@@ -18,6 +18,12 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
 interface Wallet {
   id: number;
   userId: number;
@@ -46,16 +52,13 @@ const WalletQRCodeScreen = () => {
         router.replace("/");
         return;
       }
-      const response = await fetch(
-        "http://localhost:3000/api/users/me/wallets",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/users/me/wallets`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
       setWallets(data);
     } catch (error) {
@@ -83,7 +86,7 @@ const WalletQRCodeScreen = () => {
 
   const handleGenerateQRCode = async (wallet: Wallet) => {
     try {
-      const response = await fetch("http://localhost:3000/api/generate-qr", {
+      const response = await fetch(`${API_BASE_URL}/generate-qr`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,19 +115,16 @@ const WalletQRCodeScreen = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/wallet/addMoney",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            walletId: selectedWallet.id,
-            amount: amountToAdd, // ensure numeric
-          }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/wallet/addMoney`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          walletId: selectedWallet.id,
+          amount: amountToAdd, // ensure numeric
+        }),
+      });
 
       const data = await response.json();
 

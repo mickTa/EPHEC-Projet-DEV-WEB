@@ -21,7 +21,13 @@ import { router } from "expo-router";
 import DateTimePickerWeb from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 
-const EventFormScreen = () => {
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
+export default function EventFormScreen() {
   const [name, setName] = useState("");
   const [organizer, setOrganizer] = useState("");
   const [address, setAddress] = useState("");
@@ -70,7 +76,7 @@ const EventFormScreen = () => {
         .split("Z")[0];
 
       const response = await axios.post(
-        "http://localhost:3000/api/events",
+        `${API_BASE_URL}/events`,
         {
           name,
           organizer,
@@ -257,7 +263,7 @@ const EventFormScreen = () => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   input: {
@@ -299,5 +305,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-export default EventFormScreen;
