@@ -14,7 +14,6 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-
 import Constants from "expo-constants";
 
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
@@ -24,7 +23,6 @@ const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 export default function SendPaymentRequestScreen() {
   const router = useRouter();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [scanned, setScanned] = useState(false);
   const [walletData, setWalletData] = useState<any>(null);
   const [amount, setAmount] = useState("50");
   const [description, setDescription] = useState("Achat de boisson");
@@ -37,7 +35,6 @@ export default function SendPaymentRequestScreen() {
   }, []);
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
-    setScanned(true);
     try {
       const parsedData = JSON.parse(data);
       setWalletData(parsedData);
@@ -55,8 +52,8 @@ export default function SendPaymentRequestScreen() {
         `${API_BASE_URL}/payment-request`,
         {
           userId: walletData.userId,
-          organizerId: 3, // hardcodé pour l’instant
-          eventId: 1, // hardcodé aussi
+          organizerId: 3,
+          eventId: 1,
           amount: parseFloat(amount),
           description,
         },
@@ -68,21 +65,15 @@ export default function SendPaymentRequestScreen() {
       );
 
       Alert.alert("Succès", "Demande de paiement envoyée !");
-      console.log("Réponse :", response.data);
       setWalletData(null);
-      setScanned(false);
     } catch (error) {
       console.error("Erreur d'envoi :", error);
       Alert.alert("Erreur", "Impossible d’envoyer la demande.");
     }
   };
 
-  if (hasPermission === null) {
-    return <Text>Demande d'autorisation...</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>Permission caméra refusée</Text>;
-  }
+  if (hasPermission === null) return <Text>Demande d'autorisation...</Text>;
+  if (hasPermission === false) return <Text>Permission caméra refusée</Text>;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -104,15 +95,14 @@ export default function SendPaymentRequestScreen() {
           <>
             <Text style={styles.instruction}>Scannez un portefeuille :</Text>
             <BarCodeScanner
-              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-              style={styles.scanner}
+              onBarCodeScanned={walletData ? undefined : handleBarCodeScanned}
+              style={styles.camera}
+              barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
             />
-            {scanned && (
-              <Button
-                title="Scanner à nouveau"
-                onPress={() => setScanned(false)}
-              />
-            )}
+            <Button
+              title="Réinitialiser le scan"
+              onPress={() => setWalletData(null)}
+            />
           </>
         ) : (
           <>
@@ -138,6 +128,7 @@ export default function SendPaymentRequestScreen() {
 }
 
 const styles = StyleSheet.create({
+  // styles inchangés
   safeArea: {
     flex: 1,
     backgroundColor: "#f9f9f9",
@@ -184,10 +175,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  scanner: {
+  camera: {
     width: "100%",
     height: 300,
     marginBottom: 20,
+    borderRadius: 12,
+    overflow: "hidden",
   },
   label: {
     fontSize: 16,

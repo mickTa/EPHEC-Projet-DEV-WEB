@@ -31,6 +31,10 @@ export default function HomeScreen() {
     const fetchEvents = async () => {
       try {
         const token = await AsyncStorage.getItem("jwtToken");
+        if (!token) {
+          router.replace("/");
+          return;
+        }
         const response = await axios.get(`${API_BASE_URL}/events`, {
           method: "GET",
           headers: {
