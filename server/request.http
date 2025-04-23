@@ -104,3 +104,11 @@ Content-Type: application/json
   "walletId": 1,
   "amount": 10
 }
+###Affiche un event par rapport à son ID
+GET http://localhost:3000/api/events/1
+Content-Type: application/json
+
+###S'inscrire à un événement
+POST http://localhost:3000/api/events/1/register
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ1NDM2NTg4LCJleHAiOjE3NDU0NDAxODh9.Ok87bsexe0r5uqoIAXUm_T0ZifHKO9V4c6lK3Bp0Oz4

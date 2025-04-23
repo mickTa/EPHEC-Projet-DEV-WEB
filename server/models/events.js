@@ -36,6 +36,10 @@ Event.init(
     },
     description: {
       type: DataTypes.STRING(511),
+    },
+    videoUrl: {
+      type: DataTypes.STRING(511),  // 👈 ici
+      allowNull: true
     }
   },
   {
@@ -44,5 +48,6 @@ Event.init(
     timestamps: false,
   }
 );
+
 
 module.exports = Event;
