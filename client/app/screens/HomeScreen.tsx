@@ -16,9 +16,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [events, setEvents] = useState<{ name: string; description: string }[]>(
-    []
-  );
+  const [events, setEvents] = useState<
+    { id: number; name: string; description: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,6 +56,10 @@ export default function HomeScreen() {
     router.replace("/screens/WalletQRCodeScreen");
   };
 
+  const handleEventPress = (eventId: number) => {
+    router.push(`/screens/EventScreen?id=${eventId}`);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -68,11 +72,15 @@ export default function HomeScreen() {
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
             events.map((event, index) => (
-              <EventContainer
+              <TouchableOpacity
                 key={index}
-                title={event.name}
-                text={event.description}
-              />
+                onPress={() => handleEventPress(event.id)}
+              >
+                <EventContainer
+                  title={event.name}
+                  text={event.description}
+                />
+              </TouchableOpacity>
             ))
           )}
         </View>
@@ -128,7 +136,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-
   footer: {
     position: "absolute",
     bottom: 0,

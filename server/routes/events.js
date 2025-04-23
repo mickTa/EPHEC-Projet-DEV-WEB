@@ -8,5 +8,7 @@ router.post("/",checkAuth(),EventController.NewEvent);
 router.get("/", EventController.getAllEvents);
 router.get("/my", EventController.getMyEvents);
 router.put("/",checkAuth(),EventController.UpdateEvent)
+router.get("/:id", EventController.getEventById);
+
 
 module.exports = router;
