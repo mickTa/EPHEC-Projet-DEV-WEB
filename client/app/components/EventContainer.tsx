@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 interface EventContainerProps {
   title: string;
   text: string;
+  onPress?: () => void;
 }
 
 const EventContainer: React.FC<EventContainerProps> = ({ title, text }) => {
