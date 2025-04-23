@@ -87,9 +87,9 @@ export default function HomeScreen() {
           {loading ? (
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
-            events.map((event, index) => (
+            events.map((event) => (
               <TouchableOpacity
-                key={index}
+                key={event.id}
                 onPress={() => handleEventPress(event.id)}
               >
                 <EventContainer title={event.name} text={event.description} />
@@ -128,9 +128,10 @@ const styles = StyleSheet.create({
   },
   events: {
     flex: 1,
-    margin: 20,
     alignItems: "center",
-    gap: 30,
+    paddingHorizontal: 16,
+    paddingBottom: 30,
+    gap: 20,
   },
   header: {
     position: "absolute",

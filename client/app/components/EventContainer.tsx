@@ -4,49 +4,41 @@ import { View, Text, StyleSheet } from "react-native";
 interface EventContainerProps {
   title: string;
   text: string;
-  onPress?: () => void;
 }
 
 const EventContainer: React.FC<EventContainerProps> = ({ title, text }) => {
   return (
     <View style={styles.eventContainer}>
       <Text style={styles.title}>{title}</Text>
-      <View style={styles.eventDesc}>
-        <Text style={styles.txt}>{text}</Text>
-      </View>
+      <Text style={styles.description}>{text}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   eventContainer: {
-    width: "100%",
-    padding: 10,
-    flex: 1,
-    alignItems: "center",
-    maxWidth: "75%",
-    minHeight: 250,
-    backgroundColor: "lightgray",
+    width: 220,
+    backgroundColor: "lightgrey",
+    borderRadius: 12,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    maxWidth: "75%",
+    marginBottom: 12,
+    color: "#333",
   },
-  eventDesc: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: 14,
-    flexWrap: "wrap",
-    width: "100%",
-  },
-  txt: {
+  description: {
     fontSize: 16,
-    fontWeight: "bold",
     textAlign: "center",
-    maxWidth: "75%",
+    color: "#555",
+    lineHeight: 22,
   },
 });
 
