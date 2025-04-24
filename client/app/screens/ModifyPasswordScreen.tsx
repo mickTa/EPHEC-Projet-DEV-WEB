@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Platform,
+  View,
 } from "react-native";
 import TabContainer from "../components/TabContainer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
