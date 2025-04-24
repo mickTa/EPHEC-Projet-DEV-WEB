@@ -13,6 +13,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
+import TabContainer from "../components/TabContainer";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -255,6 +256,9 @@ const EventFormScreen = () => {
           )}
         </View>
       </ScrollView>
+      <View style={styles.footer}>
+        <TabContainer/>
+      </View>
     </SafeAreaView>
   );
 };
@@ -297,6 +301,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     flex: 1,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "white",
   },
 });
 

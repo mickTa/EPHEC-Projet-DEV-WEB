@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Platform,
 } from "react-native";
+import TabContainer from "../components/TabContainer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import axios from "axios";
@@ -123,6 +124,9 @@ export default function ModifyPasswordScreen() {
       >
         <Text style={styles.changePasswordText}>Changer le mot de passe</Text>
       </TouchableOpacity>
+      <View style={styles.footer}>
+        <TabContainer/>
+      </View>
     </SafeAreaView>
   );
 }
@@ -171,5 +175,12 @@ const styles = StyleSheet.create({
   backButtonIcon: {
     width: 24,
     height: 24,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "white",
   },
 });

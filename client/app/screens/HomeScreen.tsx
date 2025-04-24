@@ -42,18 +42,6 @@ export default function HomeScreen() {
     fetchEvents();
   }, []);
 
-  const goToProfile = () => {
-    router.replace("/screens/ProfileScreen");
-  };
-
-  const goToEvents = () => {
-    router.replace("/screens/EventFormScreen");
-  };
-
-  const goToWalletQR = () => {
-    router.replace("/screens/WalletQRCodeScreen");
-  };
-
   const handleEventPress = (eventId: number) => {
     router.push(`/screens/EventScreen?id=${eventId}`);
   };
@@ -85,11 +73,7 @@ export default function HomeScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TabContainer
-          onPressEventTab1={goToWalletQR}
-          onPressEventTab2={goToEvents}
-          onPressEventTab3={goToProfile}
-        />
+        <TabContainer/>
       </View>
     </View>
   );
