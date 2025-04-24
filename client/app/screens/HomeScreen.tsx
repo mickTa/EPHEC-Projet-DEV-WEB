@@ -7,10 +7,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import axios from "axios";
 import EventContainer from "../components/EventContainer";
 import TabContainer from "../components/TabContainer";
-import CustomButton from "../components/CustomButton";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

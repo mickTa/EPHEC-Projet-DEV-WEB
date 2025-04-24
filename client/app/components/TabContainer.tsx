@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import React from "react";
+import { View, StyleSheet, Image, Pressable } from "react-native";
 
 interface TabContainerProps {
     onPressEventTab1: () => void;

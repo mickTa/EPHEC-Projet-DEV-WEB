@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Image,
-  View,
   Text,
   TextInput,
   Alert,
