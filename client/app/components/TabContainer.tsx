@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, Pressable } from "react-native";
-import { userDataFetcher } from "../misc/userDataFetcher";
+import { userDataFetcher } from "../../misc/userDataFetcher";
 import { useRouter } from "expo-router";
 
 const TabContainer: React.FC = () => {
@@ -34,11 +34,8 @@ const TabContainer: React.FC = () => {
     <View style={styles.tabsBox}>
       {renderButton(require("../img/home-icon.png"), goToHome)}
 
-      {userRole === "ORGANIZER"
-        ? renderButton(require("../img/timetable-icon.png"), goToEvents)
-        : userRole === "USER"
-        ? renderButton(require("../img/timetable-icon.png"), goToWalletQR)
-        : null}
+      {userRole === "ORGANIZER" &&
+        renderButton(require("../img/timetable-icon.png"), goToEvents)}
 
       {renderButton(require("../img/wallet-icon.png"), goToWalletQR)}
 

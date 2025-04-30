@@ -21,12 +21,76 @@ import { router } from "expo-router";
 
 import DateTimePickerWeb from "react-datetime";
 import "react-datetime/css/react-datetime.css";
+import { useEffect } from "react";
+import { userDataFetcher } from "../../misc/userDataFetcher";
 
 import Constants from "expo-constants";
 
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
 const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
+const DatePickerComponent = ({ value, onChange, label }: any) => {
+  return (
+    <>
+      <Text style={{ marginBottom: 8 }}>{label}</Text>
+      {Platform.OS === "web" ? (
+        <DateTimePickerWeb
+          value={value || new Date()}
+          onChange={(date: any) =>
+            onChange(
+              date && typeof date !== "string" ? date.toDate() : new Date(date)
+            )
+          }
+          inputProps={{ placeholder: "Choisir une date" }}
+        />
+      ) : (
+        <View>
+          <Button
+            title={value ? value.toLocaleString() : "Choisir une date"}
+            onPress={() => onChange(value || new Date())}
+          />
+          <DateTimePicker
+            value={value || new Date()}
+            mode="datetime"
+            display="default"
+            onChange={(event, selectedDate) => {
+              if (event.type === "set" && selectedDate) {
+                onChange(selectedDate);
+              }
+            }}
+          />
+        </View>
+      )}
+    </>
+  );
+};
+
+const handleError = (error: any) => {
+  if (axios.isAxiosError(error) && error.response) {
+    Alert.alert(
+      "Erreur",
+      `Erreur: ${error.response.data.message || "Un problème est survenu."}`
+    );
+  } else {
+    Alert.alert("Erreur", "Problème avec la connexion au serveur.");
+  }
+
+  if (
+    axios.isAxiosError(error) &&
+    error.response &&
+    error.response.status === 401
+  ) {
+    AsyncStorage.removeItem("jwtToken");
+    Alert.alert("Session expirée", "Veuillez vous reconnecter.");
+    router.replace("/");
+  } else {
+    Alert.alert(
+      "Erreur",
+      "Une erreur est survenue lors de la récupération de vos données."
+    );
+  }
+};
 
 export default function EventFormScreen() {
   const [name, setName] = useState("");
@@ -35,10 +99,40 @@ export default function EventFormScreen() {
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
-  const [showStartPicker, setShowStartPicker] = useState(false);
-  const [showEndPicker, setShowEndPicker] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const checkAuthorization = async () => {
+      try {
+        const token = await AsyncStorage.getItem("jwtToken");
+        if (!token) {
+          router.replace("/");
+          return;
+        }
+
+        const userData = await userDataFetcher(() => {});
+        if (userData?.role !== "ORGANIZER") {
+          Alert.alert("Accès interdit", "Vous n'avez pas accès à cette page.");
+          router.replace("/screens/HomeScreen");
+          return;
+        }
+
+        setIsAuthorized(true);
+      } catch (error) {
+        Alert.alert(
+          "Erreur",
+          "Problème lors de la vérification de votre rôle."
+        );
+        router.replace("/");
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuthorization();
+  }, []);
 
   const formatDate = (date: Date | null) => {
     if (!date) return "";
@@ -103,36 +197,21 @@ export default function EventFormScreen() {
         );
       }
     } catch (error) {
-      console.error("Erreur lors de la création de l’événement", error);
-      if (axios.isAxiosError(error) && error.response) {
-        Alert.alert(
-          "Erreur",
-          `Erreur: ${error.response.data.message || "Un problème est survenu."}`
-        );
-      } else {
-        Alert.alert("Erreur", "Problème avec la connexion au serveur.");
-      }
-
-      if (
-        axios.isAxiosError(error) &&
-        error.response &&
-        error.response.status === 401
-      ) {
-        // Token expiré ou invalide
-        await AsyncStorage.removeItem("jwtToken");
-        Alert.alert("Session expirée", "Veuillez vous reconnecter.");
-        router.replace("/");
-      } else {
-        Alert.alert(
-          "Erreur",
-          "Une erreur est survenue lors de la récupération de vos données."
-        );
-      }
-      setLoading(false);
+      handleError(error);
     } finally {
       setLoading(false);
     }
   };
+
+  if (checkingAuth) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  if (!isAuthorized) return null;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -184,75 +263,16 @@ export default function EventFormScreen() {
           style={[styles.input, { height: 100 }]}
         />
 
-        <Text style={{ marginBottom: 8 }}>Date de début *</Text>
-        {Platform.OS === "web" ? (
-          <DateTimePickerWeb
-            value={startDate || new Date()}
-            onChange={(date) =>
-              setStartDate(
-                date && typeof date !== "string" && "toDate" in date
-                  ? date.toDate()
-                  : new Date(date)
-              )
-            }
-            inputProps={{ placeholder: "Choisir une date" }}
-          />
-        ) : (
-          <View>
-            <Button
-              title={formatDate(startDate) || "Choisir une date"}
-              onPress={() => setShowStartPicker(true)}
-            />
-            {showStartPicker && (
-              <DateTimePicker
-                value={startDate || new Date()}
-                mode="datetime"
-                display="default"
-                onChange={(event, selectedDate) => {
-                  setShowStartPicker(Platform.OS === "ios");
-                  if (event.type === "set" && selectedDate) {
-                    setStartDate(selectedDate);
-                  }
-                }}
-              />
-            )}
-          </View>
-        )}
-
-        <Text style={{ marginTop: 20, marginBottom: 8 }}>Date de fin *</Text>
-        {Platform.OS === "web" ? (
-          <DateTimePickerWeb
-            value={endDate || new Date()}
-            onChange={(date) =>
-              setEndDate(
-                date && typeof date !== "string" && "toDate" in date
-                  ? date.toDate()
-                  : new Date(date)
-              )
-            }
-            inputProps={{ placeholder: "Choisir une date" }}
-          />
-        ) : (
-          <View>
-            <Button
-              title={formatDate(endDate) || "Choisir une date"}
-              onPress={() => setShowEndPicker(true)}
-            />
-            {showEndPicker && (
-              <DateTimePicker
-                value={endDate || new Date()}
-                mode="datetime"
-                display="default"
-                onChange={(event, selectedDate) => {
-                  setShowEndPicker(Platform.OS === "ios");
-                  if (event.type === "set" && selectedDate) {
-                    setEndDate(selectedDate);
-                  }
-                }}
-              />
-            )}
-          </View>
-        )}
+        <DatePickerComponent
+          label="Date de début *"
+          value={startDate}
+          onChange={setStartDate}
+        />
+        <DatePickerComponent
+          label="Date de fin *"
+          value={endDate}
+          onChange={setEndDate}
+        />
 
         <View style={{ marginTop: 30 }}>
           {loading ? (
@@ -263,7 +283,7 @@ export default function EventFormScreen() {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <TabContainer/>
+        <TabContainer />
       </View>
     </SafeAreaView>
   );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Camera as RealCamera } from "react-native-vision-camera";
 import {
   StyleSheet,
   Text,
@@ -12,6 +11,7 @@ import {
   Image,
   Platform,
 } from "react-native";
+import { runOnJS } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -41,19 +41,20 @@ export default function SendPaymentRequestScreen() {
   const [description, setDescription] = useState("Achat de boisson");
 
   const [barcodes, setBarcodes] = useState<any[]>([]);
-  const frameProcessor = useFrameProcessor?.((frame: any) => {
-    const [frameProcessorFunction] = useScanBarcodes([
-      /* BarcodeFormat.QR_CODE */ "qr",
-    ]);
-    const scannedBarcodes: any[] = [];
-    frameProcessorFunction(frame);
-    setBarcodes(scannedBarcodes);
+  const frameProcessor = useFrameProcessor((frame: any) => {
+    "worklet";
+    const [scan] = useScanBarcodes();
+    const results = scan(frame);
+    if (results.length > 0) {
+      runOnJS(setBarcodes)(results);
+    }
   }, []);
 
   useEffect(() => {
     if (!isWeb) {
       (async () => {
-        const status = await RealCamera.requestCameraPermission();
+        const { Camera } = await import("react-native-vision-camera");
+        const status = await Camera.requestCameraPermission();
         setHasPermission(status === "granted");
       })();
     }
@@ -65,7 +66,6 @@ export default function SendPaymentRequestScreen() {
         "Scan désactivé",
         "Le scan de QR code est momentanément indisponible."
       );
-      // Tu pourrais aussi setWalletData manuellement ici si besoin
     }
   }, [barcodes]);
 
@@ -100,9 +100,24 @@ export default function SendPaymentRequestScreen() {
   if (isWeb) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <Text style={{ textAlign: "center", marginTop: 100, fontSize: 18 }}>
-          ⚠️ Le scan de QR Code n'est pas disponible sur la version Web.
-        </Text>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.replace("/screens/HomeScreen")}
+          >
+            <Image
+              source={require("../img/arrow-left.png")}
+              style={styles.backButtonIcon}
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Demande de paiement</Text>
+        </View>
+
+        <View style={styles.content}>
+          <Text style={{ textAlign: "center", fontSize: 18 }}>
+            ⚠️ Le scan de QR Code n'est pas disponible sur la version Web.
+          </Text>
+        </View>
       </SafeAreaView>
     );
   }

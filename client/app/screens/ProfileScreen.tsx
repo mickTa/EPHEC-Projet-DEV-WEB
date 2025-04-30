@@ -122,7 +122,7 @@ export default function ProfileScreen() {
           <Text style={styles.info}>Rôle : {userData.role}</Text>
           <TouchableOpacity
             style={styles.changePasswordButton}
-            onPress={() => router.replace("./ModifyPasswordScreen")}
+            onPress={() => router.replace("/screens/ModifyPasswordScreen")}
           >
             <Text style={styles.changePasswordText}>
               Modifier le mot de passe
@@ -147,7 +147,7 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
       <View style={styles.footer}>
-        <TabContainer/>
+        <TabContainer />
       </View>
     </SafeAreaView>
   );

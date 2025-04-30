@@ -5,7 +5,8 @@
     "paths": {
       "@/*": ["./*"],
       "@env": ["./env.d.ts"]
-    }
+    },
+    "module": "esnext"
   },
   "include": [
     "**/*.ts",

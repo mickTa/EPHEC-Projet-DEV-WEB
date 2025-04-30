@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Text,
   StyleSheet,
+  View,
   ActivityIndicator,
   Linking,
   ImageBackground,
@@ -51,16 +52,13 @@ export default function EventScreen() {
     try {
       const token = await AsyncStorage.getItem("jwtToken");
 
-      const response = await fetch(
-        `http://localhost:3000/api/events/${id}/register`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/events/${id}/register`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const result = await response.json();
 
