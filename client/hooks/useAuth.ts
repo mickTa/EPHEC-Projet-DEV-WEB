@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
 type User = {
   id: number;
   fullName: string;
@@ -19,14 +25,11 @@ const useAuth = () => {
     try {
       const token = await AsyncStorage.getItem("jwtToken");
       if (token) {
-        const response = await axios.get<User>(
-          "http://localhost:3000/api/users/me",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get<User>(`${API_BASE_URL}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setUser(response.data);
       }
     } catch (err) {
@@ -41,7 +44,7 @@ const useAuth = () => {
     setLoading(true);
     try {
       const response = await axios.post<{ token: string }>(
-        "http://localhost:3000/api/auth/login",
+        `${API_BASE_URL}/auth/login`,
         {
           email,
           password,

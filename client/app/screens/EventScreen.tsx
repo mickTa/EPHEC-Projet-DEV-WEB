@@ -15,6 +15,12 @@ import {
 import { useLocalSearchParams, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+
 export default function EventScreen() {
   const { id } = useLocalSearchParams();
   const [event, setEvent] = useState<any>(null);
@@ -24,7 +30,7 @@ export default function EventScreen() {
     const fetchEvent = async () => {
       try {
         const token = await AsyncStorage.getItem("jwtToken");
-        const response = await fetch(`http://localhost:3000/api/events/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/events/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",

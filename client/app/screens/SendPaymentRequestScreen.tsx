@@ -1,54 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Camera as RealCamera } from "react-native-vision-camera";
 import {
-  View,
-  Text,
-  Button,
-  Alert,
   StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  Alert,
   SafeAreaView,
   TouchableOpacity,
   Image,
-  TextInput,
+  Platform,
 } from "react-native";
-import { BarCodeScanner } from "expo-barcode-scanner";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import Constants from "expo-constants";
 
+import Camera from "../components/CameraWrapper";
+import {
+  useCameraDevices,
+  useFrameProcessor,
+  useScanBarcodes,
+} from "../../hooks/useCamera";
+
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isWeb = Platform.OS === "web";
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
 const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 
 export default function SendPaymentRequestScreen() {
   const router = useRouter();
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const devices = useCameraDevices();
+  const device =
+    devices.find?.((d: { position: string }) => d.position === "back") ?? null;
+
+  const [hasPermission, setHasPermission] = useState(false);
   const [walletData, setWalletData] = useState<any>(null);
   const [amount, setAmount] = useState("50");
   const [description, setDescription] = useState("Achat de boisson");
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
+  const [barcodes, setBarcodes] = useState<any[]>([]);
+  const frameProcessor = useFrameProcessor?.((frame: any) => {
+    const [frameProcessorFunction] = useScanBarcodes([
+      /* BarcodeFormat.QR_CODE */ "qr",
+    ]);
+    const scannedBarcodes: any[] = [];
+    frameProcessorFunction(frame);
+    setBarcodes(scannedBarcodes);
   }, []);
 
-  const handleBarCodeScanned = ({ data }: { data: string }) => {
-    try {
-      const parsedData = JSON.parse(data);
-      setWalletData(parsedData);
-      Alert.alert("Scan réussi", "Portefeuille utilisateur récupéré.");
-    } catch (error) {
-      Alert.alert("Erreur", "QR Code invalide.");
+  useEffect(() => {
+    if (!isWeb) {
+      (async () => {
+        const status = await RealCamera.requestCameraPermission();
+        setHasPermission(status === "granted");
+      })();
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (barcodes.length > 0 && !walletData) {
+      Alert.alert(
+        "Scan désactivé",
+        "Le scan de QR code est momentanément indisponible."
+      );
+      // Tu pourrais aussi setWalletData manuellement ici si besoin
+    }
+  }, [barcodes]);
 
   const handleSendRequest = async () => {
     try {
       const token = await AsyncStorage.getItem("jwtToken");
 
-      const response = await axios.post(
+      await axios.post(
         `${API_BASE_URL}/payment-request`,
         {
           userId: walletData.userId,
@@ -72,8 +97,25 @@ export default function SendPaymentRequestScreen() {
     }
   };
 
-  if (hasPermission === null) return <Text>Demande d'autorisation...</Text>;
-  if (hasPermission === false) return <Text>Permission caméra refusée</Text>;
+  if (isWeb) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <Text style={{ textAlign: "center", marginTop: 100, fontSize: 18 }}>
+          ⚠️ Le scan de QR Code n'est pas disponible sur la version Web.
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!device || !hasPermission) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <Text style={{ textAlign: "center", marginTop: 100 }}>
+          Chargement caméra...
+        </Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -94,10 +136,11 @@ export default function SendPaymentRequestScreen() {
         {!walletData ? (
           <>
             <Text style={styles.instruction}>Scannez un portefeuille :</Text>
-            <BarCodeScanner
-              onBarCodeScanned={walletData ? undefined : handleBarCodeScanned}
+            <Camera
               style={styles.camera}
-              barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+              device={device}
+              isActive={true}
+              frameProcessor={frameProcessor}
             />
             <Button
               title="Réinitialiser le scan"
@@ -128,7 +171,6 @@ export default function SendPaymentRequestScreen() {
 }
 
 const styles = StyleSheet.create({
-  // styles inchangés
   safeArea: {
     flex: 1,
     backgroundColor: "#f9f9f9",
