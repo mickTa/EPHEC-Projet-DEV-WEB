@@ -1,47 +1,52 @@
-import React, { ReactNode } from "react";
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Image, Pressable } from "react-native";
+import { userDataFetcher } from "../misc/userDataFetcher";
+import { useRouter } from "expo-router";
 
-interface TabContainerProps {
-  onPressEventTab1: () => void;
-  onPressEventTab2: () => void;
-  onPressEventTab3: () => void;
-  onPressEventTab4: () => void;
-  onPressEventTab5: () => void;
-}
+const TabContainer: React.FC = () => {
+  const router = useRouter();
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-const TabContainer: React.FC<TabContainerProps> = ({
-  onPressEventTab1,
-  onPressEventTab2,
-  onPressEventTab3,
-  onPressEventTab4,
-  onPressEventTab5,
-}) => {
+  const goToHome = () => router.replace("/screens/HomeScreen");
+  const goToEvents = () => router.replace("/screens/EventFormScreen");
+  const goToWalletQR = () => router.replace("/screens/WalletQRCodeScreen");
+  const goToProfile = () => router.replace("/screens/ProfileScreen");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await userDataFetcher(() => {});
+        setUserRole(userData?.role || null);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const renderButton = (icon: any, onPress: () => void) => (
+    <Pressable onPress={onPress}>
+      <Image source={icon} style={styles.icon} />
+    </Pressable>
+  );
+
   return (
     <View style={styles.tabsBox}>
-      <Pressable onPress={onPressEventTab1}>
-        <Image source={require("../img/home-icon.png")} style={styles.icon} />
-      </Pressable>
-      <Pressable onPress={onPressEventTab2}>
-        <Image
-          source={require("../img/timetable-icon.png")}
-          style={styles.icon}
-        />
-      </Pressable>
-      <Pressable onPress={onPressEventTab3}>
-        <Image source={require("../img/wallet-icon.png")} style={styles.icon} />
-      </Pressable>
-      <Pressable onPress={onPressEventTab4}>
-        <Image
-          source={require("../img/scanQrCode-icon.png")}
-          style={styles.icon}
-        />
-      </Pressable>
-      <Pressable onPress={onPressEventTab5}>
-        <Image
-          source={require("../img/profile-icon.png")}
-          style={styles.icon}
-        />
-      </Pressable>
+      {renderButton(require("../img/home-icon.png"), goToHome)}
+
+      {userRole === "ORGANIZER"
+        ? renderButton(require("../img/timetable-icon.png"), goToEvents)
+        : userRole === "USER"
+        ? renderButton(require("../img/timetable-icon.png"), goToWalletQR)
+        : null}
+
+      {renderButton(require("../img/wallet-icon.png"), goToWalletQR)}
+
+      {renderButton(require("../img/scanQrCode-icon.png"), () =>
+        router.replace("/screens/SendPaymentRequestScreen")
+      )}
+
+      {renderButton(require("../img/profile-icon.png"), goToProfile)}
     </View>
   );
 };
@@ -50,12 +55,10 @@ const styles = StyleSheet.create({
   tabsBox: {
     width: "100%",
     backgroundColor: "gray",
-    minHeight: 60,
-    flex: 1,
+    height: 60, // Hauteur fixe au lieu de minHeight
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginBottom: 0,
   },
   icon: {
     height: 40,

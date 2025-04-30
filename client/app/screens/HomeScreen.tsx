@@ -7,14 +7,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import axios from "axios";
 import EventContainer from "../components/EventContainer";
 import TabContainer from "../components/TabContainer";
-import CustomButton from "../components/CustomButton";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import Constants from "expo-constants";
+import axios from "axios";
 
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
@@ -35,17 +33,27 @@ export default function HomeScreen() {
           router.replace("/");
           return;
         }
+
         const response = await axios.get(`${API_BASE_URL}/events`, {
-          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-        const data = response.data;
-        setEvents(data);
+
+        setEvents(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des événements", error);
+
+        if (
+          axios.isAxiosError(error) &&
+          error.response &&
+          error.response.status === 401
+        ) {
+          await AsyncStorage.removeItem("jwtToken");
+          alert("Session expirée. Veuillez vous reconnecter.");
+          router.replace("/");
+        }
       } finally {
         setLoading(false);
       }
@@ -54,24 +62,6 @@ export default function HomeScreen() {
     fetchEvents();
   }, []);
 
-  const goToProfile = () => {
-    router.replace("/screens/ProfileScreen");
-  };
-
-  const goToEvents = () => {
-    router.replace("/screens/EventFormScreen");
-  };
-
-  const goToWalletQR = () => {
-    router.replace("/screens/WalletQRCodeScreen");
-  };
-
-  const goToHome = () => {
-    router.replace("/screens/HomeScreen");
-  };
-  const goToScanQrCode = () => {
-    router.replace("/screens/SendPaymentRequestScreen");
-  };
   const handleEventPress = (eventId: number) => {
     router.push(`/screens/EventScreen?id=${eventId}`);
   };
@@ -81,6 +71,7 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Accueil</Text>
       </View>
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.events}>
           <Text style={styles.title}>Événements à la une</Text>
@@ -100,13 +91,7 @@ export default function HomeScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TabContainer
-          onPressEventTab1={goToHome}
-          onPressEventTab2={goToEvents}
-          onPressEventTab3={goToWalletQR}
-          onPressEventTab4={goToScanQrCode}
-          onPressEventTab5={goToProfile}
-        />
+        <TabContainer />
       </View>
     </View>
   );

@@ -24,7 +24,7 @@ exports.getAllEvents = async (req, res) => {
 
 exports.getMyEvents=async(req,res)=>{
   try{
-    const myEvents=await Event.findAll({where:{organizerId:req.body.id}});
+    const myEvents=await Event.findAll({where:{organizerId:req.user.id}});
     res.status(200).json(myEvents);
   }catch(err){
     res.status(500).json({error: err.message})

@@ -6,7 +6,7 @@ const router = new Router();
 
 router.post("/",checkAuth(),EventController.NewEvent);
 router.get("/", EventController.getAllEvents);
-router.get("/my", EventController.getMyEvents);
+router.get("/my", checkAuth(), EventController.getMyEvents);
 router.put("/",checkAuth(),EventController.UpdateEvent)
 router.get("/:id", EventController.getEventById);
 
