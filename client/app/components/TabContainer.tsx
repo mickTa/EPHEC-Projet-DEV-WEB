@@ -26,7 +26,7 @@ const TabContainer: React.FC = () => {
       | "/screens/HomeScreen"
       | "/screens/EventFormScreen"
       | "/screens/WalletQRCodeScreen"
-      | "/screens/SendPaymentRequestScreen"
+      | "/screens/QrCodeScanner"
       | "/screens/ProfileScreen"
   ) => (
     <Pressable
@@ -58,7 +58,7 @@ const TabContainer: React.FC = () => {
 
       {renderButton(
         require("../img/scanQrCode-icon.png"),
-        "/screens/SendPaymentRequestScreen"
+        "/screens/QrCodeScanner"
       )}
 
       {renderButton(
