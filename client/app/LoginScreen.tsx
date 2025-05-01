@@ -37,7 +37,7 @@ export default function LoginScreen() {
       if (token) {
         await AsyncStorage.setItem("jwtToken", token);
         Alert.alert("Connexion réussie !");
-        router.replace("/screens/HomeScreen");
+        router.replace("/HomeScreen");
       }
     } catch (error) {
       console.error("Erreur de connexion", error);
@@ -54,7 +54,7 @@ export default function LoginScreen() {
         onPress={() => router.replace("/")}
       >
         <Image
-          source={require("../img/arrow-left.png")}
+          source={require("./img/arrow-left.png")}
           style={styles.backButtonIcon}
         />
       </TouchableOpacity>

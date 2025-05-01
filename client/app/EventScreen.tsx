@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import TopBar from"./components/TopBar";
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -73,6 +74,7 @@ export default function EventScreen() {
       source={{ uri: "https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b?auto=format&fit=crop&w=1500&q=80" }}
       style={styles.background}
     >
+      <TopBar title={"Détails de l'évenement"}/>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>{event.name}</Text>
         <Text style={styles.text}>📍 Adresse : {event.address}</Text>

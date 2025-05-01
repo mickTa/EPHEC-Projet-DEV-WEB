@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import EventContainer from "../components/EventContainer";
-import TabContainer from "../components/TabContainer";
+import TopBar from"./components/TopBar";
+import EventContainer from "./components/EventContainer";
+import TabContainer from "./components/TabContainer";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -43,14 +44,12 @@ export default function HomeScreen() {
   }, []);
 
   const handleEventPress = (eventId: number) => {
-    router.push(`/screens/EventScreen?id=${eventId}`);
+    router.push(`/EventScreen?id=${eventId}`);
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Accueil</Text>
-      </View>
+      <TopBar title={"Accueil"}/>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.events}>
           <Text style={styles.title}>Événements à la une</Text>

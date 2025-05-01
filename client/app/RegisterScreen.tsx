@@ -65,7 +65,7 @@ export default function RegisterScreen() {
         onPress={() => router.replace("/")}
       >
         <Image
-          source={require("../img/arrow-left.png")}
+          source={require("./img/arrow-left.png")}
           style={styles.backButtonIcon}
         />
       </TouchableOpacity>

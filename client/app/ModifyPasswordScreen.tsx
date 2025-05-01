@@ -10,7 +10,8 @@ import {
   Platform,
   View,
 } from "react-native";
-import TabContainer from "../components/TabContainer";
+import TopBar from"./components/TopBar";
+import TabContainer from "./components/TabContainer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import axios from "axios";
@@ -84,15 +85,7 @@ export default function ModifyPasswordScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => router.replace("/screens/ProfileScreen")}
-      >
-        <Image
-          source={require("../img/arrow-left.png")}
-          style={styles.backButtonIcon}
-        />
-      </TouchableOpacity>
+      <TopBar title={"Mot de passe"}/>
       <Text style={styles.title}>Modifier le mot de passe</Text>
 
       <TextInput

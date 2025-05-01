@@ -20,16 +20,16 @@ export default function Index() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace("/screens/HomeScreen");
+      router.replace("/HomeScreen");
     }
   }, [isLoggedIn]);
 
   const goToLogin = () => {
-    router.replace("/screens/LoginScreen");
+    router.replace("/LoginScreen");
   };
 
   const goToRegister = () => {
-    router.replace("/screens/RegisterScreen");
+    router.replace("/RegisterScreen");
   };
 
   return (
