@@ -3,17 +3,17 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
-import TopBar from "../components/TopBar";
 import EventContainer from "../components/EventContainer";
-import TabContainer from "../components/TabContainer";
+import TopBar from "../components/TopBar";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import axios from "axios";
+import TabContainer from "../components/TabContainer";
 
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
@@ -69,8 +69,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <TopBar title={"Accueil"} />
-
+      <TopBar title="Accueil" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.events}>
           <Text style={styles.title}>Événements à la une</Text>
@@ -88,23 +87,14 @@ export default function HomeScreen() {
           )}
         </View>
       </ScrollView>
-
       <View style={styles.footer}>
-        <TabContainer />
+        <TabContainer></TabContainer>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 80,
-    paddingTop: 100,
-  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -116,6 +106,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 30,
     gap: 20,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 80,
+    paddingTop: 100,
+  },
+  container: {
+    flex: 1,
   },
   footer: {
     position: "absolute",

@@ -271,9 +271,6 @@ const WalletQRCodeScreen = () => {
           </View>
         </View>
       </Modal>
-      <View style={styles.footer}>
-        <TabContainer />
-      </View>
     </SafeAreaView>
   );
 };
@@ -298,15 +295,6 @@ const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 20,
   },
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "white",
-  },
-
-  // Header styles
   header: {
     position: "absolute",
     top: 0,

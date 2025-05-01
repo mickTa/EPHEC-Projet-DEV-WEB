@@ -135,9 +135,6 @@ export default function ProfileScreen() {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.footer}>
-        <TabContainer />
-      </View>
     </SafeAreaView>
   );
 }
@@ -243,12 +240,5 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderBottomWidth: 0.5,
     borderBottomColor: "#ccc",
-  },
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "white",
   },
 });

@@ -1,12 +1,45 @@
 import React from "react";
-import { useRouter } from "expo-router";
 import { Text, StyleSheet, TouchableOpacity, View, Image } from "react-native";
-//import { useNavigation,useNavigationContainerRef  } from '@react-navigation/native';
-import { useNavigation, useNavigationContainerRef } from "expo-router";
+import { useRouter, usePathname } from "expo-router";
 
-interface TopBarTitle {
+interface TopBarProps {
   title: string;
 }
+
+const TopBar: React.FC<TopBarProps> = ({ title }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isHomeScreen = pathname === "/screens/HomeScreen";
+  const isModifyPasswordScreen = pathname === "/screens/ModifyPasswordScreen";
+
+  const handleBack = () => {
+    if (isModifyPasswordScreen) {
+      router.replace("/screens/ProfileScreen");
+    } else {
+      router.replace("/screens/HomeScreen");
+    }
+  };
+
+  return (
+    <View style={styles.header}>
+      {!isHomeScreen ? (
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <Image
+            source={require("../img/arrow-left.png")}
+            style={styles.backButtonIcon}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.placeholder} />
+      )}
+      <Text style={styles.headerTitle}>{title}</Text>
+      <View style={styles.placeholder} />
+    </View>
+  );
+};
+
+export default TopBar;
 
 const styles = StyleSheet.create({
   header: {
@@ -16,9 +49,10 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 10,
     flexDirection: "row",
-    justifyContent: "flex-start",
     alignItems: "center",
-    padding: 20,
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
@@ -26,7 +60,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   backButton: {
-    margin: 0,
+    padding: 4,
   },
   backButtonIcon: {
     width: 24,
@@ -36,35 +70,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    position: "absolute",
-    left: "50%",
-    transform: [{ translateX: -50 }],
+    flex: 1,
+  },
+  placeholder: {
+    width: 24,
   },
 });
-
-const TopBar: React.FC<TopBarTitle> = ({ title }) => {
-  const navigation = useNavigation();
-  const router = useRouter();
-  return (
-    <View style={styles.header}>
-      {navigation.canGoBack() ? (
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Image
-            source={require("../img/arrow-left.png")}
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.backButtonIcon} />
-      )}
-      <Text style={styles.headerTitle}>{title}</Text>
-    </View>
-  );
-};
-
-export default TopBar;

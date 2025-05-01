@@ -216,7 +216,6 @@ export default function EventFormScreen() {
     <SafeAreaView style={{ flex: 1 }}>
       <TopBar title={"Créer un évenement"} />
       <ScrollView contentContainerStyle={{ padding: 20, marginTop: 80 }}>
-        {/* Form fields */}
         <Text style={{ marginBottom: 8 }}>Nom de l'événement *</Text>
         <TextInput
           value={name}
@@ -269,9 +268,6 @@ export default function EventFormScreen() {
           )}
         </View>
       </ScrollView>
-      <View style={styles.footer}>
-        <TabContainer />
-      </View>
     </SafeAreaView>
   );
 }
@@ -311,12 +307,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     flex: 1,
-  },
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "white",
   },
 });
