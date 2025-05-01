@@ -12,7 +12,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import TopBar from "../components/TopBar";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { router } from "expo-router";
@@ -29,6 +29,19 @@ const isDevice = Constants.platform?.ios || Constants.platform?.android;
 const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 
 const DatePickerComponent = ({ value, onChange, label }: any) => {
+  const showPicker = () => {
+    DateTimePickerAndroid.open({
+      value: value || new Date(),
+      mode: "date",
+      is24Hour: true,
+      onChange: (event, selectedDate) => {
+        if (event.type === "set" && selectedDate) {
+          onChange(selectedDate);
+        }
+      },
+    });
+  };
+
   return (
     <>
       <Text style={{ marginBottom: 8 }}>{label}</Text>
@@ -43,22 +56,10 @@ const DatePickerComponent = ({ value, onChange, label }: any) => {
           inputProps={{ placeholder: "Choisir une date" }}
         />
       ) : (
-        <View>
-          <Button
-            title={value ? value.toLocaleString() : "Choisir une date"}
-            onPress={() => onChange(value || new Date())}
-          />
-          <DateTimePicker
-            value={value || new Date()}
-            mode="datetime"
-            display="default"
-            onChange={(event, selectedDate) => {
-              if (event.type === "set" && selectedDate) {
-                onChange(selectedDate);
-              }
-            }}
-          />
-        </View>
+        <Button
+          title={value ? value.toLocaleString() : "Choisir une date"}
+          onPress={showPicker}
+        />
       )}
     </>
   );
@@ -213,7 +214,7 @@ export default function EventFormScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopBar title="Créer un évenement" previous="Home" />
+      <TopBar title="Créer un évenement" previous="HomeScreen" />
       <ScrollView contentContainerStyle={{ padding: 20, marginTop: 80 }}>
         <Text style={{ marginBottom: 8 }}>Nom de l'événement *</Text>
         <TextInput
