@@ -14,6 +14,7 @@ import {
   Platform,
   Alert,
 } from "react-native";
+import TopBar from "../components/TopBar";
 import TabContainer from "../components/TabContainer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -171,15 +172,7 @@ const WalletQRCodeScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.replace("/screens/HomeScreen")}
-        >
-          <Image
-            source={require("../img/arrow-left.png")}
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
+        <TopBar title={"Porte-monnaies"} />
         <Text style={styles.headerTitle}>Mes Wallets</Text>
       </View>
 

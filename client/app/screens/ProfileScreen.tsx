@@ -11,6 +11,7 @@ import {
   Image,
 } from "react-native";
 import TabContainer from "../components/TabContainer";
+import TopBar from "../components/TopBar";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
@@ -92,19 +93,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.replace("/screens/HomeScreen")}
-        >
-          <Image
-            source={require("../img/arrow-left.png")}
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Mon Profil</Text>
-      </View>
-
+      <TopBar title={"Mon profil"} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>

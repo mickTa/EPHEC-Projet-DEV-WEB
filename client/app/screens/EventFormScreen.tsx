@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Image,
   View,
   Text,
   TextInput,
@@ -9,11 +8,11 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
-  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
 } from "react-native";
 import TabContainer from "../components/TabContainer";
+import TopBar from "../components/TopBar";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -215,19 +214,7 @@ export default function EventFormScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => router.replace("/screens/HomeScreen")}
-          style={styles.backButton}
-        >
-          <Image
-            source={require("../img/arrow-left.png")}
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Créer un Événement</Text>
-      </View>
-
+      <TopBar title={"Créer un évenement"} />
       <ScrollView contentContainerStyle={{ padding: 20, marginTop: 80 }}>
         {/* Form fields */}
         <Text style={{ marginBottom: 8 }}>Nom de l'événement *</Text>

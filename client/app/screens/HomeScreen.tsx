@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import TopBar from "../components/TopBar";
 import EventContainer from "../components/EventContainer";
 import TabContainer from "../components/TabContainer";
 import { useRouter } from "expo-router";
@@ -68,9 +69,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Accueil</Text>
-      </View>
+      <TopBar title={"Accueil"} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.events}>
@@ -118,31 +117,11 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     gap: 20,
   },
-  header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
-  },
   footer: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: "white",
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
   },
 });

@@ -2,20 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   Text,
   StyleSheet,
-  View,
   ActivityIndicator,
   Linking,
   ImageBackground,
   ScrollView,
   TouchableOpacity,
   Alert,
-  Image,
   SafeAreaView,
 } from "react-native";
-import { useLocalSearchParams, router } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import Constants from "expo-constants";
+import TopBar from "../components/TopBar";
 
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
@@ -78,23 +76,11 @@ export default function EventScreen() {
 
   if (loading)
     return <ActivityIndicator style={{ marginTop: 100 }} size="large" />;
-
   if (!event) return <Text style={styles.notFound}>Événement introuvable</Text>;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => router.replace("/screens/HomeScreen")}
-          style={styles.backButton}
-        >
-          <Image
-            source={require("../img/arrow-left.png")}
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Détails de l'événement</Text>
-      </View>
+      <TopBar title="Détails de l'événement" />
 
       <ImageBackground
         source={{
@@ -185,39 +171,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
-    boxShadow: "0px 2px 3px rgba(0, 0, 0, 0.3)",
   },
   registerText: {
     color: "#1b5e20",
     fontWeight: "bold",
     fontSize: 16,
-  },
-  header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
-  },
-  backButton: {
-    margin: 0,
-  },
-  backButtonIcon: {
-    width: 24,
-    height: 24,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    flex: 1,
   },
 });
