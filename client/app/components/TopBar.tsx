@@ -7,7 +7,7 @@ interface TopBarProps {
   previous: string;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ title,previous="HomeScreen" }) => {
+const TopBar: React.FC<TopBarProps> = ({ title, previous = "HomeScreen" }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -15,16 +15,21 @@ const TopBar: React.FC<TopBarProps> = ({ title,previous="HomeScreen" }) => {
 
   return (
     <View style={styles.header}>
-      {isHomeScreen ?
+      {isHomeScreen ? (
         <View style={styles.placeholder} />
-      :
-        <TouchableOpacity style={styles.backButton} onPress={()=>{router.replace(`/screens/${previous}`)}}>
+      ) : (
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => {
+            router.replace(`/screens/${previous}` as any);
+          }}
+        >
           <Image
             source={require("../img/arrow-left.png")}
             style={styles.backButtonIcon}
           />
         </TouchableOpacity>
-      }
+      )}
       <Text style={styles.headerTitle}>{title}</Text>
     </View>
   );
@@ -58,7 +63,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  placeholder:{
+  placeholder: {
     height: 24,
   },
 });

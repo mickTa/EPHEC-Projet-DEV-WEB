@@ -92,7 +92,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TopBar title="Mon profil" />
+      <TopBar title="Mon profil" previous="HomeScreen" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>

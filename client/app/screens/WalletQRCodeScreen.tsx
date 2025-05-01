@@ -170,7 +170,7 @@ const WalletQRCodeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <TopBar title="Porte-monnaies" />
+      <TopBar title="Porte-monnaies" previous="HomeScreen" />
 
       {/* Content */}
       <View style={styles.content}>

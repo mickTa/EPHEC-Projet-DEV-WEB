@@ -213,7 +213,7 @@ export default function EventFormScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopBar title="Créer un évenement" />
+      <TopBar title="Créer un évenement" previous="Home" />
       <ScrollView contentContainerStyle={{ padding: 20, marginTop: 80 }}>
         <Text style={{ marginBottom: 8 }}>Nom de l'événement *</Text>
         <TextInput

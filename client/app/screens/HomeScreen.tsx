@@ -69,7 +69,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <TopBar title="Accueil" />
+      <TopBar title="Accueil" previous="Home" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.events}>
           <Text style={styles.title}>Événements à la une</Text>
