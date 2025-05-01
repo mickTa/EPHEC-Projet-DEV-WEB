@@ -11,7 +11,6 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import TabContainer from "../components/TabContainer";
 import TopBar from "../components/TopBar";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -214,7 +213,7 @@ export default function EventFormScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopBar title={"Créer un évenement"} />
+      <TopBar title="Créer un évenement" />
       <ScrollView contentContainerStyle={{ padding: 20, marginTop: 80 }}>
         <Text style={{ marginBottom: 8 }}>Nom de l'événement *</Text>
         <TextInput
@@ -279,33 +278,5 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     marginBottom: 16,
-  },
-  header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
-  },
-  backButton: {
-    margin: 0,
-  },
-  backButtonIcon: {
-    width: 24,
-    height: 24,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    flex: 1,
   },
 });

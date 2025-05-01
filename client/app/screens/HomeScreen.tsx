@@ -87,9 +87,7 @@ export default function HomeScreen() {
           )}
         </View>
       </ScrollView>
-      <View style={styles.footer}>
-        <TabContainer></TabContainer>
-      </View>
+      <TabContainer></TabContainer>
     </View>
   );
 }
@@ -114,12 +112,5 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-  },
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "white",
   },
 });

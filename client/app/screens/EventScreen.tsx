@@ -81,7 +81,6 @@ export default function EventScreen() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopBar title="Détails de l'événement" />
-
       <ImageBackground
         source={{
           uri: "https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b?auto=format&fit=crop&w=1500&q=80",

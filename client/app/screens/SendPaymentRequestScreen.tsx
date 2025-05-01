@@ -7,10 +7,9 @@ import {
   TextInput,
   Alert,
   SafeAreaView,
-  TouchableOpacity,
-  Image,
   Platform,
 } from "react-native";
+import TopBar from "../components/TopBar";
 import { runOnJS } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -100,19 +99,7 @@ export default function SendPaymentRequestScreen() {
   if (isWeb) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.replace("/screens/HomeScreen")}
-          >
-            <Image
-              source={require("../img/arrow-left.png")}
-              style={styles.backButtonIcon}
-            />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Demande de paiement</Text>
-        </View>
-
+        <TopBar title="Demande de paiement"/>
         <View style={styles.content}>
           <Text style={{ textAlign: "center", fontSize: 18 }}>
             ⚠️ Le scan de QR Code n'est pas disponible sur la version Web.
@@ -134,19 +121,7 @@ export default function SendPaymentRequestScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.replace("/screens/HomeScreen")}
-        >
-          <Image
-            source={require("../img/arrow-left.png")}
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Demande de paiement</Text>
-      </View>
-
+      <TopBar title="Demande de paiement"/>
       <View style={styles.content}>
         {!walletData ? (
           <>
@@ -189,34 +164,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#f9f9f9",
-  },
-  header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
-  },
-  backButton: {
-    margin: 0,
-  },
-  backButtonIcon: {
-    width: 24,
-    height: 24,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginLeft: 30,
   },
   content: {
     flex: 1,

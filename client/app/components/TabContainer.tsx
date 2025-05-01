@@ -33,7 +33,7 @@ const TabContainer: React.FC = () => {
       onPress={
         pathname === targetPath
           ? undefined
-          : () => router.push(targetPath as any)
+          : () => router.replace(targetPath as any)
       }
     >
       <Image source={icon} style={styles.icon} />
@@ -41,30 +41,32 @@ const TabContainer: React.FC = () => {
   );
 
   return (
-    <View style={styles.tabsBox}>
-      {renderButton(require("../img/home-icon.png"), "/screens/HomeScreen")}
+    <View style={styles.footer}>
+      <View style={styles.tabsBox}>
+        {renderButton(require("../img/home-icon.png"), "/screens/HomeScreen")}
 
-      {userRole === "ORGANIZER" &&
-        renderButton(
-          require("../img/timetable-icon.png"),
-          "/screens/EventFormScreen"
+        {userRole === "ORGANIZER" &&
+          renderButton(
+            require("../img/timetable-icon.png"),
+            "/screens/EventFormScreen"
+          )}
+
+        {userRole === "USER" &&
+          renderButton(
+            require("../img/wallet-icon.png"),
+            "/screens/WalletQRCodeScreen"
+          )}
+
+        {renderButton(
+          require("../img/scanQrCode-icon.png"),
+          "/screens/SendPaymentRequestScreen"
         )}
 
-      {userRole === "USER" &&
-        renderButton(
-          require("../img/wallet-icon.png"),
-          "/screens/WalletQRCodeScreen"
+        {renderButton(
+          require("../img/profile-icon.png"),
+          "/screens/ProfileScreen"
         )}
-
-      {renderButton(
-        require("../img/scanQrCode-icon.png"),
-        "/screens/SendPaymentRequestScreen"
-      )}
-
-      {renderButton(
-        require("../img/profile-icon.png"),
-        "/screens/ProfileScreen"
-      )}
+      </View>
     </View>
   );
 };
@@ -81,6 +83,13 @@ const styles = StyleSheet.create({
   icon: {
     height: 40,
     width: 40,
+  },
+  footer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "white",
   },
 });
 
