@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import {
-  Image,
   Text,
   TextInput,
   Alert,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Platform,
-  View,
 } from "react-native";
 import TopBar from "../components/TopBar";
-import TabContainer from "../components/TabContainer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import axios from "axios";
@@ -91,7 +87,7 @@ export default function ModifyPasswordScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TopBar title={"Mot de passe"} />
+      <TopBar title="Mot de passe" previous="ProfileScreen" />
       <Text style={styles.title}>Modifier le mot de passe</Text>
 
       <TextInput
@@ -162,15 +158,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
-  },
-  backButton: {
-    position: "absolute",
-    top: Platform.OS === "ios" ? 50 : 30,
-    left: 20,
-    zIndex: 10,
-  },
-  backButtonIcon: {
-    width: 24,
-    height: 24,
   },
 });

@@ -15,7 +15,6 @@ import {
   Alert,
 } from "react-native";
 import TopBar from "../components/TopBar";
-import TabContainer from "../components/TabContainer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
@@ -171,10 +170,7 @@ const WalletQRCodeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TopBar title={"Porte-monnaies"} />
-        <Text style={styles.headerTitle}>Mes Wallets</Text>
-      </View>
+      <TopBar title="Porte-monnaies" />
 
       {/* Content */}
       <View style={styles.content}>
@@ -294,34 +290,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 20,
-  },
-  header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
-  },
-  backButton: {
-    marginRight: 10,
-  },
-  backButtonIcon: {
-    width: 24,
-    height: 24,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    flex: 1,
   },
 
   // Wallet item styles

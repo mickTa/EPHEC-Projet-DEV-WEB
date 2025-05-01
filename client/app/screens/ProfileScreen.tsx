@@ -10,7 +10,6 @@ import {
   SafeAreaView,
   Image,
 } from "react-native";
-import TabContainer from "../components/TabContainer";
 import TopBar from "../components/TopBar";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -93,7 +92,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TopBar title={"Mon profil"} />
+      <TopBar title="Mon profil" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
@@ -161,34 +160,6 @@ const styles = StyleSheet.create({
   logoutText: {
     color: "white",
     fontWeight: "bold",
-  },
-  header: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
-  },
-  backButton: {
-    margin: 0,
-  },
-  backButtonIcon: {
-    width: 24,
-    height: 24,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginLeft: 75,
   },
   profileInfo: {
     alignItems: "center",
