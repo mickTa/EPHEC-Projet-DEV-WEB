@@ -112,3 +112,17 @@ Content-Type: application/json
 POST http://localhost:3000/api/events/1/register
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ1NDM2NTg4LCJleHAiOjE3NDU0NDAxODh9.Ok87bsexe0r5uqoIAXUm_T0ZifHKO9V4c6lK3Bp0Oz4
+
+
+### Upload d'une image
+POST http://localhost:3000/api/events/upload HTTP/1.1
+Host: localhost:3000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NTIzMjUwLCJleHAiOjE3NDY1MjY4NTB9.doT7olqbqnmfbdBckAiPEp-sJge4ZVaUetbcFlttgxU
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Length: [calculez la longueur ici]
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="000037.JPG"
+Content-Type: image/jpeg
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

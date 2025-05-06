@@ -17,6 +17,7 @@ Event.init(
     organizerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: "organizerId",
       references: {
         model: "users",
         key: "id"
@@ -33,19 +34,25 @@ Event.init(
     },
     address: {
       type: DataTypes.STRING(255),
+      allowNull: true
     },
     description: {
       type: DataTypes.STRING(511),
+      allowNull: true
     },
     videoUrl: {
-      type: DataTypes.STRING(511),  // 👈 ici
+      type: DataTypes.STRING(511),
+      allowNull: true
+    },
+    imageUrl: {
+      type: DataTypes.STRING(511),
       allowNull: true
     }
   },
   {
     tableName: "events",
     sequelize: connection,
-    timestamps: false,
+    timestamps: false
   }
 );
 

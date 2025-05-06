@@ -10,10 +10,18 @@ const walletRoutes = require("./routes/wallets");
 const qrCodeRoutes = require("./routes/qrCodeRoutes");
 const paymentRequestRoutes = require("./routes/paymentRequest");
 const cors = require("cors");
+const fs = require('fs');
+const path = require('path');
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+  console.log('Répertoire "uploads" créé.');
+}
 
 // Définition des routes
 app.use(cors());

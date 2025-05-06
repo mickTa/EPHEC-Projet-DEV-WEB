@@ -1,14 +1,20 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 
 interface EventContainerProps {
   title: string;
   text: string;
+  image?: string;
 }
 
-const EventContainer: React.FC<EventContainerProps> = ({ title, text }) => {
+const screenWidth = Dimensions.get("window").width; 
+
+const EventContainer: React.FC<EventContainerProps> = ({ title, text, image }) => {
   return (
     <View style={styles.eventContainer}>
+      {image && (
+        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
+      )}
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{text}</Text>
     </View>
@@ -17,18 +23,25 @@ const EventContainer: React.FC<EventContainerProps> = ({ title, text }) => {
 
 const styles = StyleSheet.create({
   eventContainer: {
-    width: 220,
+    width: screenWidth * 0.8, 
+    height: 250, 
     backgroundColor: "lightgrey",
     borderRadius: 12,
-    padding: 20,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    padding: 0,
     elevation: 3,
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  image: {
+    width: "100%", 
+    height: "60%", 
+    borderRadius: 12,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 12,
+    marginTop: 10,
     color: "#333",
   },
   description: {
@@ -36,6 +49,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#555",
     lineHeight: 22,
+    marginTop: 8,
   },
 });
 

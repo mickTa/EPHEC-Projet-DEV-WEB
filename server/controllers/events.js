@@ -1,4 +1,7 @@
 const Event = require("../models/events");
+const cloudinary = require("../cloudinary");
+const fs = require("fs");
+
 
 exports.NewEvent = async (req, res) => {
   try {
@@ -53,5 +56,23 @@ exports.getEventById = async (req, res) => {
   } catch (err) {
     console.error("Erreur Sequelize :", err);
     res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.uploadEventImage = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "Aucun fichier n'a été envoyé." });
+  }
+
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "events", 
+    });
+
+    res.status(200).json({ message: "Image téléchargée avec succès", url: result.secure_url });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de l'upload de l'image" });
   }
 };

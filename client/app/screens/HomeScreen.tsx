@@ -19,11 +19,16 @@ const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
 const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 
+type EventType = {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl?: string;
+};
+
 export default function HomeScreen() {
   const router = useRouter();
-  const [events, setEvents] = useState<
-    { id: number; name: string; description: string }[]
-  >([]);
+  const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,7 +50,7 @@ export default function HomeScreen() {
         setEvents(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des événements", error);
-
+        
         if (
           axios.isAxiosError(error) &&
           error.response &&
@@ -81,13 +86,17 @@ export default function HomeScreen() {
                 key={event.id}
                 onPress={() => handleEventPress(event.id)}
               >
-                <EventContainer title={event.name} text={event.description} />
+                <EventContainer
+                  title={event.name}
+                  text={event.description}
+                  image={event.imageUrl || undefined}
+                />
               </TouchableOpacity>
             ))
           )}
         </View>
       </ScrollView>
-      <TabContainer></TabContainer>
+      <TabContainer />
     </View>
   );
 }

@@ -1,6 +1,8 @@
 const{Router}=require("express");
 const EventController=require("../controllers/events.js");
 const checkAuth=require("../middlewares/checkAuth"); 
+const upload = require("../middlewares/upload");
+
 
 const router = new Router();
 
@@ -12,6 +14,7 @@ router.get("/:id", EventController.getEventById);
 
 const RegistrationController = require('../controllers/registrations');
 router.post('/:id/register', checkAuth(), RegistrationController.registerToEvent);
+router.post("/upload", checkAuth(), upload.single("image"), EventController.uploadEventImage);
 
 
 module.exports = router;
