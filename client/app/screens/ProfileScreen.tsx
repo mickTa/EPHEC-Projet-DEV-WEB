@@ -10,6 +10,7 @@ import {
   Image,
 } from "react-native";
 import TopBar from "../components/TopBar";
+import EventContainer from "../components/EventContainer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
@@ -24,11 +25,21 @@ interface UserData {
   fullName: string;
   email: string;
   role: string;
+  id: number;
+}
+
+interface EventInfo{
+  id: number;
+  name:string;
+  description:string
+  imageUrl?: string;
 }
 
 export default function ProfileScreen() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [eventLoading, setEventLoading] = useState(true);
+  const[events,setEvents]=useState<EventInfo[]>([]);
   const router = useRouter();
   
   useEffect(() => {
@@ -40,6 +51,23 @@ export default function ProfileScreen() {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    const fetchMyEvents = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/events/my`, {
+          headers: {
+            Authorization: `Bearer ${await AsyncStorage.getItem("jwtToken")}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setEvents(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements", error);
+      }
+    };
+    fetchMyEvents().then(()=>{setEventLoading(false)});
+  }, []);
+
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("jwtToken");
@@ -48,6 +76,10 @@ export default function ProfileScreen() {
     } catch (error) {
       console.error("Erreur lors de la déconnexion", error);
     }
+  };
+
+  const handleEventPress = (eventId: number) => {
+    router.push(`/screens/EventManagementScreen?id=${eventId}`);
   };
 
   if (loading)
@@ -99,6 +131,25 @@ export default function ProfileScreen() {
               <Text>50,00€</Text>
             </View>
           </View>
+          <View style={styles.events}>
+          <Text style={styles.title}>Mes événements</Text>
+          {eventLoading ? 
+            <ActivityIndicator size="large" color="#0000ff" />
+          :
+          events.map((event) => (
+            <TouchableOpacity
+              key={event.id}
+              onPress={() => handleEventPress(event.id)}
+            >
+              <EventContainer
+                title={event.name}
+                text={event.description}
+                image={event.imageUrl || undefined}
+              />
+            </TouchableOpacity>
+          ))
+          }
+        </View>
         </ScrollView>
       :
         <Text style={styles.noData}>Impossible de charger les informations de l'utilisateur</Text>
@@ -108,6 +159,9 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: "#f9f9f9",
@@ -188,5 +242,11 @@ const styles = StyleSheet.create({
     transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
     fontSize: 20,
     fontWeight: "bold",
-  }
+  },
+  events: {
+    flex: 1,
+    margin: 20,
+    alignItems: "center",
+    gap: 30,
+  },
 });

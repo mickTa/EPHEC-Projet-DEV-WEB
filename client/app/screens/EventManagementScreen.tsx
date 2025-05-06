@@ -15,8 +15,7 @@ import TopBar from "../components/TopBar";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { router } from "expo-router";
-
+import { router,useLocalSearchParams } from "expo-router";
 import DateTimePickerWeb from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { useEffect } from "react";
@@ -91,8 +90,8 @@ const handleError = (error: any) => {
 };
 
 export default function EventFormScreen() {
+  const { id } = useLocalSearchParams();
   const [name, setName] = useState("");
-  //const [organizer, setOrganizer] = useState("");
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -110,7 +109,7 @@ export default function EventFormScreen() {
           return;
         }
 
-        const userData = JSON.parse(await AsyncStorage.getItem("userData")??"null");
+        const userData = await JSON.parse(await AsyncStorage.getItem("userData")??"null");
         if (userData?.role !== "ORGANIZER") {
           Alert.alert("Accès interdit", "Vous n'avez pas accès à cette page.");
           router.replace("/screens/HomeScreen");
@@ -132,19 +131,38 @@ export default function EventFormScreen() {
     checkAuthorization();
   }, []);
 
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const token = await AsyncStorage.getItem("jwtToken");
+        const response = await fetch(`${API_BASE_URL}/events/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        setName(data.name);
+        setAddress(data.address);
+        setDescription(data.description);
+        setStartDate(new Date(data.startDate));
+        setEndDate(new Date(data.endDate));
+      } catch (error) {
+        console.error("Erreur lors de la récupération de l'événement", error);
+      }
+    };
+    fetchEvent();
+  }, []);
+
   const formatDate = (date: Date | null) => {
     if (!date) return "";
     return date.toLocaleString();
   };
 
-  const handleCreateEvent = async () => {
-    if (!name || !address || !startDate || !endDate) {
-      Alert.alert("Erreur", "Tous les champs sont obligatoires.");
-      return;
-    }
-
+  const handleModifyEvent = async () => {
     if (startDate && endDate && endDate < startDate) {
       Alert.alert("Erreur", "La date de fin doit être après la date de début.");
+      window.alert("La date de fin doit être après la date de début.")
       return;
     }
 
@@ -157,24 +175,23 @@ export default function EventFormScreen() {
         return;
       }
 
-      const userData = JSON.parse(await AsyncStorage.getItem("userData")??"null");
-
       const formattedStartDate = startDate
         ?.toISOString()
         .split("T")
         .join(" ")
         .split("Z")[0];
+
       const formattedEndDate = endDate
         ?.toISOString()
         .split("T")
         .join(" ")
         .split("Z")[0];
 
-      const response = await axios.post(
+      const response = await axios.put(
         `${API_BASE_URL}/events`,
         {
+          id,
           name,
-          organizerId:userData.id,
           startDate: formattedStartDate,
           endDate: formattedEndDate,
           address,
@@ -186,14 +203,13 @@ export default function EventFormScreen() {
           },
         }
       );
-
-      if (response.status === 201) {
-        Alert.alert("Événement créé avec succès !");
-        router.replace("/screens/HomeScreen");
+      if (response.status === 200) {
+        Alert.alert("Événement modifié avec succès !");
+        router.replace("/screens/ProfileScreen");
       } else {
         Alert.alert(
-          "Échec de la création",
-          "L'événement n'a pas pu être créé."
+          "Échec de la modification",
+          "L'événement n'a pas pu être modifié."
         );
       }
     } catch (error) {
@@ -215,7 +231,7 @@ export default function EventFormScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TopBar title="Créer un évenement" previous="HomeScreen" />
+      <TopBar title="Modifier un évenement" previous="ProfileScreen" />
       <ScrollView contentContainerStyle={{ padding: 20, marginTop: 80 }}>
         <Text style={{ marginBottom: 8 }}>Nom de l'événement *</Text>
         <TextInput
@@ -224,14 +240,6 @@ export default function EventFormScreen() {
           placeholder="Nom"
           style={styles.input}
         />
-
-        {/*<Text style={{ marginBottom: 8 }}>Organisateur *</Text>
-        <TextInput
-          value={organizer}
-          onChangeText={setOrganizer}
-          placeholder="Organisateur"
-          style={styles.input}
-        />*/}
 
         <Text style={{ marginBottom: 8 }}>Adresse *</Text>
         <TextInput
@@ -265,7 +273,7 @@ export default function EventFormScreen() {
           {loading ? (
             <ActivityIndicator size="large" color="#007AFF" />
           ) : (
-            <Button title="Créer l'événement" onPress={handleCreateEvent} />
+            <Button title="Modifier l'événement" onPress={handleModifyEvent} />
           )}
         </View>
       </ScrollView>
