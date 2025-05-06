@@ -4,7 +4,6 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
-  Alert,
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
@@ -31,50 +30,20 @@ export default function ProfileScreen() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const token = await AsyncStorage.getItem("jwtToken");
-
-        if (!token) {
-          router.replace("/");
-          return;
-        }
-
-        const response = await axios.get(`${API_BASE_URL}/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setUserData(response.data);
-      } catch (error) {
-        console.error("Erreur récupération utilisateur:", error);
-        if (
-          axios.isAxiosError(error) &&
-          error.response &&
-          error.response.status === 401
-        ) {
-          // Token expiré ou invalide
-          await AsyncStorage.removeItem("jwtToken");
-          Alert.alert("Session expirée", "Veuillez vous reconnecter.");
-          router.replace("/");
-        } else {
-          Alert.alert(
-            "Erreur",
-            "Une erreur est survenue lors de la récupération de vos données."
-          );
-        }
-      } finally {
-        setLoading(false);
-      }
+      setUserData(JSON.parse(await AsyncStorage.getItem("userData")??"null"));
+      setLoading(false);
     };
-
+    
     fetchUserData();
   }, []);
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("jwtToken");
+      await AsyncStorage.removeItem("userData");
       router.replace("/");
     } catch (error) {
       console.error("Erreur lors de la déconnexion", error);
@@ -85,55 +54,55 @@ export default function ProfileScreen() {
     return (
       <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
     );
-  if (!userData)
-    return (
-      <Text>Impossible de charger les informations de l'utilisateur.</Text>
-    );
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <TopBar title="Mon profil" previous="HomeScreen" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.topBar}>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Text style={styles.logoutText}>Déconnexion</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.profileInfo}>
-          <View style={styles.profilePic} />
-          <Text style={styles.title}>Bienvenue, {userData.fullName}!</Text>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.info}>Email : {userData.email}</Text>
-          <Text style={styles.info}>Rôle : {userData.role}</Text>
-          <TouchableOpacity
-            style={styles.changePasswordButton}
-            onPress={() => router.replace("/screens/ModifyPasswordScreen")}
-          >
-            <Text style={styles.changePasswordText}>
-              Modifier le mot de passe
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.subtitle}>Vos derniers achats :</Text>
-          <View style={styles.inlineEvent}>
-            <Text>Event #1 : Event name</Text>
-            <Text>0,00€</Text>
+      {userData?
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.topBar}>
+            <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Déconnexion</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.inlineEvent}>
-            <Text>Event #2 : Event name</Text>
-            <Text>10,00€</Text>
+
+          <View style={styles.profileInfo}>
+            <View style={styles.profilePic} />
+            <Text style={styles.title}>Bienvenue, {userData.fullName}!</Text>
           </View>
-          <View style={styles.inlineEvent}>
-            <Text>Event #3 : Event name</Text>
-            <Text>50,00€</Text>
+
+          <View style={styles.card}>
+            <Text style={styles.info}>Email : {userData.email}</Text>
+            <Text style={styles.info}>Rôle : {userData.role}</Text>
+            <TouchableOpacity
+              style={styles.changePasswordButton}
+              onPress={() => router.replace("/screens/ModifyPasswordScreen")}
+            >
+              <Text style={styles.changePasswordText}>
+                Modifier le mot de passe
+              </Text>
+            </TouchableOpacity>
           </View>
-        </View>
-      </ScrollView>
+
+          <View style={styles.card}>
+            <Text style={styles.subtitle}>Vos derniers achats :</Text>
+            <View style={styles.inlineEvent}>
+              <Text>Event #1 : Event name</Text>
+              <Text>0,00€</Text>
+            </View>
+            <View style={styles.inlineEvent}>
+              <Text>Event #2 : Event name</Text>
+              <Text>10,00€</Text>
+            </View>
+            <View style={styles.inlineEvent}>
+              <Text>Event #3 : Event name</Text>
+              <Text>50,00€</Text>
+            </View>
+          </View>
+        </ScrollView>
+      :
+        <Text style={styles.noData}>Impossible de charger les informations de l'utilisateur</Text>
+      }
     </SafeAreaView>
   );
 }
@@ -212,4 +181,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: "#ccc",
   },
+  noData:{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+    fontSize: 20,
+    fontWeight: "bold",
+  }
 });

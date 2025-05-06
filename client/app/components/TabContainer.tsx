@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, Pressable } from "react-native";
-import { userDataFetcher } from "../../misc/userDataFetcher";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, usePathname } from "expo-router";
 
 const TabContainer: React.FC = () => {
@@ -10,13 +10,9 @@ const TabContainer: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const userData = await userDataFetcher(() => {});
+        const userData = JSON.parse(await AsyncStorage.getItem("userData")??"null");
         setUserRole(userData?.role || null);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
       }
-    };
     fetchData();
   }, []);
 

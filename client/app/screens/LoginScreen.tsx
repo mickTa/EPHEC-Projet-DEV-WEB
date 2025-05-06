@@ -40,7 +40,7 @@ export default function LoginScreen() {
       if (token) {
         await AsyncStorage.setItem("jwtToken", token);
         Alert.alert("Connexion réussie !");
-        router.replace("/screens/HomeScreen");
+        router.replace("/");
       }
     } catch (error) {
       console.error("Erreur de connexion", error);

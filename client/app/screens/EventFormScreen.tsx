@@ -20,7 +20,6 @@ import { router } from "expo-router";
 import DateTimePickerWeb from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { useEffect } from "react";
-import { userDataFetcher } from "../../misc/userDataFetcher";
 
 import Constants from "expo-constants";
 
@@ -111,7 +110,7 @@ export default function EventFormScreen() {
           return;
         }
 
-        const userData = await userDataFetcher(() => {});
+        const userData = await JSON.parse(await AsyncStorage.getItem("userData")??"null");
         if (userData?.role !== "ORGANIZER") {
           Alert.alert("Accès interdit", "Vous n'avez pas accès à cette page.");
           router.replace("/screens/HomeScreen");
