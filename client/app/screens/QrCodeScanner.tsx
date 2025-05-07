@@ -1,160 +1,131 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  StyleSheet,
-  Text,
   View,
-  SafeAreaView,
+  Text,
+  StyleSheet,
+  Button,
+  Alert,
   TouchableOpacity,
-  Image,
-  Platform,
 } from "react-native";
+import {
+  CameraView,
+  useCameraPermissions,
+  BarcodeScanningResult,
+} from "expo-camera";
 import { useRouter } from "expo-router";
-import Constants from "expo-constants";
-import Camera from "../components/CameraWrapper";
-import { useCameraDevices } from "../../hooks/useCamera";
-
-const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
-const isWeb = Platform.OS === "web";
-const isDevice = Constants.platform?.ios || Constants.platform?.android;
-const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
+import { Ionicons } from "@expo/vector-icons";
 
 export default function QrCodeScanner() {
+  const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
   const router = useRouter();
-  const devices = useCameraDevices();
-  const device =
-    devices.find?.((d: { position: string }) => d.position === "back") ?? null;
 
-  const [hasPermission, setHasPermission] = useState(false);
-
-  useEffect(() => {
-    if (!isWeb) {
-      (async () => {
-        const { Camera } = await import("react-native-vision-camera");
-        const status = await Camera.requestCameraPermission();
-        setHasPermission(status === "granted");
-      })();
+  const handleBarCodeScanned = (scanningResult: BarcodeScanningResult) => {
+    const { data, type } = scanningResult ?? {};
+    if (!scanned && data) {
+      setScanned(true);
+      console.log(`QR code détecté (${type}): ${data}`);
+      try {
+        // Vérifie si c’est une URL valide
+        const isUrl = /^https?:\/\/.+$/.test(data);
+        if (isUrl) {
+          router.replace({
+            pathname: "/screens/WebViewScreen",
+            params: { url: data },
+          });
+        } else {
+          Alert.alert("QR Code", `Données non valides : ${data}`);
+        }
+      } catch (error) {
+        console.error("Erreur de redirection :", error);
+      }
     }
-  }, []);
+  };
 
-  if (isWeb) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.replace("/screens/HomeScreen")}
-          >
-            <Image
-              source={require("../img/arrow-left.png")}
-              style={styles.backButtonIcon}
-            />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Demande de paiement</Text>
-        </View>
-
-        <View style={styles.content}>
-          <Text style={{ textAlign: "center", fontSize: 18 }}>
-            ⚠️ Le scan de QR Code n'est pas disponible sur la version Web.
-          </Text>
-        </View>
-      </SafeAreaView>
-    );
+  if (!permission) {
+    return <Text>Demande d'autorisation en cours...</Text>;
   }
 
-  if (!device || !hasPermission) {
+  if (!permission.granted) {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <Text style={{ textAlign: "center", marginTop: 100 }}>
-          Chargement caméra...
-        </Text>
-      </SafeAreaView>
+      <View style={styles.container}>
+        <Text>Accès à la caméra refusé.</Text>
+        <Button title="Autoriser la caméra" onPress={requestPermission} />
+      </View>
     );
   }
 
   return (
-    <View style={styles.fullScreen}>
-      <Camera style={styles.cameraFull} device={device} isActive={true} />
+    <View style={styles.container}>
+      <CameraView
+        style={StyleSheet.absoluteFillObject}
+        barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
+        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+      />
 
-      {/* UI superposé */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.replace("/screens/HomeScreen")}
-        >
-          <Image
-            source={require("../img/arrow-left.png")}
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Demande de paiement</Text>
-      </View>
-
+      {/* Overlay : Cadre de scan */}
       <View style={styles.overlay}>
-        <Text style={styles.instruction}>Scannez un portefeuille :</Text>
+        <View style={styles.scanBox} />
       </View>
+
+      {/* Bouton retour */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.replace("/screens/HomeScreen")}
+      >
+        <Ionicons name="arrow-back" size={28} color="white" />
+      </TouchableOpacity>
+
+      {scanned && (
+        <Button title="Scanner à nouveau" onPress={() => setScanned(false)} />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  fullScreen: {
+  container: {
     flex: 1,
-    position: "relative",
   },
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#f9f9f9",
+  backButton: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    padding: 10,
+    borderRadius: 20,
+    zIndex: 1,
   },
-  cameraFull: {
+  overlay: {
     ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  header: {
+  scanBox: {
+    width: 250,
+    height: 250,
+    borderWidth: 2,
+    borderColor: "white",
+    borderRadius: 10,
+    backgroundColor: "transparent",
+    zIndex: 2,
+  },
+  maskOuter: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "rgba(255,255,255,0.8)",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-    marginTop: 100,
-  },
-  overlay: {
+  maskCenter: {
     position: "absolute",
-    bottom: 50,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 20,
-    zIndex: 10,
-  },
-  instruction: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#fff",
-    backgroundColor: "rgba(0,0,0,0.6)",
-    padding: 10,
-    borderRadius: 8,
-  },
-  backButton: {
-    margin: 0,
-  },
-  backButtonIcon: {
-    width: 24,
-    height: 24,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginLeft: 30,
+    top: "50%",
+    left: "50%",
+    width: 250,
+    height: 250,
+    marginLeft: -125,
+    marginTop: -125,
+    backgroundColor: "transparent",
+    zIndex: 1,
   },
 });

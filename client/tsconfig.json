@@ -15,5 +15,7 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "node_modules/expo-camera/types"
-  ]
+  ],
+
+  "exclude": ["node_modules"]
 }
