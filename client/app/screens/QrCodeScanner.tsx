@@ -6,6 +6,7 @@ import {
   Button,
   Alert,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import {
   CameraView,
@@ -46,11 +47,27 @@ export default function QrCodeScanner() {
     return <Text>Demande d'autorisation en cours...</Text>;
   }
 
-  if (!permission.granted) {
+  if (!permission || !permission.granted) {
     return (
       <View style={styles.container}>
-        <Text>Accès à la caméra refusé.</Text>
-        <Button title="Autoriser la caméra" onPress={requestPermission} />
+        <Text>
+          {permission === null
+            ? "Initialisation de la permission caméra..."
+            : "Accès à la caméra refusé ou non disponible."}
+        </Text>
+
+        {permission && !permission.granted && (
+          <Button title="Autoriser la caméra" onPress={requestPermission} />
+        )}
+
+        {Platform.OS === "web" && (
+          <TouchableOpacity
+            style={styles.backToHomeButton}
+            onPress={() => router.replace("/screens/HomeScreen")}
+          >
+            <Text style={styles.backToHomeButtonText}>Retour à l'accueil</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
@@ -86,6 +103,9 @@ export default function QrCodeScanner() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
   backButton: {
     position: "absolute",
@@ -127,5 +147,18 @@ const styles = StyleSheet.create({
     marginTop: -125,
     backgroundColor: "transparent",
     zIndex: 1,
+  },
+  backToHomeButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 20,
+    alignItems: "center",
+  },
+  backToHomeButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
