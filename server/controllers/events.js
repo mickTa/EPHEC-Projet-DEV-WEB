@@ -1,4 +1,5 @@
 const Event = require("../models/events");
+const Registration = require("../models/registration");
 const cloudinary = require("../cloudinary");
 const fs = require("fs");
 
@@ -25,12 +26,23 @@ exports.getAllEvents = async (req, res) => {
   }
 };
 
-exports.getMyEvents=async(req,res)=>{
-  try{
-    const myEvents=await Event.findAll({where:{organizerId:req.user.id}});
-    res.status(200).json(myEvents);
-  }catch(err){
-    res.status(500).json({error: err.message})
+
+exports.getMyEvents = async (req, res) => {
+  try {
+    const registrations = await Registration.findAll({
+      where: { userId: req.user.id },
+      include: [
+        {
+          model: Event,
+          as: 'event'
+        }
+      ]
+    });
+    const events = registrations.map(reg => reg.event);
+    res.status(200).json(events);
+  } catch (err) {
+    console.error("Erreur lors de la récupération des événements :", err);
+    res.status(500).json({ error: err.message });
   }
 };
 

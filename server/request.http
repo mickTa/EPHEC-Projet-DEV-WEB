@@ -89,12 +89,9 @@ Content-Type: application/json
 
 ### Get my events
 GET http://localhost:3000/api/events/my
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NzI1MjEzLCJleHAiOjE3NDY3Mjg4MTN9.BaF_FF6Od28LHe7Rv3ISVFMeKRThlEGhT-vOqqmqad4
 Content-Type: application/json
 
-{
-  "id": "3"
-}
 
 ### Add money to wallet
 POST http://localhost:3000/api/wallet/addMoney
@@ -109,10 +106,9 @@ GET http://localhost:3000/api/events/1
 Content-Type: application/json
 
 ###S'inscrire à un événement
-POST http://localhost:3000/api/events/1/register
+POST http://localhost:3000/api/events/13/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ1NDM2NTg4LCJleHAiOjE3NDU0NDAxODh9.Ok87bsexe0r5uqoIAXUm_T0ZifHKO9V4c6lK3Bp0Oz4
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NzI0MjQ0LCJleHAiOjE3NDY3Mjc4NDR9.jEpxYn6jT4u_tbAAJa3DO_EiF6jOVcrMHCDI9Bb3r4o
 
 ### Upload d'une image
 POST http://localhost:3000/api/events/upload HTTP/1.1

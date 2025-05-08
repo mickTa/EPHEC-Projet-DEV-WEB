@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const connection = require('./db');
+const Event = require('./events');
 
 class Registration extends Model {}
 
@@ -37,5 +38,10 @@ Registration.init(
     timestamps: true, 
   }
 );
+
+Registration.belongsTo(Event, {
+  foreignKey: 'eventId',
+  as: 'event',
+});
 
 module.exports = Registration;
