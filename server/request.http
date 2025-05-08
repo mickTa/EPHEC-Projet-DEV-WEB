@@ -106,9 +106,9 @@ GET http://localhost:3000/api/events/1
 Content-Type: application/json
 
 ###S'inscrire à un événement
-POST http://localhost:3000/api/events/13/register
+POST http://localhost:3000/api/events/8/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NzI0MjQ0LCJleHAiOjE3NDY3Mjc4NDR9.jEpxYn6jT4u_tbAAJa3DO_EiF6jOVcrMHCDI9Bb3r4o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NzMyNTM1LCJleHAiOjE3NDY3MzYxMzV9.CNZq8G-d6Rw8JYwuwUSJM3cjyaM-KZv-1q4dgq4b7jE
 
 ### Upload d'une image
 POST http://localhost:3000/api/events/upload HTTP/1.1

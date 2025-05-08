@@ -28,6 +28,15 @@ Wallet.init(
       },
       onDelete: "CASCADE"
     },
+    eventId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "events",
+        key: "id"
+      },
+      onDelete: "SET NULL"
+    },
     amount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
@@ -51,7 +60,7 @@ Wallet.init(
     indexes: [
       {
         unique: true,
-        fields: ['userId', 'organizerId']
+        fields: ['userId', 'organizerId', 'eventId']  
       }
     ]
   }
