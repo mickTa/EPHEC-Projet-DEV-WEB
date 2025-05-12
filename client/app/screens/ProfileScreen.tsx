@@ -38,8 +38,10 @@ interface EventInfo{
 export default function ProfileScreen() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [eventLoading, setEventLoading] = useState(true);
-  const[events,setEvents]=useState<EventInfo[]>([]);
+  const [subscribedEventLoading, setSubscribedEventLoading] = useState(true);
+  const [organizedEventLoading, setOrganizedEventLoading] = useState(true);
+  const[subscribedEvents,setSubscribedEvents]=useState<EventInfo[]>([]);
+  const[organizedEvents,setOrganizedEvents]=useState<EventInfo[]>([]);
   const router = useRouter();
   
   useEffect(() => {
@@ -52,20 +54,35 @@ export default function ProfileScreen() {
   }, []);
 
   useEffect(() => {
-    const fetchMyEvents = async () => {
+    const fetchMySubscribedEvents = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/events/my`, {
+        const response = await axios.get(`${API_BASE_URL}/events/subscribed`, {
           headers: {
             Authorization: `Bearer ${await AsyncStorage.getItem("jwtToken")}`,
             "Content-Type": "application/json",
           },
         });
-        setEvents(response.data);
+        setSubscribedEvents(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des événements", error);
       }
     };
-    fetchMyEvents().then(()=>{setEventLoading(false)});
+    fetchMySubscribedEvents().then(()=>{setSubscribedEventLoading(false)});
+
+    const fetchMyOrganizedEvents = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/events/organized`, {
+          headers: {
+            Authorization: `Bearer ${await AsyncStorage.getItem("jwtToken")}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setOrganizedEvents(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements", error);
+      }
+    };
+    fetchMyOrganizedEvents().then(()=>{setOrganizedEventLoading(false)});
   }, []);
 
   const handleLogout = async () => {
@@ -76,10 +93,6 @@ export default function ProfileScreen() {
     } catch (error) {
       console.error("Erreur lors de la déconnexion", error);
     }
-  };
-
-  const handleEventPress = (eventId: number) => {
-    router.push(`/screens/EventManagementScreen?id=${eventId}`);
   };
 
   if (loading)
@@ -132,14 +145,31 @@ export default function ProfileScreen() {
             </View>
           </View>
           <View style={styles.events}>
-          <Text style={styles.title}>Mes événements</Text>
-          {eventLoading ? 
+          <Text style={styles.title}>Mes inscriptions</Text>
+          {subscribedEventLoading ? 
             <ActivityIndicator size="large" color="#0000ff" />
           :
-          events.map((event) => (
+          subscribedEvents.map((event) => (
             <TouchableOpacity
               key={event.id}
-              onPress={() => handleEventPress(event.id)}
+              onPress={() => {router.push(`/screens/EventScreen?id=${event.id}`)}}
+            >
+              <EventContainer
+                title={event.name}
+                text={event.description}
+                image={event.imageUrl || undefined}
+              />
+            </TouchableOpacity>
+          ))
+          }
+          <Text style={styles.title}>Mes organisations</Text>
+          {organizedEventLoading ? 
+            <ActivityIndicator size="large" color="#0000ff" />
+          :
+          organizedEvents.map((event) => (
+            <TouchableOpacity
+              key={event.id}
+              onPress={() => {router.push(`/screens/EventManagementScreen?id=${event.id}`)}}
             >
               <EventContainer
                 title={event.name}

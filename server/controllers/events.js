@@ -27,7 +27,7 @@ exports.getAllEvents = async (req, res) => {
 };
 
 
-exports.getMyEvents = async (req, res) => {
+exports.getMySubscribedEvents = async (req, res) => {
   try {
     const registrations = await Registration.findAll({
       where: { userId: req.user.id },
@@ -46,6 +46,15 @@ exports.getMyEvents = async (req, res) => {
   }
 };
 
+exports.getMyOrganizedEvents=async(req,res)=>{
+  try{
+    const organized=await Event.findAll({where:{organizerId:req.user.id}});
+    res.status(200).json(organized);
+  }catch(err){
+    res.status(500).json({error: err.message})
+  }
+};
+
 exports.UpdateEvent=async(req,res)=>{
   newEvent=req.body;
   try{
@@ -56,7 +65,7 @@ exports.UpdateEvent=async(req,res)=>{
   }catch(err){
     res.status(500).json({error: err.message})
   }
-}
+};
 
 exports.getEventById = async (req, res) => {
   try {

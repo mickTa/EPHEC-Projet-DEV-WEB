@@ -8,7 +8,8 @@ const router = new Router();
 
 router.post("/",checkAuth(),EventController.NewEvent);
 router.get("/", EventController.getAllEvents);
-router.get("/my", checkAuth(), EventController.getMyEvents);
+router.get("/subscribed", checkAuth(), EventController.getMySubscribedEvents);
+router.get("/organized", checkAuth(), EventController.getMyOrganizedEvents);
 router.put("/",checkAuth(),EventController.UpdateEvent)
 router.get("/:id", EventController.getEventById);
 
