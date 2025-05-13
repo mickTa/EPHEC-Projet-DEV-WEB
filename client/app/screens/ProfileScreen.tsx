@@ -67,7 +67,6 @@ export default function ProfileScreen() {
         console.error("Erreur lors de la récupération des événements", error);
       }
     };
-    fetchMySubscribedEvents().then(()=>{setSubscribedEventLoading(false)});
 
     const fetchMyOrganizedEvents = async () => {
       try {
@@ -82,8 +81,10 @@ export default function ProfileScreen() {
         console.error("Erreur lors de la récupération des événements", error);
       }
     };
-    fetchMyOrganizedEvents().then(()=>{setOrganizedEventLoading(false)});
-  }, []);
+
+    if(userData?.role=="USER")fetchMySubscribedEvents().then(()=>{setSubscribedEventLoading(false)});
+    if(userData?.role=="ORGANIZER")fetchMyOrganizedEvents().then(()=>{setOrganizedEventLoading(false)});
+  }, [userData]);
 
   const handleLogout = async () => {
     try {
@@ -145,40 +146,56 @@ export default function ProfileScreen() {
             </View>
           </View>
           <View style={styles.events}>
-          <Text style={styles.title}>Mes inscriptions</Text>
-          {subscribedEventLoading ? 
-            <ActivityIndicator size="large" color="#0000ff" />
-          :
-          subscribedEvents.map((event) => (
-            <TouchableOpacity
-              key={event.id}
-              onPress={() => {router.push(`/screens/EventScreen?id=${event.id}`)}}
-            >
-              <EventContainer
-                title={event.name}
-                text={event.description}
-                image={event.imageUrl || undefined}
-              />
-            </TouchableOpacity>
-          ))
-          }
-          <Text style={styles.title}>Mes organisations</Text>
-          {organizedEventLoading ? 
-            <ActivityIndicator size="large" color="#0000ff" />
-          :
-          organizedEvents.map((event) => (
-            <TouchableOpacity
-              key={event.id}
-              onPress={() => {router.push(`/screens/EventManagementScreen?id=${event.id}`)}}
-            >
-              <EventContainer
-                title={event.name}
-                text={event.description}
-                image={event.imageUrl || undefined}
-              />
-            </TouchableOpacity>
-          ))
-          }
+          {userData?.role=="USER" ? (
+            <>
+              <Text style={styles.title}>Mes inscriptions</Text>
+              {subscribedEventLoading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : (
+                subscribedEvents.map((event) => (
+                  <TouchableOpacity
+                    key={event.id}
+                    onPress={() => {
+                      router.push(`/screens/EventScreen?id=${event.id}`);
+                    }}
+                  >
+                    <EventContainer
+                      title={event.name}
+                      text={event.description}
+                      image={event.imageUrl || undefined}
+                    />
+                  </TouchableOpacity>
+                ))
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+          {userData?.role=="ORGANIZER" ? (
+            <>
+              <Text style={styles.title}>Mes organisations</Text>
+              {organizedEventLoading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : (
+                organizedEvents.map((event) => (
+                  <TouchableOpacity
+                    key={event.id}
+                    onPress={() => {
+                      router.push(`/screens/EventManagementScreen?id=${event.id}`);
+                    }}
+                  >
+                    <EventContainer
+                      title={event.name}
+                      text={event.description}
+                      image={event.imageUrl || undefined}
+                    />
+                  </TouchableOpacity>
+                ))
+              )}
+            </>
+          ) : (
+            <></>
+          )}
         </View>
         </ScrollView>
       :
