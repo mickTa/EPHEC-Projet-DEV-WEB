@@ -56,7 +56,7 @@ exports.getMyOrganizedEvents=async(req,res)=>{
 };
 
 exports.UpdateEvent=async(req,res)=>{
-  newEvent=req.body;
+  let newEvent=req.body;
   try{
     const event=await Event.findByPk(newEvent.id);
     delete newEvent.id;

@@ -9,6 +9,7 @@ const eventRoutes = require("./routes/events");
 const walletRoutes = require("./routes/wallets");
 const qrCodeRoutes = require("./routes/qrCodeRoutes");
 const paymentRequestRoutes = require("./routes/paymentRequest");
+const registrationRoutes = require("./routes/registration");
 const cors = require("cors");
 const fs = require('fs');
 const path = require('path');
@@ -31,6 +32,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api", qrCodeRoutes);
 app.use("/api/payment-request", paymentRequestRoutes);
+app.use("/api/registration", registrationRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 3000;

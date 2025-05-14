@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  View,
   Text,
   StyleSheet,
   ActivityIndicator,
@@ -22,36 +23,86 @@ const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 export default function EventScreen() {
   const { id } = useLocalSearchParams();
   const [event, setEvent] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [registration, setRegistration] = useState<any>(null);
+  const [eventLoading, setEventLoading] = useState(true);
+  const [registrationLoading, setRegistrationLoading] = useState(true);
 
   useEffect(() => {
-    const fetchEvent = async () => {
+    const fetchData = async () => {
+      const token = await AsyncStorage.getItem("jwtToken");
+
       try {
-        const token = await AsyncStorage.getItem("jwtToken");
         const response = await fetch(`${API_BASE_URL}/events/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-        const data = await response.json();
-        setEvent(data);
+        setEvent(await response.json());
       } catch (error) {
         console.error("Erreur lors de la récupération de l'événement", error);
       } finally {
-        setLoading(false);
+        setEventLoading(false);
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/registration/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result=await response.json()
+        setRegistration(result);
+      } catch (error) {
+        console.error("Erreur lors de la récupération de l'inscription", error);
+      } finally {
+        setRegistrationLoading(false);
       }
     };
 
-    fetchEvent();
-  }, [id]);
+    fetchData();
+  }, []);
 
   const handleRegister = async () => {
     try {
       const token = await AsyncStorage.getItem("jwtToken");
 
-      const response = await fetch(`${API_BASE_URL}/events/${id}/register`, {
+      const response = await fetch(`${API_BASE_URL}/registration`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({
+          id,
+          organizerId:event.organizerId
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        Alert.alert(
+          "Inscription réussie",
+          "Tu es bien inscrit à l'événement !"
+        );
+        setRegistration({registered:true,wallet:result.wallet.id})
+      } else {
+        Alert.alert("Erreur", result.message || "Impossible de s'inscrire.");
+      }
+    } catch (error) {
+      console.error("Erreur pendant l'inscription :", error);
+      Alert.alert("Erreur", "Une erreur s’est produite lors de l’inscription.");
+    }
+  };
+
+  const handleUnregister = async () => {
+    try {
+      const token = await AsyncStorage.getItem("jwtToken");
+
+      const response = await fetch(`${API_BASE_URL}/registration/${id}`, {
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -62,19 +113,20 @@ export default function EventScreen() {
 
       if (response.ok) {
         Alert.alert(
-          "Inscription réussie",
-          "Tu es bien inscrit à l'événement !"
+          "Désinscription réussie",
+          "Tu es bien désinscrit de l'événement !"
         );
+        setRegistration({registered:false})
       } else {
-        Alert.alert("Erreur", result.message || "Impossible de s'inscrire.");
+        Alert.alert("Erreur", result.message || "Impossible de se désinscrire.");
       }
     } catch (error) {
-      console.error("Erreur pendant l'inscription :", error);
-      Alert.alert("Erreur", "Une erreur s’est produite lors de l’inscription.");
+      console.error("Erreur pendant la désinscription :", error);
+      Alert.alert("Erreur", "Une erreur s’est produite lors de la désinscription.");
     }
   };
 
-  if (loading)
+  if (eventLoading)
     return <ActivityIndicator style={{ marginTop: 100 }} size="large" />;
   if (!event) return <Text style={styles.notFound}>Événement introuvable</Text>;
 
@@ -101,19 +153,28 @@ export default function EventScreen() {
 
           {event.videoUrl && (
             <TouchableOpacity
-              style={styles.videoLink}
+              style={[styles.button,{backgroundColor:"#c90028"}]}
               onPress={() => Linking.openURL(event.videoUrl)}
             >
-              <Text style={styles.videoText}>▶️ Voir la vidéo sur YouTube</Text>
+              <Text style={styles.buttonText}>▶️ Voir la vidéo sur YouTube</Text>
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity
-            style={styles.registerButton}
-            onPress={handleRegister}
-          >
-            <Text style={styles.registerText}>✅ S'inscrire à l'événement</Text>
-          </TouchableOpacity>
+          <View>
+            {registrationLoading?
+              <ActivityIndicator style={[styles.button,{backgroundColor:"#888888"}]}/>
+            :
+              registration?
+                <TouchableOpacity
+                  style={[styles.button,{backgroundColor:registration.registered?"#ff4444":"#b8f2c9"}]}
+                  onPress={registration.registered?handleUnregister:handleRegister}
+                >
+                  <Text style={styles.buttonText}>{registration.registered?"Se désinscrire":"S'inscrire"}</Text>
+                </TouchableOpacity>
+              :
+                <Text style={styles.buttonText}>Erreur de récupération des données d'inscription.</Text>
+            }
+          </View>
         </ScrollView>
       </ImageBackground>
     </SafeAreaView>
@@ -153,25 +214,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
   },
-  videoLink: {
-    marginTop: 20,
-    backgroundColor: "#ff4444",
-    padding: 12,
-    borderRadius: 8,
-  },
-  videoText: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  registerButton: {
+  button: {
     marginTop: 30,
-    backgroundColor: "#b8f2c9",
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
   },
-  registerText: {
+  buttonText: {
     color: "#1b5e20",
     fontWeight: "bold",
     fontSize: 16,

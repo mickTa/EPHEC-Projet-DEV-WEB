@@ -12,9 +12,6 @@ router.get("/subscribed", checkAuth(), EventController.getMySubscribedEvents);
 router.get("/organized", checkAuth(), EventController.getMyOrganizedEvents);
 router.put("/",checkAuth(),EventController.UpdateEvent)
 router.get("/:id", EventController.getEventById);
-
-const RegistrationController = require('../controllers/registrations');
-router.post('/:id/register', checkAuth(), RegistrationController.registerToEvent);
 router.post("/upload", checkAuth(), upload.single("image"), EventController.uploadEventImage);
 
 
