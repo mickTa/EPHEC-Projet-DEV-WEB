@@ -1,6 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "private": true,
   "description": "RESTful API for login and register",
   "main": "server.js",
   "scripts": {
