@@ -18,6 +18,9 @@ pids
 
 # Dependency directories
 node_modules/
+client/node_modules/
+client/.expo/
+server/node_modules/
 jspm_packages/
 bower_components/
 .yarn/cache/
@@ -25,6 +28,11 @@ bower_components/
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Package-locks
+package-lock.json
+client/package-lock.json
+server/package-lock.json
 
 # Output builds
 dist/

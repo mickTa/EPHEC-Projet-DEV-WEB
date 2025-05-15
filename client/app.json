@@ -1,5 +1,6 @@
 {
   "expo": {
+    "entryPoint": "expo-router/entry",
     "name": "client",
     "slug": "client",
     "version": "1.0.0",
@@ -9,11 +10,7 @@
     "scheme": "client",
     "owner": "nobody7274",
     "userInterfaceStyle": "automatic",
-    "platforms": [
-      "android",
-      "ios",
-      "web"
-    ],
+    "platforms": ["android", "ios", "web"],
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -23,9 +20,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.CAMERA"
-      ],
+      "permissions": ["android.permission.CAMERA"],
       "package": "com.anonymous.client"
     },
     "web": {
