@@ -50,11 +50,13 @@ out/
 .serverless/
 .fusebox/
 .dynamodb/
+android/
 android/build/
 android/app/build/
 android/.gradle/
 android/.idea/
 android/.build/
+ios/
 .cxx/
 captures/
 externalNativeBuild/
