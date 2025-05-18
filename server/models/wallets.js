@@ -8,50 +8,51 @@ Wallet.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: "users",
-        key: "id"
+        key: "id",
       },
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
     },
     organizerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: "users",
-        key: "id"
+        key: "id",
       },
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
     },
     eventId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: "events",
-        key: "id"
+        key: "id",
       },
-      onDelete: "SET NULL"
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
     amount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
-    }
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: "wallets",
@@ -60,9 +61,9 @@ Wallet.init(
     indexes: [
       {
         unique: true,
-        fields: ['userId', 'organizerId', 'eventId']  
-      }
-    ]
+        fields: ["userId", "organizerId", "eventId"],
+      },
+    ],
   }
 );
 

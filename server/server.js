@@ -8,17 +8,16 @@ const userRoutes = require("./routes/users");
 const eventRoutes = require("./routes/events");
 const walletRoutes = require("./routes/wallets");
 const qrCodeRoutes = require("./routes/qrCodeRoutes");
-const paymentRequestRoutes = require("./routes/paymentRequest");
 const registrationRoutes = require("./routes/registration");
 const cors = require("cors");
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
   console.log('Répertoire "uploads" créé.');
@@ -29,9 +28,8 @@ app.use(cors());
 app.use("/api/auth", securityRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/events", eventRoutes);
-app.use("/api/wallet", walletRoutes);
+app.use("/api/wallets", walletRoutes);
 app.use("/api", qrCodeRoutes);
-app.use("/api/payment-request", paymentRequestRoutes);
 app.use("/api/registration", registrationRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

@@ -15,51 +15,71 @@ import {
 } from "expo-camera";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import Constants from "expo-constants";
+
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 
 export default function QrCodeScanner() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const router = useRouter();
 
-  const handleBarCodeScanned = (scanningResult: BarcodeScanningResult) => {
-    const { data, type } = scanningResult ?? {};
-    if (!scanned && data) {
-      setScanned(true);
-      console.log(`QR code détecté (${type}): ${data}`);
-      try {
-        // Vérifie si c’est une URL valide
-        const isUrl = /^https?:\/\/.+$/.test(data);
-        if (isUrl) {
-          router.replace({
-            pathname: "/screens/WebViewScreen",
-            params: { url: data },
-          });
-        } else {
-          Alert.alert("QR Code", `Données non valides : ${data}`);
-        }
-      } catch (error) {
-        console.error("Erreur de redirection :", error);
+  const handleBarCodeScanned = async (
+    scanningResult: BarcodeScanningResult
+  ) => {
+    const { data } = scanningResult ?? {};
+
+    if (!data || scanned) return;
+
+    setScanned(true);
+    console.log("QR détecté :", data);
+
+    try {
+      const token = await AsyncStorage.getItem("jwtToken");
+      if (!token) {
+        Alert.alert("Erreur", "Token manquant");
+        return;
       }
+
+      // Déchiffrement
+      const decryptRes = await axios.post(
+        `${API_BASE_URL}/decrypt-qr`,
+        { encryptedData: data },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const walletData = decryptRes.data.walletData;
+      if (!walletData) {
+        Alert.alert("Erreur", "QR code invalide ou expiré.");
+        return;
+      }
+
+      const { userId, organizerId, id, eventId } = walletData;
+      console.log("🔓 WalletData:", walletData);
+
+      router.replace({
+        pathname: "/screens/ManualPaymentFormScreen",
+        params: { userId, organizerId, walletId: id, eventId },
+      });
+    } catch (error) {
+      console.error("Erreur QR Scan:", error);
+      Alert.alert("Erreur", "Impossible de traiter le QR code.");
+      setScanned(false);
     }
   };
 
-  if (!permission) {
-    return <Text>Demande d'autorisation en cours...</Text>;
-  }
+  if (!permission) return <Text>Demande de permission caméra...</Text>;
 
-  if (!permission || !permission.granted) {
+  if (!permission.granted) {
     return (
       <View style={styles.container}>
-        <Text>
-          {permission === null
-            ? "Initialisation de la permission caméra..."
-            : "Accès à la caméra refusé ou non disponible."}
-        </Text>
-
-        {permission && !permission.granted && (
-          <Button title="Autoriser la caméra" onPress={requestPermission} />
-        )}
-
+        <Text>Accès caméra refusé.</Text>
+        <Button title="Autoriser" onPress={requestPermission} />
         {Platform.OS === "web" && (
           <TouchableOpacity
             style={styles.backToHomeButton}
@@ -80,12 +100,10 @@ export default function QrCodeScanner() {
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
       />
 
-      {/* Overlay : Cadre de scan */}
       <View style={styles.overlay}>
         <View style={styles.scanBox} />
       </View>
 
-      {/* Bouton retour */}
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => router.replace("/screens/HomeScreen")}
@@ -93,9 +111,17 @@ export default function QrCodeScanner() {
         <Ionicons name="arrow-back" size={28} color="white" />
       </TouchableOpacity>
 
-      {scanned && (
-        <Button title="Scanner à nouveau" onPress={() => setScanned(false)} />
-      )}
+      <TouchableOpacity>
+        {scanned && (
+          <Button
+            title="Scanner à nouveau"
+            onPress={() => {
+              setScanned(false);
+              router.replace("/screens/QrCodeScanner");
+            }}
+          />
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -128,25 +154,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "transparent",
     zIndex: 2,
-  },
-  maskOuter: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  maskCenter: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    width: 250,
-    height: 250,
-    marginLeft: -125,
-    marginTop: -125,
-    backgroundColor: "transparent",
-    zIndex: 1,
   },
   backToHomeButton: {
     backgroundColor: "#4CAF50",

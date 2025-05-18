@@ -29,6 +29,7 @@ interface Wallet {
   id: number;
   userId: number;
   organizerId: number;
+  eventId: number;
   amount: number;
 }
 
@@ -116,7 +117,7 @@ const WalletQRCodeScreen = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/wallet/addMoney`, {
+      const response = await fetch(`${API_BASE_URL}/wallets/addMoney`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,6 +155,7 @@ const WalletQRCodeScreen = () => {
       <Text>Wallet ID: {item.id}</Text>
       <Text>User ID: {item.userId}</Text>
       <Text>Organizer ID: {item.organizerId}</Text>
+      <Text>Event ID: {item.eventId}</Text>
       <Text>Amount: {item.amount}</Text>
       <Button
         title="Générer le QR Code"

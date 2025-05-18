@@ -13,6 +13,7 @@ export default function ScreensLayout() {
       <Stack.Screen name="screens/QrCodeScanner" />
       <Stack.Screen name="screens/EventScreen" />
       <Stack.Screen name="screens/EventManagementScreen" />
+      <Stack.Screen name="screens/ManualPaymentFormScreen" />
     </Stack>
   );
 }

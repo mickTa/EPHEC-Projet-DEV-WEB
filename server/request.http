@@ -18,8 +18,8 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "newusdser@example.com",
-  "password": "Secsdure12*"
+  "email": "bobby3@example.com",
+  "password": "Abscdef12&*"
 }
 
 
@@ -84,7 +84,7 @@ POST http://localhost:3000/api/decrypt-qr
 Content-Type: application/json
 
 {
-  "encryptedData": "961475a5f0118f87c09acb6f2e039234:4199f08db8511399d0fb5dc14330f0c0146a13f1dc5b02aced4c36c8d6f2a6ca0e84cecb4eb1e38de470781034cf537c764482f8bdf926c26928ae42354b95ee4c7fbc8bba5963ae2c9d44d5e81d3e11ab90687940ec3539964226d18d063cbf674166377b8b02993b80379539bf4337"
+  "encryptedData": "78c9f921ce9e674b9cfe86837fd9d035:2263b65f244444bf97ec0d3d067181dd7704d83c46410b5a401a24538e31319da7e99d39200b50538e43d8d912c0cb159d1ee307972cfd2ed62a193be1836120de7c7530d90a0c537a6c515646b1612ecb77de7f65679a5aae959ba736b65abe9d6c11a8d693df308b249d09963d0a6c:a728cd88f6f9aac1396fe354f232db2847bfc8ed982262ce4bd71f8394f3b158"
 }
 
 ### Get my events
@@ -94,7 +94,7 @@ Content-Type: application/json
 
 
 ### Add money to wallet
-POST http://localhost:3000/api/wallet/addMoney
+POST http://localhost:3000/api/wallets/addMoney
 Content-Type: application/json
 
 {
@@ -122,3 +122,15 @@ Content-Disposition: form-data; name="image"; filename="000037.JPG"
 Content-Type: image/jpeg
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+### Débit du portefeuille
+POST http://localhost:3000/api/wallets/charge
+Content-Type: application/json
+Authorization: Bearer <TOKEN>
+
+{
+  "walletId": 1,
+  "amount": 7.5,
+  "description": "Achat de 3 bières"
+}

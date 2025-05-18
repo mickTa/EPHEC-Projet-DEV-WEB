@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const Wallet = require("../models/wallet");
+const Wallet = require("../models/wallets");
 const bcrypt = require("bcryptjs");
 
 function validatePassword(password) {
@@ -89,7 +89,7 @@ exports.getUserById = async (req, res) => {
         process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
-}
+};
 
 exports.getUserWallets = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
@@ -101,7 +101,7 @@ exports.getUserWallets = async (req, res) => {
 
     const wallets = await Wallet.findAll({
       where: { userId: req.user.id },
-      order: [["createdAt", "DESC"]], // Newest first
+      order: [["createdAt", "DESC"]],
       limit,
       offset,
     });
