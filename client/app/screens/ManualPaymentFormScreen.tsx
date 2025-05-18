@@ -32,7 +32,7 @@ export default function ManualPaymentFormScreen() {
   const [description, setDescription] = useState("");
 
   const handleSubmit = async () => {
-    console.log("👉 handleSubmit called");
+    console.log("handleSubmit triggered");
     if (!amount || isNaN(+amount)) {
       Alert.alert("Erreur", "Veuillez entrer un montant valide.");
       return;
@@ -40,21 +40,46 @@ export default function ManualPaymentFormScreen() {
 
     try {
       const token = await AsyncStorage.getItem("jwtToken");
+      console.log("✅ Token récupéré :", token);
+
+      const payload = {
+        walletId: Number(walletId),
+        userId,
+        organizerId,
+        eventId,
+        amount: parseFloat(amount),
+        description: description || "Achat produit",
+      };
+
+      console.log("📦 Payload envoyé :", payload);
+      console.log("🌍 URL API :", `${API_BASE_URL}/payment-requests`);
+
       const response = await axios.post(
-        `${API_BASE_URL}/wallets/charge`,
+        `${API_BASE_URL}/payment-requests`,
+        payload,
         {
-          walletId: parsedWalletId,
-          amount: parseFloat(amount),
-          description: description || "Achat produit",
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          timeout: 5000, // Ajoute un timeout pour forcer une erreur si bloqué
+        }
       );
 
-      Alert.alert("Succès", "Demande envoyée !");
+      console.log("✅ Réponse reçue :", response.data);
+
+      Alert.alert("Succès", "Demande de paiement envoyée !");
       router.replace("/screens/HomeScreen");
-    } catch (err) {
-      console.error("Erreur création paiement manuel:", err);
-      Alert.alert("Erreur", "Échec de la création.");
+    } catch (error) {
+      console.log("❌ Erreur Axios détectée");
+      if (axios.isAxiosError(error)) {
+        console.error("📛 Axios Error message:", error.message);
+        console.error("📛 Axios Response data:", error.response?.data);
+        console.error("📛 Axios Response status:", error.response?.status);
+      } else {
+        console.error("⚠️ Erreur inconnue:", error);
+      }
+      Alert.alert("Erreur", "Échec de la création de la demande.");
     }
   };
 

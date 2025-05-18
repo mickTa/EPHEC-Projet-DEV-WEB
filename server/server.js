@@ -9,6 +9,7 @@ const eventRoutes = require("./routes/events");
 const walletRoutes = require("./routes/wallets");
 const qrCodeRoutes = require("./routes/qrCodeRoutes");
 const registrationRoutes = require("./routes/registration");
+const payment_requests = require("./routes/paymentRequests");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
@@ -31,7 +32,12 @@ app.use("/api/events", eventRoutes);
 app.use("/api/wallets", walletRoutes);
 app.use("/api", qrCodeRoutes);
 app.use("/api/registration", registrationRoutes);
+app.use("/api/payment-requests", payment_requests);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get("/", (_, res) =>
+  res.send("API RESTful de l'application de gestion d'événements")
+);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

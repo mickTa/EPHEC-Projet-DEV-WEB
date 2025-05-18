@@ -134,3 +134,14 @@ Authorization: Bearer <TOKEN>
   "amount": 7.5,
   "description": "Achat de 3 bières"
 }
+
+### Requête de paiement 
+POST http://localhost:3000/api/payment-requests
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ3NTg4MTE4LCJleHAiOjE3NDc1OTE3MTh9.61CYm54Ajoe12FvHhwE95bkm-BEGYPPNAEW8VP_zj48
+
+{
+  "walletId": 1,
+  "amount": 7.5,
+  "description": "Achat de 3 bières"
+}
