@@ -96,6 +96,26 @@ export default function ProfileScreen() {
     }
   };
 
+  const requestOrganizerRole = async () => {
+
+    const token = await AsyncStorage.getItem("jwtToken");
+
+    try {
+      await fetch(`${API_BASE_URL}/users/requestRole`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          role: "ORGANIZER"
+        }),
+      });
+    } catch (error) {
+      console.error("Impossible de demander le rôle organisateur", error);
+    }
+  };
+
   if (loading)
     return (
       <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
@@ -128,7 +148,17 @@ export default function ProfileScreen() {
                 Modifier le mot de passe
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.changePasswordButton}
+              onPress={() => requestOrganizerRole()}
+            >
+              <Text style={styles.changePasswordText}>
+                Demander à être organisateur
+              </Text>
+            </TouchableOpacity>
           </View>
+
+          
 
           <View style={styles.card}>
             <Text style={styles.subtitle}>Vos derniers achats :</Text>

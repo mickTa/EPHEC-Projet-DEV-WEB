@@ -1,3 +1,4 @@
+const { RoleRequest } = require("../models/roleRequest");
 const User = require("../models/user");
 const Wallet = require("../models/wallet");
 const bcrypt = require("bcryptjs");
@@ -44,6 +45,32 @@ exports.changePassword = async (req, res) => {
     res.json({ message: "Mot de passe changé avec succès !" });
   } catch (err) {
     console.error("Erreur lors du changement de mot de passe :", err);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+};
+
+exports.requestRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+
+    if (!req.user) {
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
+    }
+
+    // Création requête de rôle
+    await RoleRequest.create({
+      userId: req.user.id,
+      role: role,
+      date: Date.now(), 
+      status: "PENDING"
+    });
+    res.status(200);
+
+    // console.log("Requête créée :", role);
+
+    res.json({ message: "Requête envoyée aux administrateurs" });
+  } catch (err) {
+    console.error("Erreur lors de la requête de rôle :", err);
     res.status(500).json({ error: "Erreur interne du serveur" });
   }
 };

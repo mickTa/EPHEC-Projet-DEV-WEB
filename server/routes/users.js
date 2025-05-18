@@ -23,6 +23,8 @@ router.get(
 
 router.post("/changePassword", checkAuth(), UserController.changePassword);
 
+router.post("/requestRole", checkAuth(), UserController.requestRole);
+
 // Route pour l'inscription
 router.post("/", UserController.post);
 
