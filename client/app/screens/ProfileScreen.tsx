@@ -9,6 +9,7 @@ import {
   ScrollView,
   SafeAreaView,
   Image,
+  Platform,
 } from "react-native";
 import TopBar from "../components/TopBar";
 import EventContainer from "../components/EventContainer";
@@ -107,8 +108,16 @@ export default function ProfileScreen() {
       const blob = await response.blob(); // convert to Blob
 
       const formData = new FormData();
-      formData.append("image", new File([blob], `pfp.${extension}`, { type: blob.type }));
-
+      if(Platform.OS=="web"){
+        formData.append("image", new File([blob], `pfp.${extension}`, { type: blob.type }));
+      }else{
+        formData.append("image", {
+          uri: pfp.uri,
+          name: pfp.fileName,
+          type: pfp.mimeType,
+        }as any);
+      }
+      
       try {
         const res = await fetch(`${API_BASE_URL}/users/setPfp`, {
           method: 'POST',
