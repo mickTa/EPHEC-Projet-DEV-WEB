@@ -183,8 +183,8 @@ export default function ProfileScreen() {
 
           <View style={styles.profileInfo}>
 
-            <TouchableOpacity onPress={pickPfp}>
-              <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+            <TouchableOpacity onPress={pickPfp} style={styles.pfp}>
+              <View>
                 <Image 
                   source={pfp?
                     { uri: pfp.uri }
@@ -382,5 +382,10 @@ const styles = StyleSheet.create({
     margin: 20,
     alignItems: "center",
     gap: 30,
+  },
+  pfp: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1
   },
 });
