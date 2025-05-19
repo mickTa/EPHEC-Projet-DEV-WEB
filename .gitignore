@@ -81,6 +81,8 @@ Icon?
 *.tsbuildinfo
 
 # Expo / React Native
+client/.expo/
+client/.expo-shared/
 .expo/
 .expo-shared/
 *.jks

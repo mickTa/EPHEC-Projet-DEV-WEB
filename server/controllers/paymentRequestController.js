@@ -1,5 +1,6 @@
 const PaymentRequest = require("../models/paymentRequest");
 const Wallet = require("../models/wallets");
+const { getIO, userSockets } = require("../utils/socket");
 
 exports.create = async (req, res) => {
   try {
@@ -15,6 +16,13 @@ exports.create = async (req, res) => {
       description,
       status: "pending",
     });
+
+    // Émettre la notification à l'utilisateur concerné via Socket.IO
+    const io = getIO();
+    const socketId = userSockets.get(String(userId));
+    if (socketId) {
+      io.to(socketId).emit("newPaymentRequest", request);
+    }
 
     res.status(201).json(request);
   } catch (err) {

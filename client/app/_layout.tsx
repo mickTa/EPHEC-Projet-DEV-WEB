@@ -14,6 +14,7 @@ export default function ScreensLayout() {
       <Stack.Screen name="screens/EventScreen" />
       <Stack.Screen name="screens/EventManagementScreen" />
       <Stack.Screen name="screens/ManualPaymentFormScreen" />
+      <Stack.Screen name="screens/UserPaymentRequestsScreen" />
     </Stack>
   );
 }

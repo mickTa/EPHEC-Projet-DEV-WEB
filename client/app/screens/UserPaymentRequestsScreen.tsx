@@ -1,92 +1,131 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList, Button } from "react-native";
+import { io } from "socket.io-client";
+import Constants from "expo-constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-interface PendingRequestsProps {
-  token: string;
-}
+const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
+const isDevice = Constants.platform?.ios || Constants.platform?.android;
+const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 
-interface PaymentRequest {
+type PaymentRequest = {
   id: string;
-  description: string;
   amount: number;
-  // add other fields if needed
-}
+  description: string;
+};
 
-export default function PendingRequests({ token }: PendingRequestsProps) {
-  const [pendingRequests, setPendingRequests] = useState<PaymentRequest[]>([]);
-  const [selectedRequest, setSelectedRequest] = useState<PaymentRequest | null>(
-    null
-  );
+const UserPaymentRequestsScreen = () => {
+  const [paymentRequests, setPaymentRequests] = useState<PaymentRequest[]>([]);
+  const [socket, setSocket] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      axios
-        .get("http://192.168.0.247:3000/api/payment-requests/pending", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          setPendingRequests(res.data);
-          if (res.data.length > 0) setSelectedRequest(res.data[0]);
-        })
-        .catch(console.error);
-    }, 5000); // toutes les 5 secondes
+    const connectSocket = async () => {
+      const user = JSON.parse(
+        (await AsyncStorage.getItem("userData")) ?? "null"
+      );
+      setUserId(user.id);
+      const newSocket = io(API_BASE_URL);
+      setSocket(newSocket);
 
-    return () => clearInterval(interval);
-  }, []);
+      newSocket.on("connect", () => {
+        console.log("Connecté au serveur Socket.IO");
+        newSocket.emit("register", user.id);
+      });
 
-  const handleAccept = () => {
-    if (!selectedRequest) return;
-    axios
-      .post(
-        `http://192.168.0.247:3000/api/payment-requests/${selectedRequest.id}/accept`,
+      newSocket.on("newPaymentRequest", (request: any) => {
+        if (userId) {
+          setPaymentRequests((prevRequests) => [...prevRequests, request]);
+        }
+      });
+
+      setSocket(newSocket);
+
+      return () => {
+        newSocket.disconnect();
+      };
+    };
+    connectSocket();
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchPaymentRequests = async () => {
+      if (!userId) return;
+      try {
+        const token = await AsyncStorage.getItem("jwtToken");
+        const response = await axios.get(
+          `${API_BASE_URL}/paymentRequests/user/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setPaymentRequests(response.data);
+      } catch (error) {
+        console.error("Error fetching payment requests:", error);
+      }
+    };
+    fetchPaymentRequests();
+  }, [userId]);
+
+  const handleApprove = async (requestId: string) => {
+    try {
+      const token = await AsyncStorage.getItem("jwtToken");
+      await axios.post(
+        `${API_BASE_URL}/paymentRequests/${requestId}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
-      )
-      .then(() => {
-        alert("Demande acceptée");
-        setSelectedRequest(null);
-      })
-      .catch(console.error);
+      );
+      setPaymentRequests(paymentRequests.filter((req) => req.id !== requestId));
+    } catch (error) {
+      console.error("Error approving request:", error);
+    }
   };
 
-  const handleReject = () => {
-    if (!selectedRequest) return;
-    axios
-      .post(
-        `http://192.168.0.247:3000/api/payment-requests/${selectedRequest.id}/reject`,
+  const handleReject = async (requestId: string) => {
+    try {
+      const token = await AsyncStorage.getItem("jwtToken");
+      await axios.post(
+        `${API_BASE_URL}/paymentRequests/${requestId}/reject`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
-      )
-      .then(() => {
-        alert("Demande rejetée");
-        setSelectedRequest(null);
-      })
-      .catch(console.error);
+      );
+      setPaymentRequests(paymentRequests.filter((req) => req.id !== requestId));
+    } catch (error) {
+      console.error("Error rejecting request:", error);
+    }
   };
 
   return (
-    <Modal visible={!!selectedRequest} transparent>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          backgroundColor: "rgba(0,0,0,0.5)",
-          padding: 20,
-        }}
-      >
-        {selectedRequest && (
-          <View
-            style={{ backgroundColor: "white", padding: 20, borderRadius: 10 }}
-          >
-            <Text>Demande de paiement reçue:</Text>
-            <Text>Description: {selectedRequest.description}</Text>
-            <Text>Montant: €{selectedRequest.amount}</Text>
-            <Button title="Accepter" onPress={handleAccept} />
-            <Button title="Refuser" onPress={handleReject} />
-          </View>
-        )}
-      </View>
-    </Modal>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ fontSize: 20, marginBottom: 20 }}>
+        Demandes de paiement
+      </Text>
+      {paymentRequests.length === 0 ? (
+        <Text>Aucune demande de paiement en attente.</Text>
+      ) : (
+        <FlatList
+          data={paymentRequests}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={{ borderWidth: 1, padding: 10, marginVertical: 5 }}>
+              <Text>Montant: {item.amount}</Text>
+              <Text>Description: {item.description}</Text>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-around" }}
+              >
+                <Button
+                  title="Approuver"
+                  onPress={() => handleApprove(item.id)}
+                />
+                <Button title="Rejeter" onPress={() => handleReject(item.id)} />
+              </View>
+            </View>
+          )}
+        />
+      )}
+    </View>
   );
-}
+};
+
+export default UserPaymentRequestsScreen;

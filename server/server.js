@@ -13,10 +13,15 @@ const payment_requests = require("./routes/paymentRequests");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+const http = require("http");
+const { init } = require("./utils/socket");
 
 dotenv.config();
 const app = express();
+const server = http.createServer(app);
 app.use(express.json());
+
+init(server);
 
 const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
