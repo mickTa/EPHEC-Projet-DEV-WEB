@@ -27,6 +27,10 @@ User.init(
       type: DataTypes.ENUM("USER", "ADMIN","ORGANIZER"),
       defaultValue: "USER",
     },
+    pfpUrl: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
   },
   {
     tableName: "users",

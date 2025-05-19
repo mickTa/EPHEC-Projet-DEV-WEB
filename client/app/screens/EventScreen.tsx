@@ -65,6 +65,7 @@ export default function EventScreen() {
   }, []);
 
   const handleRegister = async () => {
+    setRegistrationLoading(true);
     try {
       const token = await AsyncStorage.getItem("jwtToken");
 
@@ -95,9 +96,11 @@ export default function EventScreen() {
       console.error("Erreur pendant l'inscription :", error);
       Alert.alert("Erreur", "Une erreur s’est produite lors de l’inscription.");
     }
+    setRegistrationLoading(false);
   };
 
   const handleUnregister = async () => {
+    setRegistrationLoading(true);
     try {
       const token = await AsyncStorage.getItem("jwtToken");
 
@@ -124,6 +127,7 @@ export default function EventScreen() {
       console.error("Erreur pendant la désinscription :", error);
       Alert.alert("Erreur", "Une erreur s’est produite lors de la désinscription.");
     }
+    setRegistrationLoading(false);
   };
 
   if (eventLoading)

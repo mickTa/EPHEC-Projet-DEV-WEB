@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const UserController = require("../controllers/users");
 const checkAuth = require("../middlewares/checkAuth");
+const upload = require("../middlewares/upload");
 
 const router = new Router();
 
@@ -22,6 +23,8 @@ router.get(
 );
 
 router.post("/changePassword", checkAuth(), UserController.changePassword);
+
+router.post("/setPfp",checkAuth(),upload.single("image"),UserController.setPfp);
 
 // Route pour l'inscription
 router.post("/", UserController.post);

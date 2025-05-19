@@ -12,7 +12,8 @@
     "node-fetch": "^3.3.2",
     "pg": "^8.13.3",
     "pg-hstore": "^2.3.4",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "tsconfig": "^7.0.0"
   },
   "scripts": {
     "dev:server": "npm run dev --workspace=server",
