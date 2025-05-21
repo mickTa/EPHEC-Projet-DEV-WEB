@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Wallet = require("../models/wallet");
 const bcrypt = require("bcryptjs");
 const cloudinary = require("../cloudinary");
+const streamifier = require("streamifier");
 
 function validatePassword(password) {
   const regex =
@@ -126,14 +127,21 @@ exports.getUserWallets = async (req, res) => {
 
 exports.setPfp = async (req, res) => {
   try {
-      let user=await User.findByPk(req.user.id)
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "users", 
-      });
-      user.update({pfpUrl:result.secure_url})
-      res.status(200).json({ message: "Image téléchargée avec succès", url: result.secure_url });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Erreur lors de l'upload de l'image" });
-    }
+    let user=await User.findByPk(req.user.id)
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "users" },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+      streamifier.createReadStream(req.file.buffer).pipe(stream);
+    });
+    user.update({pfpUrl:result.secure_url})
+    res.status(200).json({ message: "Image téléchargée avec succès", url: result.secure_url });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de l'upload de l'image" });
+  }
 }
