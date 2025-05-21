@@ -123,3 +123,6 @@ app-example
 
 # Yarn v2+
 .yarn-integrity
+
+#Config Firebase
+server/firebaseConfig.json
