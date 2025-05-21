@@ -2,13 +2,13 @@
 
 ## Membres du groupe
 
-| Nom               | Pseudo Github     | 
-| ----------------- | ----------------- | 
-| Mickaël TALIDEC   | mickTa            | 
-| Sydney TEXIER     | MrNobody005       | 
-| Charlie AUBOURG   | CharlieAubourg1   | 
-| Bogomir STOYANOV  | bogogod           |
-
+| Nom                | Pseudo Github      | 
+| ------------------ | ------------------ | 
+| Mickaël TALIDEC    | mickTa             | 
+| Sydney TEXIER      | MrNobody005        | 
+| Charlie AUBOURG    | CharlieAubourg1    | 
+| Bogomir STOYANOV   | bogogod            |
+| Jérémie MUCHEMBLED | jeremie-78         |
 
 ## Structure du Projet
 
