@@ -44,11 +44,35 @@ mickta-ephec-projet-dev-web/
 
 ### Prérequis
 
-#### Version web
+#### Dump la base de donnée dans votre environnement local : 
+
+1. Créer une nouvelle base de données (vide)
+
+- Dans pgAdmin, clic droit sur "Databases" → Create > Database...
+- Donner un nom à la base (ex. : qufest_db_copy)
+- Valider
+
+2. Restaurer le fichier .backup
+
+- Clic droit sur la nouvelle base → Restore...
+
+##### Paramétrer :
+
+- Format : Custom or tar
+- Filename : Sélectionner le fichier dump-sql.backup (dans le dossier Dumps du projet)
+
+##### Aller dans l’onglet Restore options :
+
+- Cocher la case "No owner" (pour ignorer les rôles d’origine)
+- Cocher la case "No privilèges" (pour ignorer les permissions d’origine)
+
+Lancer la restauration en cliquant sur Restore
+
+#### Utilisation de la version web
 
 - Node.js 
 - PostgreSQL
-- `npm install` à la racine du projet
+- `npm install` à la racine du projet 
 
 ##### Variables d'environnement
 
