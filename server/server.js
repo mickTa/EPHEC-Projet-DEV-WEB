@@ -27,12 +27,6 @@ app.use(cors());
 
 app.use(logConnection);
 
-// Création du dossier uploads si nécessaire
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-  console.log('Répertoire "uploads" créé.');
-}
 
 // Définition des routes
 app.use("/api/auth", securityRoutes);
