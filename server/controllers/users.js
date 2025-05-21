@@ -51,7 +51,7 @@ exports.changePassword = async (req, res) => {
 
 exports.post = async (req, res) => {
   try {
-    const { password } = req.body;
+    const { password, role, ...rest } = req.body;
 
     if (!validatePassword(password)) {
       return res.status(400).json({
@@ -59,7 +59,13 @@ exports.post = async (req, res) => {
           "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
       });
     }
-    const user = await User.create(req.body);
+    if (role && role.toUpperCase() === "ADMIN") {
+      return res.status(403).json({
+        error: "La création de comptes ADMIN est interdite via cette route.",
+      });
+    }
+
+    const user = await User.create({ ...rest, password, role: role || "USER" });
     res.status(201).json(user);
   } catch (err) {
     console.error("Erreur Sequelize :", err);
