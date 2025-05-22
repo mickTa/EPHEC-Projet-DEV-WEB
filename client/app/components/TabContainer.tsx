@@ -24,6 +24,7 @@ const TabContainer: React.FC = () => {
       | "/screens/WalletQRCodeScreen"
       | "/screens/QrCodeScanner"
       | "/screens/ProfileScreen"
+      | "/screens/RoleRequestScreen"
   ) => (
     <Pressable
       onPress={
@@ -41,17 +42,26 @@ const TabContainer: React.FC = () => {
       <View style={styles.tabsBox}>
         {renderButton(require("../img/home-icon.png"), "/screens/HomeScreen")}
 
+        {userRole === "ADMIN" &&
+          renderButton(
+            require("../img/timetable-icon.png"),
+            "/screens/RoleRequestScreen"
+          )
+        }
+
         {userRole === "ORGANIZER" &&
           renderButton(
             require("../img/timetable-icon.png"),
             "/screens/EventFormScreen"
-          )}
+          )
+        }
 
         {userRole === "USER" &&
           renderButton(
             require("../img/wallet-icon.png"),
             "/screens/WalletQRCodeScreen"
-          )}
+          )
+        }
 
         {renderButton(
           require("../img/scanQrCode-icon.png"),

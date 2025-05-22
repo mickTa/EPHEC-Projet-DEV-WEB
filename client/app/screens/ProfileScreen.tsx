@@ -148,14 +148,18 @@ export default function ProfileScreen() {
                 Modifier le mot de passe
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.changePasswordButton}
-              onPress={() => requestOrganizerRole()}
-            >
-              <Text style={styles.changePasswordText}>
-                Demander à être organisateur
-              </Text>
-            </TouchableOpacity>
+
+            {userData.role=="USER" && (
+              <TouchableOpacity
+                style={styles.changePasswordButton}
+                onPress={() => requestOrganizerRole()}
+              >
+                <Text style={styles.changePasswordText}>
+                  Demander à être organisateur
+                </Text>
+              </TouchableOpacity>
+            )}
+            
           </View>
 
           

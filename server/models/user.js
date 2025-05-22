@@ -24,7 +24,7 @@ User.init(
       type: DataTypes.STRING,
     },
     role: {
-      type: DataTypes.ENUM("USER", "ADMIN","ORGANIZER"),
+      type: DataTypes.ENUM("USER", "ADMIN", "ORGANIZER"),
       defaultValue: "USER",
     },
   },
