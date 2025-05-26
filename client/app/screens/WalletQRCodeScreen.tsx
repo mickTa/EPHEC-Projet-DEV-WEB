@@ -152,11 +152,8 @@ const WalletQRCodeScreen = () => {
 
   const renderWalletItem = ({ item }: { item: Wallet }) => (
     <View style={styles.walletItem}>
-      <Text>Wallet ID: {item.id}</Text>
-      <Text>User ID: {item.userId}</Text>
-      <Text>Organizer ID: {item.organizerId}</Text>
-      <Text>Event ID: {item.eventId}</Text>
-      <Text>Amount: {item.amount}</Text>
+      <Text>Portefeuille pour organiseur #{item.organizerId}</Text>
+      <Text>Vous avez {item.amount} crédits</Text>
       <Button
         title="Générer le QR Code"
         onPress={() => handleGenerateQRCode(item)}

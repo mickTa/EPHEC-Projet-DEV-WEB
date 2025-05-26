@@ -2,18 +2,22 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  Alert,
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
   Image,
+  Platform,
 } from "react-native";
 import TopBar from "../components/TopBar";
 import EventContainer from "../components/EventContainer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import {requestMediaLibraryPermissionsAsync,launchImageLibraryAsync} from 'expo-image-picker';
+import Toast from 'react-native-toast-message';
 
 import Constants from "expo-constants";
 
@@ -42,11 +46,17 @@ export default function ProfileScreen() {
   const [organizedEventLoading, setOrganizedEventLoading] = useState(true);
   const[subscribedEvents,setSubscribedEvents]=useState<EventInfo[]>([]);
   const[organizedEvents,setOrganizedEvents]=useState<EventInfo[]>([]);
+  const[pfp,setPfp]=useState<any>(null);
+  const[pfpUrl,setPfpUrl]=useState("");
   const router = useRouter();
   
   useEffect(() => {
     const fetchUserData = async () => {
-      setUserData(JSON.parse(await AsyncStorage.getItem("userData")??"null"));
+      const data=JSON.parse(await AsyncStorage.getItem("userData")??"null");
+      setUserData(data);
+      if(data?.pfpUrl){
+        setPfpUrl(data.pfpUrl);
+      }
       setLoading(false);
     };
     
@@ -86,6 +96,53 @@ export default function ProfileScreen() {
     if(userData?.role=="ORGANIZER")fetchMyOrganizedEvents().then(()=>{setOrganizedEventLoading(false)});
   }, [userData]);
 
+  useEffect(()=>{
+    const uploadPfp=async()=>{ 
+      if(!pfp){
+        return
+      }
+      const filename=pfp.fileName.split(".")
+      const extension=filename[filename.length-1]
+
+      const response = await fetch(pfp.uri); // fetch image file from URI
+      const blob = await response.blob(); // convert to Blob
+
+      const formData = new FormData();
+      if(Platform.OS=="web"){
+        formData.append("image", new File([blob], `pfp.${extension}`, { type: blob.type }));
+      }else{
+        formData.append("image", {
+          uri: pfp.uri,
+          name: pfp.fileName,
+          type: pfp.mimeType,
+        }as any);
+      }
+      
+      try {
+        const res = await fetch(`${API_BASE_URL}/users/setPfp`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${await AsyncStorage.getItem("jwtToken")}`,
+          },
+          body: formData,
+        });
+
+        const data = await res.json();
+        let newUserData=JSON.parse(await AsyncStorage.getItem("userData")??"null");
+        newUserData.pfpUrl=data.url
+        AsyncStorage.setItem("userData",JSON.stringify(newUserData));
+        if (res.ok){
+          Toast.show({type:"success",text1:"Photo de profil mise à jour",position:"bottom"});
+        }else{
+          Toast.show({type:"error",text1:"Echec de la mise à jour de la photo de profil",text2:data,position:"bottom"});
+        }
+      }catch(error) {
+        console.error('Upload error',error);
+      }
+    };
+    uploadPfp();
+  },[pfp])
+
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("jwtToken");
@@ -95,6 +152,26 @@ export default function ProfileScreen() {
       console.error("Erreur lors de la déconnexion", error);
     }
   };
+
+  const pickPfp = async () => {
+    const permissionResult = await requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert("Permission required", "Permission to access media library is required!");
+      return;
+    }
+
+    const result = await launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1], // Square crop
+      quality: 1,
+      selectionLimit: 1
+    });
+
+    if (!result.canceled) {
+      setPfp(result.assets[0]);
+    }
+  }
 
   if (loading)
     return (
@@ -106,6 +183,7 @@ export default function ProfileScreen() {
       <TopBar title="Mon profil" previous="HomeScreen" />
       {userData?
         <ScrollView contentContainerStyle={styles.scrollContent}>
+
           <View style={styles.topBar}>
             <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
               <Text style={styles.logoutText}>Déconnexion</Text>
@@ -113,7 +191,24 @@ export default function ProfileScreen() {
           </View>
 
           <View style={styles.profileInfo}>
-            <View style={styles.profilePic} />
+
+            <TouchableOpacity onPress={pickPfp} style={styles.pfp}>
+              <View>
+                <Image 
+                  source={pfp?
+                    { uri: pfp.uri }
+                     
+                  :
+                    pfpUrl?
+                      { uri: pfpUrl }
+                    :
+                      require("../img/profile-icon.png")
+                  }
+                  style={styles.profilePic}
+                />
+              </View>
+            </TouchableOpacity>
+
             <Text style={styles.title}>Bienvenue, {userData.fullName}!</Text>
           </View>
 
@@ -201,6 +296,7 @@ export default function ProfileScreen() {
       :
         <Text style={styles.noData}>Impossible de charger les informations de l'utilisateur</Text>
       }
+      <Toast/>
     </SafeAreaView>
   );
 }
@@ -295,5 +391,10 @@ const styles = StyleSheet.create({
     margin: 20,
     alignItems: "center",
     gap: 30,
+  },
+  pfp: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1
   },
 });

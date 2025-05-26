@@ -110,38 +110,6 @@ POST http://localhost:3000/api/events/8/register
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NzMyNTM1LCJleHAiOjE3NDY3MzYxMzV9.CNZq8G-d6Rw8JYwuwUSJM3cjyaM-KZv-1q4dgq4b7jE
 
-### Upload d'une image
-POST http://localhost:3000/api/events/upload HTTP/1.1
-Host: localhost:3000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NTIzMjUwLCJleHAiOjE3NDY1MjY4NTB9.doT7olqbqnmfbdBckAiPEp-sJge4ZVaUetbcFlttgxU
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Length: [calculez la longueur ici]
-
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="image"; filename="000037.JPG"
-Content-Type: image/jpeg
-
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
-
-
-### Débit du portefeuille
-POST http://localhost:3000/api/wallets/charge
-Content-Type: application/json
-Authorization: Bearer <TOKEN>
-
-{
-  "walletId": 1,
-  "amount": 7.5,
-  "description": "Achat de 3 bières"
-}
-
-### Requête de paiement 
-POST http://localhost:3000/api/payment-requests
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ3NTg4MTE4LCJleHAiOjE3NDc1OTE3MTh9.61CYm54Ajoe12FvHhwE95bkm-BEGYPPNAEW8VP_zj48
-
-{
-  "walletId": 1,
-  "amount": 7.5,
-  "description": "Achat de 3 bières"
-}
+### Récupérer les logs (admin uniquement)
+GET http://localhost:3000/api/admin/logs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ3ODM2MzE1LCJleHAiOjE3NDc4Mzk5MTV9.krNbHpMjrsUuf3fyfZqCEtoMjzQV1orHPkeD2GCowg0

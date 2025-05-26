@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const Wallet = require("../models/wallets");
 const bcrypt = require("bcryptjs");
+const cloudinary = require("../cloudinary");
+const streamifier = require("streamifier");
 
 function validatePassword(password) {
   const regex =
@@ -50,7 +52,7 @@ exports.changePassword = async (req, res) => {
 
 exports.post = async (req, res) => {
   try {
-    const { password } = req.body;
+    const { password, role, ...rest } = req.body;
 
     if (!validatePassword(password)) {
       return res.status(400).json({
@@ -58,7 +60,13 @@ exports.post = async (req, res) => {
           "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
       });
     }
-    const user = await User.create(req.body);
+    if (role && role.toUpperCase() === "ADMIN") {
+      return res.status(403).json({
+        error: "La création de comptes ADMIN est interdite via cette route.",
+      });
+    }
+
+    const user = await User.create({ ...rest, password, role: role || "USER" });
     res.status(201).json(user);
   } catch (err) {
     console.error("Erreur Sequelize :", err);
@@ -116,3 +124,24 @@ exports.getUserWallets = async (req, res) => {
     });
   }
 };
+
+exports.setPfp = async (req, res) => {
+  try {
+    let user=await User.findByPk(req.user.id)
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "users" },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+      streamifier.createReadStream(req.file.buffer).pipe(stream);
+    });
+    user.update({pfpUrl:result.secure_url})
+    res.status(200).json({ message: "Image téléchargée avec succès", url: result.secure_url });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erreur lors de l'upload de l'image" });
+  }
+}

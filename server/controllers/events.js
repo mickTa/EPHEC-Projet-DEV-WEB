@@ -2,6 +2,8 @@ const Event = require("../models/events");
 const Registration = require("../models/registration");
 const cloudinary = require("../cloudinary");
 const fs = require("fs");
+const streamifier = require("streamifier");
+
 
 
 exports.NewEvent = async (req, res) => {
@@ -87,8 +89,15 @@ exports.uploadEventImage = async (req, res) => {
   }
 
   try {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: "events", 
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "events" },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+      streamifier.createReadStream(req.file.buffer).pipe(stream);
     });
 
     res.status(200).json({ message: "Image téléchargée avec succès", url: result.secure_url });
