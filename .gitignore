@@ -50,11 +50,13 @@ out/
 .serverless/
 .fusebox/
 .dynamodb/
+android/
 android/build/
 android/app/build/
 android/.gradle/
 android/.idea/
 android/.build/
+ios/
 .cxx/
 captures/
 externalNativeBuild/
@@ -121,3 +123,6 @@ app-example
 
 # Yarn v2+
 .yarn-integrity
+
+#Config Firebase
+server/firebaseConfig.json

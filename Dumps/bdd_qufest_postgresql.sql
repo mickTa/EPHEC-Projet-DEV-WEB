@@ -152,6 +152,7 @@ CREATE TABLE public.users (
     birthday character varying(255) DEFAULT NULL::character varying,
     role character varying(10) DEFAULT 'USER'::character varying,
     "paymentURL" character varying(255) DEFAULT NULL::character varying,
+    "pfpUrl" character varying(255) DEFAULT NULL::character varying,
     "createdAt" timestamp without time zone NOT NULL,
     "updatedAt" timestamp without time zone NOT NULL,
     CONSTRAINT users_role_check CHECK (((role)::text = ANY ((ARRAY['USER'::character varying, 'ADMIN'::character varying, 'ORGANIZER'::character varying])::text[])))
