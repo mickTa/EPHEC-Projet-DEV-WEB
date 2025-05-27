@@ -93,7 +93,26 @@ CLOUDINARY_URL=
 LOCALHOST_API=http://localhost:3000/api
 LAN_API=http://<votre adresse ip:3000/api // Lors du déploiement ce sera l'ip d'un de nos vps
 ```
+##### Clé de connexion Firebase :
 
+Pour lancer l'API il est nécéssaire d'avoir unn fichier ```firebaseConfig.json``` qui comporte la clé de connexion à votre projet Firebase Cloud Firestore. Ce fichier doit êre placé dans le dossier /server
+Il doit ressembler à : 
+
+```
+{
+  "type": "",
+  "project_id": "",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
+  "auth_uri": "",
+  "token_uri": "",
+  "auth_provider_x509_cert_url": "",
+  "client_x509_cert_url": "",
+  "universe_domain": ""
+}
+```
 #### Version mobile (Android)
 
 - Node.js 
