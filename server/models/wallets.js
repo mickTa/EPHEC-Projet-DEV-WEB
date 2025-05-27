@@ -67,4 +67,23 @@ Wallet.init(
   }
 );
 
+Wallet.debit = async (walletId, amount) => {
+  const wallet = await Wallet.findByPk(walletId);
+  if (!wallet) {
+    throw new Error("Wallet introuvable");
+  }
+
+  const currentAmount = parseFloat(wallet.amount);
+  const debitAmount = parseFloat(amount);
+
+  if (currentAmount < debitAmount) {
+    throw new Error("Fonds insuffisants");
+  }
+
+  wallet.amount = currentAmount - debitAmount;
+  await wallet.save();
+
+  return wallet;
+};
+
 module.exports = Wallet;

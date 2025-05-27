@@ -31,6 +31,12 @@ exports.create = async (req, res) => {
       console.log("📤 Émission de la demande au socket :", socketId);
       const target = io.to(socketId);
       if (target?.emit) {
+        console.log(
+          "Emitting to socket",
+          socketId,
+          "with data:",
+          request.get({ plain: true })
+        );
         target.emit("newPaymentRequest", request.get({ plain: true }));
         console.log("📤 Émission de la demande au socket :", socketId);
       } else {
@@ -78,6 +84,7 @@ exports.accept = async (req, res) => {
       return res.status(400).json({ error: "Demande invalide" });
     }
 
+    console.log("Méthodes disponibles sur Wallet :", Object.keys(Wallet));
     // retirer du wallet
     await Wallet.debit(request.wallet_id, request.amount);
 

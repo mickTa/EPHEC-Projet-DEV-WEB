@@ -16,10 +16,19 @@ function init(server) {
 
     socket.on("register", (userId) => {
       const cleanId = String(userId).replace(/"/g, "");
-      console.log(`Reçu register(${cleanId}) de socket ${socket.id}`);
+
+      // Supprimer toutes les anciennes associations de ce user
+      for (const [uid, sid] of userSockets.entries()) {
+        if (uid === cleanId) {
+          userSockets.delete(uid);
+        }
+      }
+
+      // Associer le userId au nouveau socket actif
       userSockets.set(cleanId, socket.id);
-      console.log(`Utilisateur ${cleanId} enregistré avec socket ${socket.id}`);
-      console.log("userSockets:", [...userSockets.entries()]);
+
+      console.log(`✅ REGISTER user ${cleanId} → socket ${socket.id}`);
+      console.log("📦 userSockets:", [...userSockets.entries()]);
     });
 
     socket.on("pingTest", (msg) => {
@@ -28,11 +37,12 @@ function init(server) {
     });
 
     socket.on("disconnect", () => {
-      console.log("Utilisateur déconnecté", socket.id);
+      console.log("🔌 Déconnexion socket", socket.id);
+
       for (const [userId, sockId] of userSockets.entries()) {
         if (sockId === socket.id) {
           userSockets.delete(userId);
-          break;
+          console.log(`❌ Socket supprimé pour user ${userId}`);
         }
       }
     });

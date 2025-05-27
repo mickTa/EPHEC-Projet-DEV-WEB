@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,11 +8,12 @@ import {
   Alert,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
-import useSocket from "../../hooks/useSocket"; // Assure-toi que ce chemin est correct
+import useSocket from "../../hooks/useSocket";
 
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
@@ -24,6 +26,7 @@ type PaymentRequest = {
 };
 
 export default function PaymentInboxScreen() {
+  const router = useRouter();
   const [requests, setRequests] = useState<PaymentRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -76,6 +79,7 @@ export default function PaymentInboxScreen() {
           },
         ]
       );
+      console.log("📨 Paiement reçu :", request);
       fetchRequests(); // refresh la liste
     });
   });
@@ -86,6 +90,12 @@ export default function PaymentInboxScreen() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.replace("/screens/HomeScreen")}
+      >
+        <Text style={styles.backButtonText}>← Retour à l'accueil</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Demandes de paiement</Text>
       {loading ? (
         <ActivityIndicator size="large" />
@@ -131,5 +141,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: 10,
+  },
+  backButton: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: "#4682B4",
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  backButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
