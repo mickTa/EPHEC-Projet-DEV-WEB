@@ -2,22 +2,16 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
-  Button,
-  Platform,
   ScrollView,
   Alert,
   Pressable,
-  ActivityIndicator,
   StyleSheet,
   SafeAreaView,
 } from "react-native";
 import TopBar from "../components/TopBar";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { router,useLocalSearchParams } from "expo-router";
-import DateTimePickerWeb from "react-datetime";
+import { router } from "expo-router";
 import "react-datetime/css/react-datetime.css";
 import { useEffect } from "react";
 import ListItem from "../components/ListItem";
@@ -55,7 +49,7 @@ const handleError = (error: any) => {
 };
 
 const RoleRequestScreen = () => {
-  
+
   const [requests, setRequests] = useState(null);
 
   const getRequests = async () => {
@@ -93,6 +87,7 @@ const RoleRequestScreen = () => {
           requestId
         }),
       });
+      await getRequests();
     } catch (error) {
       console.error("Erreur de connexion", error);
       Alert.alert("Échec de la connexion", "Vérifiez vos identifiants.");
@@ -113,6 +108,7 @@ const RoleRequestScreen = () => {
           requestId
         }),
       });
+      await getRequests();
     } catch (error) {
       console.error("Erreur de connexion", error);
       Alert.alert("Échec de la connexion", "Vérifiez vos identifiants.");
@@ -134,16 +130,24 @@ const RoleRequestScreen = () => {
         <br />
         {requests && (
           <>
+            <View style={styles.tab}>
+              <ListItem
+                texts={["User ID", "Statut", "Date de demande"]}
+              />
+            </View>
             {requests.map((req) => {
               return (
                 <View style={styles.tab}>
                   <ListItem
-                    texts={[req.userId, req.status, req.date]}
+                    texts={[req.userId, req.status, (new Date(parseInt(req.date, 10))).toLocaleDateString("fr-FR")]}
                   />
-                  <View style={styles.buttonsTab}>
-                    <Pressable style={styles.acceptButton} onPress={() => accept(req.id)}><Text style={styles.buttonsText}>Accept</Text></Pressable>
-                    <Pressable style={styles.rejectButton} onPress={() => reject(req.id)}><Text style={styles.buttonsText}>Reject</Text></Pressable>
-                  </View>
+
+                  {req.status === "PENDING" && (
+                    <View style={styles.buttonsTab}>
+                      <Pressable style={styles.acceptButton} onPress={() => accept(req.id)}><Text style={styles.buttonsText}>Accept</Text></Pressable>
+                      <Pressable style={styles.rejectButton} onPress={() => reject(req.id)}><Text style={styles.buttonsText}>Reject</Text></Pressable>
+                    </View>
+                  )}
                 </View>
               );
             })}
@@ -155,15 +159,14 @@ const RoleRequestScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    safeArea: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#f9f9f9"
   },
   tab: {
     flex: 1,
     marginVertical: 15,
-    marginHorizontal: 10,
-    borderWidth: 2
+    marginHorizontal: 10
   },
   buttonsTab: {
     flex: 1,
