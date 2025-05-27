@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const paymentRequestController = require("../controllers/paymentRequestController");
-const authenticate = require("../middlewares/checkAuth");
+const checkAuth = require("../middlewares/checkAuth");
 
-router.post("/", authenticate, paymentRequestController.create);
-router.get("/pending", authenticate, paymentRequestController.getPending);
-router.post("/:id/accept", authenticate, paymentRequestController.accept);
-router.post("/:id/reject", authenticate, paymentRequestController.reject);
+router.post("/", checkAuth(), paymentRequestController.create);
+router.get("/pending", checkAuth(), paymentRequestController.getPending);
+router.post("/:id/accept", checkAuth(), paymentRequestController.accept);
+router.post("/:id/reject", checkAuth(), paymentRequestController.reject);
 
 module.exports = router;

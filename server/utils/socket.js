@@ -1,4 +1,3 @@
-// socket.js
 const { Server } = require("socket.io");
 
 let io;
@@ -16,8 +15,16 @@ function init(server) {
     console.log("🔌 Utilisateur connecté", socket.id);
 
     socket.on("register", (userId) => {
-      userSockets.set(userId, socket.id);
-      console.log(`Utilisateur ${userId} enregistré avec socket ${socket.id}`);
+      const cleanId = String(userId).replace(/"/g, "");
+      console.log(`Reçu register(${cleanId}) de socket ${socket.id}`);
+      userSockets.set(cleanId, socket.id);
+      console.log(`Utilisateur ${cleanId} enregistré avec socket ${socket.id}`);
+      console.log("userSockets:", [...userSockets.entries()]);
+    });
+
+    socket.on("pingTest", (msg) => {
+      console.log("Ping reçu du client :", msg);
+      socket.emit("pongTest", "Réponse du serveur : Pong !");
     });
 
     socket.on("disconnect", () => {

@@ -19,7 +19,7 @@ const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 export default function ManualPaymentFormScreen() {
   const { userId, organizerId, walletId, eventId } = useLocalSearchParams();
   const parsedWalletId = Number(walletId);
-  // console.log("🧾 Params:", {
+  // console.log(" Params:", {
   //   userId,
   //   organizerId,
   //   walletId,
@@ -40,7 +40,7 @@ export default function ManualPaymentFormScreen() {
 
     try {
       const token = await AsyncStorage.getItem("jwtToken");
-      console.log("✅ Token récupéré :", token);
+      console.log("Token récupéré :", token);
 
       const payload = {
         walletId: Number(walletId),
@@ -51,33 +51,33 @@ export default function ManualPaymentFormScreen() {
         description: description || "Achat produit",
       };
 
-      console.log("📦 Payload envoyé :", payload);
-      console.log("🌍 URL API :", `${API_BASE_URL}/payment-requests`);
+      console.log("Payload envoyé :", payload);
+      console.log("URL API :", `${API_BASE_URL}/payment-requests/`);
 
       const response = await axios.post(
-        `${API_BASE_URL}/payment-requests`,
+        `${API_BASE_URL}/payment-requests/`,
         payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          timeout: 5000, // Ajoute un timeout pour forcer une erreur si bloqué
+          timeout: 5000,
         }
       );
 
-      console.log("✅ Réponse reçue :", response.data);
+      console.log("Réponse reçue :", response.data);
 
       Alert.alert("Succès", "Demande de paiement envoyée !");
       router.replace("/screens/HomeScreen");
     } catch (error) {
-      console.log("❌ Erreur Axios détectée");
+      console.log("Erreur Axios détectée");
       if (axios.isAxiosError(error)) {
-        console.error("📛 Axios Error message:", error.message);
-        console.error("📛 Axios Response data:", error.response?.data);
-        console.error("📛 Axios Response status:", error.response?.status);
+        console.error(error.message);
+        console.error(error.response?.data);
+        console.error(error.response?.status);
       } else {
-        console.error("⚠️ Erreur inconnue:", error);
+        console.error(error);
       }
       Alert.alert("Erreur", "Échec de la création de la demande.");
     }

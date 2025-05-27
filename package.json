@@ -9,5 +9,8 @@
   "scripts": {
     "dev:server": "npm run dev --workspace=server",
     "dev:client": "npm run start --workspace=client"
+  },
+  "dependencies": {
+    "jest": "^29.7.0"
   }
 }

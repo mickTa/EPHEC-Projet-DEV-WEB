@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import axios from "axios";
 import TabContainer from "../components/TabContainer";
+import useSocket from "../../hooks/useSocket";
 
 const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
@@ -30,6 +31,12 @@ export default function HomeScreen() {
   const router = useRouter();
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useSocket((socket) => {
+    socket.on("pingTest", (msg) => {
+      console.log("Ping reçu dans HomeScreen :", msg);
+    });
+  });
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -50,7 +57,7 @@ export default function HomeScreen() {
         setEvents(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des événements", error);
-        
+
         if (
           axios.isAxiosError(error) &&
           error.response &&

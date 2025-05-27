@@ -17,11 +17,30 @@ exports.create = async (req, res) => {
       status: "pending",
     });
 
-    // Émettre la notification à l'utilisateur concerné via Socket.IO
+    // Émission la notification à l'utilisateur concerné via Socket.IO
     const io = getIO();
     const socketId = userSockets.get(String(userId));
+
+    console.log("userId reçu :", userId);
+    console.log("socketId trouvé :", socketId);
+    console.log("Donnée de la requête envoyée :", request);
+    console.log("Socket ID récupéré dans Map:", socketId);
+    console.log("État actuel de userSockets:", [...userSockets.entries()]);
+
     if (socketId) {
-      io.to(socketId).emit("newPaymentRequest", request);
+      console.log("📤 Émission de la demande au socket :", socketId);
+      const target = io.to(socketId);
+      if (target?.emit) {
+        target.emit("newPaymentRequest", request.get({ plain: true }));
+        console.log("📤 Émission de la demande au socket :", socketId);
+      } else {
+        console.warn(
+          "Émission impossible, .to() ou .emit() est undefined pour socketId:",
+          socketId
+        );
+      }
+    } else {
+      console.log("Aucun socket enregistré pour userId:", userId);
     }
 
     res.status(201).json(request);

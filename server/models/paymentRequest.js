@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
-const db = require("./db"); // ta connexion Sequelize
+const db = require("./db");
 
 const PaymentRequest = db.define(
-  "payment_request", // nom du modèle (singulier)
+  "payment_request",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -40,9 +40,9 @@ const PaymentRequest = db.define(
     },
   },
   {
-    tableName: "payment_requests", // nom exact de la table en base
-    timestamps: true, // ajoute createdAt, updatedAt
-    underscored: true, // pour snake_case des colonnes timestamps
+    tableName: "payment_requests",
+    timestamps: true,
+    underscored: true,
   }
 );
 
