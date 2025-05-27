@@ -41,8 +41,6 @@ exports.changePassword = async (req, res) => {
     // Mise à jour du mot de passe
     await req.user.update({ password: hashedPassword });
 
-    console.log("Nouveau mot de passe hashé :", hashedPassword);
-
     res.json({ message: "Mot de passe changé avec succès !" });
   } catch (err) {
     console.error("Erreur lors du changement de mot de passe :", err);
