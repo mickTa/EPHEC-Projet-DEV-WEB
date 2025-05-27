@@ -123,26 +123,73 @@ const RoleRequestScreen = () => {
     getRequests();
   }, []);
 
+
   return (
-    <View>
-      {requests && (
-        <>
-          {requests.map((req) => {
-            return (
-              <>
-                <ListItem
-                  texts={[req.userId, req.status, req.date]}
-                />
-                <Pressable onPress={() => accept(req.id)}>ACCEPT</Pressable>
-                <Pressable onPress={() => reject(req.id)}>REJECT</Pressable>
-              </>
-            );
-          })}
-        </>
-      )}
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <TopBar title="Gestion des demandes" previous="HomeScreen" />
+      <ScrollView>
+        <br />
+        <br />
+        <br />
+        <br />
+        {requests && (
+          <>
+            {requests.map((req) => {
+              return (
+                <View style={styles.tab}>
+                  <ListItem
+                    texts={[req.userId, req.status, req.date]}
+                  />
+                  <View style={styles.buttonsTab}>
+                    <Pressable style={styles.acceptButton} onPress={() => accept(req.id)}><Text style={styles.buttonsText}>Accept</Text></Pressable>
+                    <Pressable style={styles.rejectButton} onPress={() => reject(req.id)}><Text style={styles.buttonsText}>Reject</Text></Pressable>
+                  </View>
+                </View>
+              );
+            })}
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+    safeArea: {
+    flex: 1,
+    backgroundColor: "#f9f9f9"
+  },
+  tab: {
+    flex: 1,
+    marginVertical: 15,
+    marginHorizontal: 10,
+    borderWidth: 2
+  },
+  buttonsTab: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around"
+  },
+  acceptButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#218532",
+    borderRadius: 6,
+    alignItems: "center"
+  },
+  rejectButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#a10000",
+    borderRadius: 6,
+    alignItems: "center"
+  },
+  buttonsText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+})
 
 export default RoleRequestScreen;
 

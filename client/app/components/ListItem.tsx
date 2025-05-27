@@ -8,20 +8,23 @@ interface ListItemProps {
 const ListItem: React.FC<ListItemProps> = ({ texts }) => {
   return (
     <View
-      style={styles.item}
+      style={styles.items}
       accessible={true}
     >
         {texts && (texts.map((text) => (
-          <p>{text}</p>
+          <Text>{text}</Text>
         )))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  item: {
+  items: {
     width: "100%",
-  }
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
 
 export default ListItem;
