@@ -1,115 +1,105 @@
+@baseUrl = http://localhost:3000/api
+
 ### Inscription d'un utilisateur
-POST http://localhost:3000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+POST {{baseUrl}}/users
 Content-Type: application/json
 
 { 
-  "id": 4,
-  "fullName": "usertest2",
-  "email": "usertest2@example.com",
-  "password": "Secure12*",
-  "fullName": "newuser",
-  "email": "newusdser@example.com",
-  "password": "Secsdure12*"
+  "fullName": "",
+  "email": "",
+  "password": ""
 }
 
 ### Connexion d'un utilisateur
-POST http://localhost:3000/api/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "newusdser@example.com",
-  "password": "Secsdure12*"
+  "email": "",
+  "password": ""
 }
 
-
 ### Get user by id test
-GET http://localhost:3000/api/users/getByIndex/13
-Content-type: application/json
-
+GET {{baseUrl}}/users/getByIndex/13
+Content-Type: application/json
 
 ### Tester une route protégée (récupérer les infos de l'utilisateur connecté)
-GET http://localhost:3000/api/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
+GET {{baseUrl}}/users/me
+Authorization: Bearer TOKEN
 
 ### Changement de mot de passe d'un utilisateur connecté
-POST http://localhost:3000/api/users/changePassword
+POST {{baseUrl}}/users/changePassword
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
+Authorization: Bearer TOKEN
 
 {
-  "oldPassword": "Secure12*",
-  "newPassword": "NewSecure99!"
+  "oldPassword": "",
+  "newPassword": ""
 }
 
 ### Test de création d'évenement
-POST http://localhost:3000/api/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQwNjUyODMxfQ.drVFCAwIgy8XupuNUl1fi3gxzyk2UiHwgBdLcHb3rsU
+POST {{baseUrl}}/events
+Authorization: Bearer TOKEN
 Content-Type: application/json
 
 {
-  "name":"t Welcome 2",
-  "organizerId":3,
-  "startDate":"2025-06-15T14:30:00",
-  "endDate":"2025-06-15T14:40:00",
-  "address":"EPHEC Louvain-La-Neuve",
-  "description":"This events accepts everyone"
+  "name": "",
+  "organizerId": ,
+  "startDate": "",
+  "endDate": "",
+  "address": "",
+  "description": ""
 }
-
 
 ### Test de récupération des événements
-GET http://localhost:3000/api/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
-
+GET {{baseUrl}}/events
+Authorization: Bearer TOKEN
 
 ### Test de création de Wallet
-
-POST http://localhost:3000/api/wallet
+POST {{baseUrl}}/wallet
 Content-Type: application/json
 
 {
-  "userId": 7,
-  "organizerId": 13,
-  "amount": 150
+  "userId": ,
+  "organizerId": ,
+  "amount": 
 }
 
-
 ### Test to get all wallets of a user
-GET http://localhost:3000/api/users/me/wallets
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ0NjMwMjE4fQ.mqDaSzNteL5rcBuBZQdptzEvhPkERKwpnjDXGHOolAk
-
+GET {{baseUrl}}/users/me/wallets
+Authorization: Bearer TOKEN
 
 ### Test to decrypt a wallet qr code
-POST http://localhost:3000/api/decrypt-qr
+POST {{baseUrl}}/decrypt-qr
 Content-Type: application/json
 
 {
-  "encryptedData": "961475a5f0118f87c09acb6f2e039234:4199f08db8511399d0fb5dc14330f0c0146a13f1dc5b02aced4c36c8d6f2a6ca0e84cecb4eb1e38de470781034cf537c764482f8bdf926c26928ae42354b95ee4c7fbc8bba5963ae2c9d44d5e81d3e11ab90687940ec3539964226d18d063cbf674166377b8b02993b80379539bf4337"
+  "encryptedData": ""
 }
 
 ### Get my events
-GET http://localhost:3000/api/events/my
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NzI1MjEzLCJleHAiOjE3NDY3Mjg4MTN9.BaF_FF6Od28LHe7Rv3ISVFMeKRThlEGhT-vOqqmqad4
+GET {{baseUrl}}/events/my
+Authorization: Bearer TOKEN
 Content-Type: application/json
 
-
 ### Add money to wallet
-POST http://localhost:3000/api/wallet/addMoney
+POST {{baseUrl}}/wallet/addMoney
 Content-Type: application/json
 
 {
-  "walletId": 1,
-  "amount": 10
+  "walletId": ,
+  "amount": 
 }
-###Affiche un event par rapport à son ID
-GET http://localhost:3000/api/events/1
+
+### Affiche un event par rapport à son ID
+GET {{baseUrl}}/events/1
 Content-Type: application/json
 
-###S'inscrire à un événement
-POST http://localhost:3000/api/events/8/register
+### S'inscrire à un événement
+POST {{baseUrl}}/events/8/register
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ2NzMyNTM1LCJleHAiOjE3NDY3MzYxMzV9.CNZq8G-d6Rw8JYwuwUSJM3cjyaM-KZv-1q4dgq4b7jE
+Authorization: Bearer TOKEN
 
 ### Récupérer les logs (admin uniquement)
-GET http://localhost:3000/api/admin/logs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzQ3ODM2MzE1LCJleHAiOjE3NDc4Mzk5MTV9.krNbHpMjrsUuf3fyfZqCEtoMjzQV1orHPkeD2GCowg0
+GET {{baseUrl}}/admin/logs
+Authorization: Bearer TOKEN
