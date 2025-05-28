@@ -30,16 +30,16 @@ export default function SocketInitializer() {
       });
 
       socket.on("connect", () => {
-        console.log("✅ [FRONT] Socket connecté :", socket?.id);
+        console.log("[FRONT] Socket connecté :", socket?.id);
         socket?.emit("register", user.id);
       });
 
       socket.on("connect_error", (err) => {
-        console.log("❌ [FRONT] Erreur de connexion socket :", err.message);
+        console.log("[FRONT] Erreur de connexion socket :", err.message);
       });
 
       socket.on("newPaymentRequest", (request) => {
-        console.log("📨 [FRONT] Paiement reçu :", request);
+        console.log("[FRONT] Paiement reçu :", request);
 
         Alert.alert(
           "Nouvelle demande de paiement",
@@ -55,7 +55,7 @@ export default function SocketInitializer() {
       });
 
       socket.on("disconnect", () => {
-        console.log("🔌 Socket déconnecté");
+        console.log("Socket déconnecté");
       });
     };
 

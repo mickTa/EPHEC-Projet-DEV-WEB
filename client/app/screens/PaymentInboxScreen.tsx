@@ -61,7 +61,7 @@ export default function PaymentInboxScreen() {
     socket.on("newPaymentRequest", (request) => {
       console.log("📨 Paiement reçu :", request);
       if (typeof request.id !== "number") {
-        console.warn("❌ ID de requête invalide reçu :", request.id);
+        console.warn("ID de requête invalide reçu :", request.id);
         return;
       }
       Alert.alert(
@@ -79,12 +79,24 @@ export default function PaymentInboxScreen() {
           },
         ]
       );
-      console.log("📨 Paiement reçu :", request);
+      console.log("Paiement reçu :", request);
       fetchRequests(); // refresh la liste
     });
   });
 
   useEffect(() => {
+    const checkUserRole = async () => {
+      const rawUser = await AsyncStorage.getItem("userData");
+      const user = JSON.parse(rawUser ?? "null");
+      if (user?.role !== "USER") {
+        Alert.alert(
+          "Accès refusé",
+          "Cette page est réservée aux utilisateurs."
+        );
+        router.replace("/screens/HomeScreen");
+      }
+    };
+    checkUserRole();
     fetchRequests();
   }, []);
 
