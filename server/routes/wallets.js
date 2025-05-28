@@ -5,7 +5,8 @@ const constants = require("../middlewares/constants.js");
 
 const router = new Router();
 
-router.post('/', checkAuth([constants.ROLE_TYPE_ADMIN, constants.ROLE_TYPE_USER]), walletController.NewWallet);
-router.post('/addMoney', checkAuth([constants.ROLE_TYPE_ADMIN, constants.ROLE_TYPE_USER]), walletController.AddMoney);
+router.post("/", checkAuth([constants.ROLE_TYPE_ADMIN, constants.ROLE_TYPE_USER]), walletController.NewWallet);
+router.post("/addMoney", checkAuth([constants.ROLE_TYPE_ADMIN, constants.ROLE_TYPE_USER]), walletController.AddMoney);
+router.post("/charge", checkAuth([constants.ROLE_TYPE_ADMIN, constants.ROLE_TYPE_USER]), walletController.ChargeWallet);
 
 module.exports = router;
