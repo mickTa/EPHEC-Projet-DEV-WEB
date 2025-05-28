@@ -8,7 +8,6 @@ async function main() {
   const baseURL = "http://localhost:3000/api/";
   const tokens = {
     user: null,
-    admin: null,
     organizer: null,
     user2: null,
   };
@@ -16,7 +15,6 @@ async function main() {
   const emails = {
     user2: null,
     organizer: null,
-    admin: null,
   };
 
   const generateRandomEmail = () => {
@@ -89,25 +87,6 @@ async function main() {
       },
     },
     {
-      name: "3. Création compte ADMIN",
-      method: "POST",
-      endpoint: "users",
-      headers: { "Content-Type": "application/json" },
-      body: () => {
-        const email = generateRandomEmail();
-        emails.admin = email;
-        return {
-          fullName: "Admin Principal",
-          email: email,
-          password: "AdminSecure45$%",
-          role: "ADMIN",
-        };
-      },
-      onSuccess: (res) => {
-        tokens.admin = res.token || res.body?.token;
-      },
-    },
-    {
       name: "4. Connexion utilisateur",
       method: "POST",
       endpoint: "auth/login",
@@ -166,60 +145,9 @@ async function main() {
       headers: () => ({
         Authorization: `Bearer ${tokens.organizer}`,
       }),
-    },
-    {
-      name: "9. Création Wallet",
-      method: "POST",
-      endpoint: "wallets",
-      headers: () => ({
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${tokens.organizer}`,
-      }),
-      body: () => {
-        return {
-          userId: 5,
-          organizerId: 132,
-          amount: 30,
-        };
-      },
-      onSuccess: (res) => {
-        console.log("Wallet créé avec succès:", res);
-      },
-      checkError: "Erreur lors de la création du wallet",
-    },
+    }
   ];
 
-  // Fonction pour supprimer un utilisateur ou autre entité après test
-  async function deleteUser(userId, token) {
-    const url = `${baseURL}users/${userId}`;
-    const options = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const res = await fetch(url, options);
-    const data = await res.json();
-    return data;
-  }
-
-  // Fonction pour nettoyer après les tests
-  async function cleanUp() {
-    // Suppression des utilisateurs après les tests
-    if (tokens.user2) {
-      await deleteUser(137, tokens.user2); // Supprimer user2
-    }
-    if (tokens.organizer) {
-      await deleteUser(138, tokens.organizer); // Supprimer organizer
-    }
-    if (tokens.admin) {
-      await deleteUser(139, tokens.admin); // Supprimer admin
-    }
-
-    console.log("Données de test supprimées avec succès !");
-  }
 
   // Exécution des tests
   async function runTests() {
@@ -278,8 +206,7 @@ async function main() {
       }
     }
 
-    // Nettoyage des données après tous les tests
-    await cleanUp();
+
   }
 
   await runTests();
