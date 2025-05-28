@@ -8,12 +8,11 @@
   ],
   "scripts": {
     "dev:server": "npm run dev --workspace=server",
-    "dev:client": "npm run start --workspace=client"
-  },
-  "dependencies": {
-    "jest": "^29.7.0",
     "dev:client": "npm run start --workspace=client",
     "test": "cross-env NODE_ENV=test jest"
+  },
+  "dependencies": {
+    "jest": "^29.7.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
