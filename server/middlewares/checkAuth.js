@@ -18,7 +18,9 @@ module.exports = (authorized) => {
 
       req.user = await User.findByPk(payload.id);
       if (!req.user) return res.sendStatus(401);
-      if (!authorized || !authorized.includes(req.user.role)) return res.status(403).json({ error: `Accès réservé aux roles ${authorized.join(" ")}` });
+      if (!authorized || !authorized.includes(req.user.role)) {
+        return res.status(403).json({ error: `Accès réservé aux roles ${authorized.join(" ")}` });
+      }
 
       next();
     } catch (e) {

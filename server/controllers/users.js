@@ -1,4 +1,4 @@
-const { RoleRequest } = require("../models/roleRequest");
+const RoleRequest = require("../models/roleRequest");
 const User = require("../models/user");
 const Wallet = require("../models/wallets");
 const bcrypt = require("bcryptjs");
@@ -114,6 +114,7 @@ exports.getUserById = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     res.json(user);
+    res.status(200);
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({

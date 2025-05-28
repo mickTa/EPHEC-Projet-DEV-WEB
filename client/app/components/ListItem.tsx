@@ -21,6 +21,7 @@ const ListItem: React.FC<ListItemProps> = ({ texts }) => {
 const styles = StyleSheet.create({
   items: {
     width: "100%",
+    height: "100%",
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",

@@ -2,7 +2,7 @@ const sequelize = require("./db");
 const User = require("./user");
 const Wallet = require("./wallet");
 const Event = require("./events");
-const { RoleRequest } = require("./roleRequest");
+const RoleRequest = require("./roleRequest");
 
 Wallet.belongsTo(User, { foreignKey: "userId" });
 RoleRequest.belongsTo(User, { foreignKey: "userId" });

@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import TopBar from "../components/TopBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { router } from "expo-router";
 import "react-datetime/css/react-datetime.css";
 import { useEffect } from "react";
 import ListItem from "../components/ListItem";
@@ -22,35 +20,11 @@ const { LOCALHOST_API, LAN_API } = Constants.expoConfig?.extra ?? {};
 const isDevice = Constants.platform?.ios || Constants.platform?.android;
 const API_BASE_URL = isDevice ? LAN_API : LOCALHOST_API;
 
-const handleError = (error: any) => {
-  if (axios.isAxiosError(error) && error.response) {
-    Alert.alert(
-      "Erreur",
-      `Erreur: ${error.response.data.message || "Un problème est survenu."}`
-    );
-  } else {
-    Alert.alert("Erreur", "Problème avec la connexion au serveur.");
-  }
-
-  if (
-    axios.isAxiosError(error) &&
-    error.response &&
-    error.response.status === 401
-  ) {
-    AsyncStorage.removeItem("jwtToken");
-    Alert.alert("Session expirée", "Veuillez vous reconnecter.");
-    router.replace("/");
-  } else {
-    Alert.alert(
-      "Erreur",
-      "Une erreur est survenue lors de la récupération de vos données."
-    );
-  }
-};
-
 const RoleRequestScreen = () => {
 
-  const [requests, setRequests] = useState(null);
+  const [requests, setRequests] = useState<any>([]);
+  const [isRejecting, setIsRejecting] = useState<boolean>(false);
+  const [isAccepting, setIsAccepting] = useState<boolean>(false); 
 
   const getRequests = async () => {
 
@@ -119,6 +93,21 @@ const RoleRequestScreen = () => {
     getRequests();
   }, []);
 
+  useEffect(() => {
+    if (!isAccepting) {
+      setRequests([]);
+      getRequests();
+    }  
+  }, [isAccepting]);
+
+  useEffect(() => {
+    if (!isRejecting) {
+      setRequests([]);
+      getRequests();
+    }  
+  }, [isRejecting]);
+
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -135,7 +124,7 @@ const RoleRequestScreen = () => {
                 texts={["User ID", "Statut", "Date de demande"]}
               />
             </View>
-            {requests.map((req) => {
+            {requests.map((req: any) => {
               return (
                 <View style={styles.tab}>
                   <ListItem
@@ -144,8 +133,8 @@ const RoleRequestScreen = () => {
 
                   {req.status === "PENDING" && (
                     <View style={styles.buttonsTab}>
-                      <Pressable style={styles.acceptButton} onPress={() => accept(req.id)}><Text style={styles.buttonsText}>Accept</Text></Pressable>
-                      <Pressable style={styles.rejectButton} onPress={() => reject(req.id)}><Text style={styles.buttonsText}>Reject</Text></Pressable>
+                      <Pressable style={styles.acceptButton} onPress={() => {setIsAccepting(true); accept(req.id); setIsAccepting(false)}}><Text style={styles.buttonsText}>Accept</Text></Pressable>
+                      <Pressable style={styles.rejectButton} onPress={() => {setIsRejecting(true); reject(req.id); setIsRejecting(false)}}><Text style={styles.buttonsText}>Reject</Text></Pressable>
                     </View>
                   )}
                 </View>
@@ -164,24 +153,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9"
   },
   tab: {
-    flex: 1,
-    marginVertical: 15,
-    marginHorizontal: 10
+    padding: 5,
+    //marginVertical: 15,
+    marginHorizontal: 10,
+    borderWidth: 2
   },
   buttonsTab: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
+    marginTop: 10
   },
   acceptButton: {
-    paddingVertical: 10,
+    //paddingVertical: 4,
     paddingHorizontal: 20,
     backgroundColor: "#218532",
     borderRadius: 6,
     alignItems: "center"
   },
   rejectButton: {
-    paddingVertical: 10,
+    //paddingVertical: 4,
     paddingHorizontal: 20,
     backgroundColor: "#a10000",
     borderRadius: 6,
