@@ -1,3 +1,6 @@
+# Personal test files
+test-mdp.js
+
 # Logs
 logs
 *.log
@@ -81,6 +84,8 @@ Icon?
 *.tsbuildinfo
 
 # Expo / React Native
+client/.expo/
+client/.expo-shared/
 .expo/
 .expo-shared/
 *.jks

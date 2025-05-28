@@ -11,6 +11,9 @@
     "dev:client": "npm run start --workspace=client",
     "test": "cross-env NODE_ENV=test jest"
   },
+  "dependencies": {
+    "jest": "^29.7.0"
+  },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "sqlite3": "^5.1.7"
