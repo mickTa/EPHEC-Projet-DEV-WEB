@@ -1,28 +1,59 @@
-// Mocks explicites
-jest.mock("../server/models/paymentRequest", () => ({
+jest.mock("../models/paymentRequest", () => ({
   create: jest.fn(),
   findByPk: jest.fn(),
 }));
-jest.mock("../server/models/wallets", () => ({
+jest.mock("../models/wallets", () => ({
   debit: jest.fn(),
 }));
-jest.mock("../server/utils/socket", () => ({
+jest.mock("../utils/socket", () => ({
   getIO: jest.fn(),
   userSockets: new Map(),
 }));
 
-const PaymentRequest = require("../server/models/paymentRequest");
-const Wallet = require("../server/models/wallets");
-const { getIO, userSockets } = require("../server/utils/socket");
+const PaymentRequest = require("../models/paymentRequest");
+const Wallet = require("../models/wallets");
+const { getIO, userSockets } = require("../utils/socket");
 const {
   create,
   accept,
   reject,
-} = require("../server/controllers/paymentRequestController");
+} = require("../controllers/paymentRequestController");
 
 beforeEach(() => {
   jest.clearAllMocks();
   userSockets.clear();
+});
+
+beforeAll(() => {
+  jest.spyOn(console, "error").mockImplementation((err) => {
+    if (
+      err instanceof Error &&
+      (err.message === "Erreur de la DB" || err.message === "fail")
+    ) {
+      // On ne log pas ces erreurs car elles sont simulées
+      return;
+    }
+
+    // Sinon on affiche normalement
+    console.warn("Autre erreur :", err);
+  });
+  jest.spyOn(console, "warn").mockImplementation((msg, socketId) => {
+    if (
+      typeof msg === "string" &&
+      msg.includes("Émission impossible, .to() ou .emit() est undefined")
+    ) {
+      return; // Ignore le warning attendu
+    }
+    console.log("WARN (non ignoré) :", msg, socketId);
+  });
+
+  jest.spyOn(console, "log").mockImplementation((...args) => {
+    const stringified = args.join(" ");
+    if (stringified.includes("Méthodes disponibles sur Wallet")) {
+      return; // Ne log pas pendant le test
+    }
+    console.info(...args); // Sinon on log normalement
+  });
 });
 
 describe("paymentRequestController", () => {
@@ -202,7 +233,7 @@ describe("paymentRequestController", () => {
     expect(res.json).toHaveBeenCalledWith(fakeRequest);
   });
 
-  it("renvoie 400 si la demande n'existe pas", async () => {
+  it("renvoie 404 si la demande n'existe pas", async () => {
     const req = { params: { id: "999" } };
     const res = {
       status: jest.fn(() => res),
@@ -213,8 +244,8 @@ describe("paymentRequestController", () => {
 
     await accept(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ error: "Demande invalide" });
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "Demande introuvable" });
   });
 
   it("devrait rejeter une demande existante", async () => {
@@ -252,6 +283,27 @@ describe("paymentRequestController", () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       error: "Erreur lors du refus",
+    });
+  });
+
+  it("refuse d’accepter une demande déjà traitée", async () => {
+    const req = { params: { id: "42" } };
+    const res = {
+      status: jest.fn(() => res),
+      json: jest.fn(),
+    };
+
+    const fakeRequest = {
+      status: "accepted",
+    };
+
+    PaymentRequest.findByPk.mockResolvedValue(fakeRequest);
+
+    await accept(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Cette demande a déjà été traitée.",
     });
   });
 });

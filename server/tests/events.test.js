@@ -1,9 +1,9 @@
-const { 
-  getEventById, 
-  getMySubscribedEvents, 
+const {
+  getEventById,
+  getMySubscribedEvents,
   getAllEvents,
-  uploadEventImage
-} = require("./events");
+  uploadEventImage,
+} = require("../controllers/events");
 const Event = require("../models/events");
 const Registration = require("../models/registration");
 const cloudinary = require("../cloudinary");
@@ -54,7 +54,9 @@ describe("Event Controller", () => {
 
       expect(Event.findByPk).toHaveBeenCalledWith("999");
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: "Événement non trouvé" });
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Événement non trouvé",
+      });
     });
 
     it("doit gérer une erreur serveur", async () => {
@@ -93,7 +95,7 @@ describe("Event Controller", () => {
 
       expect(Registration.findAll).toHaveBeenCalledWith({
         where: { userId: 42 },
-        include: [{ model: Event, as: 'event' }],
+        include: [{ model: Event, as: "event" }],
       });
 
       expect(res.status).toHaveBeenCalledWith(200);
@@ -194,14 +196,19 @@ describe("Event Controller", () => {
       await uploadEventImage(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: "Aucun fichier n'a été envoyé." });
+      expect(res.json).toHaveBeenCalledWith({
+        error: "Aucun fichier n'a été envoyé.",
+      });
     });
 
     it("doit uploader une image et retourner l'url", async () => {
-      const fakeUploadResult = { secure_url: "https://images.pexels.com/photos/32261260/pexels-photo-32261260/free-photo-of-personne-dans-un-champ-de-moutarde-avec-un-ciel-bleu-en-arriere-plan.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" };
+      const fakeUploadResult = {
+        secure_url:
+          "https://images.pexels.com/photos/32261260/pexels-photo-32261260/free-photo-of-personne-dans-un-champ-de-moutarde-avec-un-ciel-bleu-en-arriere-plan.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      };
 
       const req = {
-        file: { buffer: Buffer.from("fake image buffer") }
+        file: { buffer: Buffer.from("fake image buffer") },
       };
       const res = {
         status: jest.fn().mockReturnThis(),
@@ -225,12 +232,14 @@ describe("Event Controller", () => {
       });
 
       streamifier.createReadStream = jest.fn(() => ({
-        pipe: pipeMock
+        pipe: pipeMock,
       }));
 
       await uploadEventImage(req, res);
 
-      expect(streamifier.createReadStream).toHaveBeenCalledWith(req.file.buffer);
+      expect(streamifier.createReadStream).toHaveBeenCalledWith(
+        req.file.buffer
+      );
       expect(cloudinary.uploader.upload_stream).toHaveBeenCalledWith(
         { folder: "events" },
         expect.any(Function)
@@ -246,7 +255,7 @@ describe("Event Controller", () => {
 
     it("doit gérer une erreur lors de l'upload", async () => {
       const req = {
-        file: { buffer: Buffer.from("fake image buffer") }
+        file: { buffer: Buffer.from("fake image buffer") },
       };
       const res = {
         status: jest.fn().mockReturnThis(),
@@ -274,7 +283,9 @@ describe("Event Controller", () => {
       await uploadEventImage(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: "Erreur lors de l'upload de l'image" });
+      expect(res.json).toHaveBeenCalledWith({
+        error: "Erreur lors de l'upload de l'image",
+      });
       expect(console.error).toHaveBeenCalledWith(fakeError);
     });
   });
