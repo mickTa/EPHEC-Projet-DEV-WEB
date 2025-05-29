@@ -13,7 +13,7 @@ exports.getAll = async (req, res) => {
       order: [["createdAt", "DESC"]], // Newest first
     });
 
-    res.json(requests);
+    res.status(200).json(requests);
   } catch (error) {
     console.error("Error fetching role requests:", error);
     res.status(500).json({
@@ -39,7 +39,7 @@ exports.getByUser = async (req, res) => {
       order: [["createdAt", "DESC"]], // Newest first
     });
 
-    res.json(request);
+    res.status(200).json(request);
   } catch (error) {
     console.error("Error fetching role requests:", error);
     res.status(500).json({

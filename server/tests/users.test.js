@@ -1,28 +1,20 @@
 const bcrypt = require("bcryptjs");
-<<<<<<< HEAD:tests/users.test.js
-const { changePassword, post, getMe, getUserById, requestRole } = require("../server/controllers/users");
-const User = require("../server/models/user");
-const RoleRequest = require("../server/models/roleRequest");
-
-
-jest.mock("bcryptjs");
-
-jest.mock("../server/models/user", () => ({
-  create: jest.fn(),
-  findByPk: jest.fn(),
-}));
-
-jest.mock("../server/models/roleRequest", () => ({
-  create: jest.fn(),
-  findByPk: jest.fn(),
-}));
-=======
-const { changePassword, post, getMe } = require("../controllers/users");
+const { changePassword, post, getMe, getUserById, requestRole } = require("../controllers/users");
 const User = require("../models/user");
+const RoleRequest = require("../models/roleRequest");
+
 
 jest.mock("bcryptjs");
-jest.mock("../models/user");
->>>>>>> main:server/tests/users.test.js
+
+jest.mock("../models/user", () => ({
+  create: jest.fn(),
+  findByPk: jest.fn(),
+}));
+
+jest.mock("../models/roleRequest", () => ({
+  create: jest.fn(),
+  findByPk: jest.fn(),
+}));
 
 describe("User Controller", () => {
   describe("changePassword", () => {
@@ -39,7 +31,6 @@ describe("User Controller", () => {
         json: jest.fn(),
       };
 
-<<<<<<< HEAD:tests/users.test.js
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
       jest.spyOn(bcrypt, 'genSalt').mockResolvedValue("salt");
       jest.spyOn(bcrypt, 'hash').mockResolvedValue("hashedNewPassword");
@@ -49,24 +40,6 @@ describe("User Controller", () => {
       expect(bcrypt.compare).toHaveBeenCalledWith("Old123!", "hashedOldPassword");
       expect(req.user.update).toHaveBeenCalledWith({ password: "hashedNewPassword" });
       expect(res.json).toHaveBeenCalledWith({ message: "Mot de passe changé avec succès !" });
-=======
-      bcrypt.compare.mockResolvedValue(true);
-      bcrypt.genSalt.mockResolvedValue("salt");
-      bcrypt.hash.mockResolvedValue("hashedNewPassword");
-
-      await changePassword(req, res);
-
-      expect(bcrypt.compare).toHaveBeenCalledWith(
-        "Old123!",
-        "hashedOldPassword"
-      );
-      expect(req.user.update).toHaveBeenCalledWith({
-        password: "hashedNewPassword",
-      });
-      expect(res.json).toHaveBeenCalledWith({
-        message: "Mot de passe changé avec succès !",
-      });
->>>>>>> main:server/tests/users.test.js
     });
 
     it("doit refuser si ancien mot de passe incorrect", async () => {
@@ -79,22 +52,12 @@ describe("User Controller", () => {
         json: jest.fn(),
       };
 
-<<<<<<< HEAD:tests/users.test.js
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
-=======
-      bcrypt.compare.mockResolvedValue(false);
->>>>>>> main:server/tests/users.test.js
 
       await changePassword(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-<<<<<<< HEAD:tests/users.test.js
       expect(res.json).toHaveBeenCalledWith({ error: "Ancien mot de passe incorrect" });
-=======
-      expect(res.json).toHaveBeenCalledWith({
-        error: "Ancien mot de passe incorrect",
-      });
->>>>>>> main:server/tests/users.test.js
     });
   });
 
@@ -113,11 +76,7 @@ describe("User Controller", () => {
         json: jest.fn(),
       };
 
-<<<<<<< HEAD:tests/users.test.js
       jest.spyOn(User, 'create').mockResolvedValue({ id: 1, ...req.body });
-=======
-      User.create.mockResolvedValue({ id: 1, ...req.body });
->>>>>>> main:server/tests/users.test.js
 
       await post(req, res);
 
@@ -129,13 +88,7 @@ describe("User Controller", () => {
       });
 
       expect(res.status).toHaveBeenCalledWith(201);
-<<<<<<< HEAD:tests/users.test.js
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ email: "test@example.com" }));
-=======
-      expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ email: "test@example.com" })
-      );
->>>>>>> main:server/tests/users.test.js
     });
 
     it("doit refuser si rôle = ADMIN", async () => {
@@ -180,7 +133,6 @@ describe("User Controller", () => {
       expect(res.json).toHaveBeenCalledWith({ error: "User not found" });
     });
   });
-<<<<<<< HEAD:tests/users.test.js
 
   describe("getUserById", () => {
     it("doit retourner un user si trouvé", async () => {
@@ -195,7 +147,7 @@ describe("User Controller", () => {
 
       await getUserById(req, res);
 
-      expect(User.findByPk).toHaveBeenCalledWith("1");
+      expect(User.findByPk).toHaveBeenCalledWith("1", { attributes: ["id", "fullName", "email", "role"] });
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith(mockUser);
     });
@@ -211,7 +163,7 @@ describe("User Controller", () => {
 
       await getUserById(req, res);
 
-      expect(User.findByPk).toHaveBeenCalledWith("999");
+      expect(User.findByPk).toHaveBeenCalledWith("999", { attributes: ["id", "fullName", "email", "role"] });
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ error: "User not found" });
     });
@@ -284,6 +236,4 @@ describe("User Controller", () => {
       expect(res.json).toHaveBeenCalledWith({ error: "Erreur interne du serveur" });
     });
   });
-=======
->>>>>>> main:server/tests/users.test.js
 });
