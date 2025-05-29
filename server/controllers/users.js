@@ -1,4 +1,4 @@
-const RoleRequest = require("../models/roleRequest");
+const RoleRequest = require("../models/RoleRequest");
 const User = require("../models/user");
 const Wallet = require("../models/wallets");
 const bcrypt = require("bcryptjs");
