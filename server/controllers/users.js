@@ -1,3 +1,4 @@
+const RoleRequest = require("../models/roleRequest");
 const User = require("../models/user");
 const Wallet = require("../models/wallets");
 const bcrypt = require("bcryptjs");
@@ -48,6 +49,32 @@ exports.changePassword = async (req, res) => {
   }
 };
 
+exports.requestRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+
+    if (!req.user) {
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
+    }
+
+    // Création requête de rôle
+    await RoleRequest.create({
+      userId: req.user.id,
+      role: role,
+      date: Date.now(), 
+      status: "PENDING"
+    });
+    res.status(200);
+
+    // console.log("Requête créée :", role);
+
+    res.json({ message: "Requête envoyée aux administrateurs" });
+  } catch (err) {
+    console.error("Erreur lors de la requête de rôle :", err);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+};
+
 exports.post = async (req, res) => {
   try {
     const { password, role, ...rest } = req.body;
@@ -89,6 +116,7 @@ exports.getUserById = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     res.json(user);
+    res.status(200);
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({

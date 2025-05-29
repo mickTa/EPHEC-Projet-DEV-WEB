@@ -16,7 +16,7 @@ import EventContainer from "../components/EventContainer";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import {requestMediaLibraryPermissionsAsync,launchImageLibraryAsync} from 'expo-image-picker';
+import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync } from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 
 import Constants from "expo-constants";
@@ -32,10 +32,10 @@ interface UserData {
   id: number;
 }
 
-interface EventInfo{
+interface EventInfo {
   id: number;
-  name:string;
-  description:string
+  name: string;
+  description: string
   imageUrl?: string;
 }
 
@@ -44,22 +44,24 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [subscribedEventLoading, setSubscribedEventLoading] = useState(true);
   const [organizedEventLoading, setOrganizedEventLoading] = useState(true);
-  const[subscribedEvents,setSubscribedEvents]=useState<EventInfo[]>([]);
-  const[organizedEvents,setOrganizedEvents]=useState<EventInfo[]>([]);
-  const[pfp,setPfp]=useState<any>(null);
-  const[pfpUrl,setPfpUrl]=useState("");
+  const [subscribedEvents, setSubscribedEvents] = useState<EventInfo[]>([]);
+  const [organizedEvents, setOrganizedEvents] = useState<EventInfo[]>([]);
+  const [pfp, setPfp] = useState<any>(null);
+  const [pfpUrl, setPfpUrl] = useState("");
+  const [hasPendingRequest, setHasPendingRequest] = useState(false);
   const router = useRouter();
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
-      const data=JSON.parse(await AsyncStorage.getItem("userData")??"null");
+      const data = JSON.parse(await AsyncStorage.getItem("userData") ?? "null");
       setUserData(data);
-      if(data?.pfpUrl){
+      if (data?.pfpUrl) {
         setPfpUrl(data.pfpUrl);
       }
+      await checkPendingRequests();
       setLoading(false);
     };
-    
+
     fetchUserData();
   }, []);
 
@@ -92,32 +94,32 @@ export default function ProfileScreen() {
       }
     };
 
-    if(userData?.role=="USER")fetchMySubscribedEvents().then(()=>{setSubscribedEventLoading(false)});
-    if(userData?.role=="ORGANIZER")fetchMyOrganizedEvents().then(()=>{setOrganizedEventLoading(false)});
+    if (userData?.role == "USER") fetchMySubscribedEvents().then(() => { setSubscribedEventLoading(false) });
+    if (userData?.role == "ORGANIZER") fetchMyOrganizedEvents().then(() => { setOrganizedEventLoading(false) });
   }, [userData]);
 
-  useEffect(()=>{
-    const uploadPfp=async()=>{ 
-      if(!pfp){
+  useEffect(() => {
+    const uploadPfp = async () => {
+      if (!pfp) {
         return
       }
-      const filename=pfp.fileName.split(".")
-      const extension=filename[filename.length-1]
+      const filename = pfp.fileName.split(".")
+      const extension = filename[filename.length - 1]
 
       const response = await fetch(pfp.uri); // fetch image file from URI
       const blob = await response.blob(); // convert to Blob
 
       const formData = new FormData();
-      if(Platform.OS=="web"){
+      if (Platform.OS == "web") {
         formData.append("image", new File([blob], `pfp.${extension}`, { type: blob.type }));
-      }else{
+      } else {
         formData.append("image", {
           uri: pfp.uri,
           name: pfp.fileName,
           type: pfp.mimeType,
-        }as any);
+        } as any);
       }
-      
+
       try {
         const res = await fetch(`${API_BASE_URL}/users/setPfp`, {
           method: 'POST',
@@ -128,20 +130,20 @@ export default function ProfileScreen() {
         });
 
         const data = await res.json();
-        let newUserData=JSON.parse(await AsyncStorage.getItem("userData")??"null");
-        newUserData.pfpUrl=data.url
-        AsyncStorage.setItem("userData",JSON.stringify(newUserData));
-        if (res.ok){
-          Toast.show({type:"success",text1:"Photo de profil mise à jour",position:"bottom"});
-        }else{
-          Toast.show({type:"error",text1:"Echec de la mise à jour de la photo de profil",text2:data,position:"bottom"});
+        let newUserData = JSON.parse(await AsyncStorage.getItem("userData") ?? "null");
+        newUserData.pfpUrl = data.url
+        AsyncStorage.setItem("userData", JSON.stringify(newUserData));
+        if (res.ok) {
+          Toast.show({ type: "success", text1: "Photo de profil mise à jour", position: "bottom" });
+        } else {
+          Toast.show({ type: "error", text1: "Echec de la mise à jour de la photo de profil", text2: data, position: "bottom" });
         }
-      }catch(error) {
-        console.error('Upload error',error);
+      } catch (error) {
+        console.error('Upload error', error);
       }
     };
     uploadPfp();
-  },[pfp])
+  }, [pfp])
 
   const handleLogout = async () => {
     try {
@@ -173,6 +175,47 @@ export default function ProfileScreen() {
     }
   }
 
+  const requestOrganizerRole = async () => {
+
+    const token = await AsyncStorage.getItem("jwtToken");
+
+    try {
+      await fetch(`${API_BASE_URL}/users/requestRole`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          role: "ORGANIZER"
+        }),
+      });
+      setHasPendingRequest(true);
+    } catch (error) {
+      console.error("Impossible de demander le rôle organisateur", error);
+    }
+  };
+
+
+  const checkPendingRequests = async () => {
+
+    const token = await AsyncStorage.getItem("jwtToken");
+
+    try {
+      const rqst = await fetch(`${API_BASE_URL}/roleRequests/getByUser`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }
+      });
+      const data = await rqst.json();
+      setHasPendingRequest(data && data.status === "PENDING");
+    } catch (error) {
+      console.error("Impossible d'accéder aux requêtes", error);
+    }
+  };
+
   if (loading)
     return (
       <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
@@ -181,7 +224,7 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <TopBar title="Mon profil" previous="HomeScreen" />
-      {userData?
+      {userData ?
         <ScrollView contentContainerStyle={styles.scrollContent}>
 
           <View style={styles.topBar}>
@@ -194,14 +237,14 @@ export default function ProfileScreen() {
 
             <TouchableOpacity onPress={pickPfp} style={styles.pfp}>
               <View>
-                <Image 
-                  source={pfp?
+                <Image
+                  source={pfp ?
                     { uri: pfp.uri }
-                     
-                  :
-                    pfpUrl?
-                      { uri: pfpUrl }
+
                     :
+                    pfpUrl ?
+                      { uri: pfpUrl }
+                      :
                       require("../img/profile-icon.png")
                   }
                   style={styles.profilePic}
@@ -223,7 +266,26 @@ export default function ProfileScreen() {
                 Modifier le mot de passe
               </Text>
             </TouchableOpacity>
+
+            {userData.role == "USER" && (
+              <TouchableOpacity
+                style={styles.changePasswordButton}
+                onPress={() => !hasPendingRequest && requestOrganizerRole()}
+              >
+                <Text style={styles.changePasswordText}>
+                  {hasPendingRequest && (
+                    "Requête en cours de validation"
+                  )}
+                  {!hasPendingRequest && (
+                    "Demander à être organisateur"
+                  )}
+                </Text>
+              </TouchableOpacity>
+            )}
+
           </View>
+
+
 
           <View style={styles.card}>
             <Text style={styles.subtitle}>Vos derniers achats :</Text>
@@ -241,62 +303,62 @@ export default function ProfileScreen() {
             </View>
           </View>
           <View style={styles.events}>
-          {userData?.role=="USER" ? (
-            <>
-              <Text style={styles.title}>Mes inscriptions</Text>
-              {subscribedEventLoading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-              ) : (
-                subscribedEvents.map((event) => (
-                  <TouchableOpacity
-                    key={event.id}
-                    onPress={() => {
-                      router.push(`/screens/EventScreen?id=${event.id}`);
-                    }}
-                  >
-                    <EventContainer
-                      title={event.name}
-                      text={event.description}
-                      image={event.imageUrl || undefined}
-                    />
-                  </TouchableOpacity>
-                ))
-              )}
-            </>
-          ) : (
-            <></>
-          )}
-          {userData?.role=="ORGANIZER" ? (
-            <>
-              <Text style={styles.title}>Mes organisations</Text>
-              {organizedEventLoading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-              ) : (
-                organizedEvents.map((event) => (
-                  <TouchableOpacity
-                    key={event.id}
-                    onPress={() => {
-                      router.push(`/screens/EventManagementScreen?id=${event.id}`);
-                    }}
-                  >
-                    <EventContainer
-                      title={event.name}
-                      text={event.description}
-                      image={event.imageUrl || undefined}
-                    />
-                  </TouchableOpacity>
-                ))
-              )}
-            </>
-          ) : (
-            <></>
-          )}
-        </View>
+            {userData?.role == "USER" ? (
+              <>
+                <Text style={styles.title}>Mes inscriptions</Text>
+                {subscribedEventLoading ? (
+                  <ActivityIndicator size="large" color="#0000ff" />
+                ) : (
+                  subscribedEvents.map((event) => (
+                    <TouchableOpacity
+                      key={event.id}
+                      onPress={() => {
+                        router.push(`/screens/EventScreen?id=${event.id}`);
+                      }}
+                    >
+                      <EventContainer
+                        title={event.name}
+                        text={event.description}
+                        image={event.imageUrl || undefined}
+                      />
+                    </TouchableOpacity>
+                  ))
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+            {userData?.role == "ORGANIZER" ? (
+              <>
+                <Text style={styles.title}>Mes organisations</Text>
+                {organizedEventLoading ? (
+                  <ActivityIndicator size="large" color="#0000ff" />
+                ) : (
+                  organizedEvents.map((event) => (
+                    <TouchableOpacity
+                      key={event.id}
+                      onPress={() => {
+                        router.push(`/screens/EventManagementScreen?id=${event.id}`);
+                      }}
+                    >
+                      <EventContainer
+                        title={event.name}
+                        text={event.description}
+                        image={event.imageUrl || undefined}
+                      />
+                    </TouchableOpacity>
+                  ))
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+          </View>
         </ScrollView>
-      :
+        :
         <Text style={styles.noData}>Impossible de charger les informations de l'utilisateur</Text>
       }
-      <Toast/>
+      <Toast />
     </SafeAreaView>
   );
 }
@@ -378,7 +440,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: "#ccc",
   },
-  noData:{
+  noData: {
     position: 'absolute',
     top: '50%',
     left: '50%',

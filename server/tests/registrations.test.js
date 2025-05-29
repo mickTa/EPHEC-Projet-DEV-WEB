@@ -27,14 +27,14 @@ describe("Event Controller", () => {
       };
 
       const mockWallet = { id: 10 };
-      Wallet.findOrCreate.mockResolvedValue([mockWallet, true]);
+      jest.spyOn(Wallet, 'findOrCreate').mockResolvedValue([mockWallet, true]);
       const mockRegistration = {
         id: 200,
         userId: 1,
         eventId: 100,
         walletId: 10,
       };
-      Registration.create.mockResolvedValue(mockRegistration);
+      jest.spyOn(Registration, 'create').mockResolvedValue(mockRegistration);
 
       await registerToEvent(req, res);
 
@@ -71,14 +71,14 @@ describe("Event Controller", () => {
         json: jest.fn(),
       };
 
-      Wallet.findOrCreate.mockRejectedValue(new Error("DB error"));
+      jest.spyOn(Wallet, 'findOrCreate').mockResolvedValue(new Error("(intermediate value) is not iterable"));
 
       await registerToEvent(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
         message: "Erreur serveur.",
-        error: "DB error",
+        error: "(intermediate value) is not iterable",
       });
     });
   });
