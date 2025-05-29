@@ -1,9 +1,9 @@
-const { registerToEvent } = require("./registrations");
+const { registerToEvent } = require("../controllers/registrations");
 const Registration = require("../models/registration");
-const Wallet = require("../models/wallet");
+const Wallet = require("../models/wallets");
 
 jest.mock("../models/registration");
-jest.mock("../models/wallet");
+jest.mock("../models/wallets");
 
 describe("Event Controller", () => {
   // Supprime les logs console.error pendant les tests
@@ -82,5 +82,4 @@ describe("Event Controller", () => {
       });
     });
   });
-
 });

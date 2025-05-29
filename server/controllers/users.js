@@ -82,7 +82,9 @@ exports.getMe = async (req, res) => {
 exports.getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(userId, {
+      attributes: ["id", "fullName", "email", "role"],
+    });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -125,7 +127,7 @@ exports.getUserWallets = async (req, res) => {
 
 exports.setPfp = async (req, res) => {
   try {
-    let user=await User.findByPk(req.user.id)
+    let user = await User.findByPk(req.user.id);
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         { folder: "users" },
@@ -136,10 +138,15 @@ exports.setPfp = async (req, res) => {
       );
       streamifier.createReadStream(req.file.buffer).pipe(stream);
     });
-    user.update({pfpUrl:result.secure_url})
-    res.status(200).json({ message: "Image téléchargée avec succès", url: result.secure_url });
+    user.update({ pfpUrl: result.secure_url });
+    res
+      .status(200)
+      .json({
+        message: "Image téléchargée avec succès",
+        url: result.secure_url,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erreur lors de l'upload de l'image" });
   }
-}
+};

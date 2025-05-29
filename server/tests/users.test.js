@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { changePassword, post, getMe } = require("./users");
+const { changePassword, post, getMe } = require("../controllers/users");
 const User = require("../models/user");
 
 jest.mock("bcryptjs");
@@ -26,9 +26,16 @@ describe("User Controller", () => {
 
       await changePassword(req, res);
 
-      expect(bcrypt.compare).toHaveBeenCalledWith("Old123!", "hashedOldPassword");
-      expect(req.user.update).toHaveBeenCalledWith({ password: "hashedNewPassword" });
-      expect(res.json).toHaveBeenCalledWith({ message: "Mot de passe changé avec succès !" });
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        "Old123!",
+        "hashedOldPassword"
+      );
+      expect(req.user.update).toHaveBeenCalledWith({
+        password: "hashedNewPassword",
+      });
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Mot de passe changé avec succès !",
+      });
     });
 
     it("doit refuser si ancien mot de passe incorrect", async () => {
@@ -46,7 +53,9 @@ describe("User Controller", () => {
       await changePassword(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: "Ancien mot de passe incorrect" });
+      expect(res.json).toHaveBeenCalledWith({
+        error: "Ancien mot de passe incorrect",
+      });
     });
   });
 
@@ -77,7 +86,9 @@ describe("User Controller", () => {
       });
 
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ email: "test@example.com" }));
+      expect(res.json).toHaveBeenCalledWith(
+        expect.objectContaining({ email: "test@example.com" })
+      );
     });
 
     it("doit refuser si rôle = ADMIN", async () => {

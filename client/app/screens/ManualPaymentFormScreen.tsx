@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -30,6 +30,26 @@ export default function ManualPaymentFormScreen() {
 
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+
+  const [userInfo, setUserInfo] = useState<{
+    fullName: string;
+    email: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(
+          `${API_BASE_URL}/users/getByIndex/${userId}`
+        );
+        setUserInfo(res.data);
+      } catch (err) {
+        console.error("Erreur récupération user info:", err);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
 
   const handleSubmit = async () => {
     console.log("handleSubmit triggered");
@@ -86,7 +106,13 @@ export default function ManualPaymentFormScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Créer une demande de paiement</Text>
-
+      {userInfo && (
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 16 }}>
+            Client : {userInfo.fullName} ({userInfo.email})
+          </Text>
+        </View>
+      )}
       <TextInput
         style={styles.input}
         placeholder="Montant (€)"

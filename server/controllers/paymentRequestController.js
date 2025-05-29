@@ -21,24 +21,24 @@ exports.create = async (req, res) => {
     const io = getIO();
     const socketId = userSockets.get(String(userId));
 
-    console.log("userId reçu :", userId);
-    console.log("socketId trouvé :", socketId);
-    console.log("Donnée de la requête envoyée :", request);
-    console.log("Socket ID récupéré dans Map:", socketId);
-    console.log("État actuel de userSockets:", [...userSockets.entries()]);
+    // console.log("userId reçu :", userId);
+    // console.log("socketId trouvé :", socketId);
+    // console.log("Donnée de la requête envoyée :", request);
+    // console.log("Socket ID récupéré dans Map:", socketId);
+    // console.log("État actuel de userSockets:", [...userSockets.entries()]);
 
     if (socketId) {
-      console.log("📤 Émission de la demande au socket :", socketId);
+      // console.log("Émission de la demande au socket :", socketId);
       const target = io.to(socketId);
       if (target?.emit) {
-        console.log(
-          "Emitting to socket",
-          socketId,
-          "with data:",
-          request.get({ plain: true })
-        );
+        // console.log(
+        //   "Emitting to socket",
+        //   socketId,
+        //   "with data:",
+        //   request.get({ plain: true })
+        // );
         target.emit("newPaymentRequest", request.get({ plain: true }));
-        console.log("📤 Émission de la demande au socket :", socketId);
+        // console.log("Émission de la demande au socket :", socketId);
       } else {
         console.warn(
           "Émission impossible, .to() ou .emit() est undefined pour socketId:",
@@ -46,7 +46,7 @@ exports.create = async (req, res) => {
         );
       }
     } else {
-      console.log("Aucun socket enregistré pour userId:", userId);
+      // console.log("Aucun socket enregistré pour userId:", userId);
     }
 
     res.status(201).json(request);
@@ -80,8 +80,13 @@ exports.accept = async (req, res) => {
 
     const request = await PaymentRequest.findByPk(requestId);
 
-    if (!request || request.status !== "pending") {
-      return res.status(400).json({ error: "Demande invalide" });
+    if (!request) {
+      return res.status(404).json({ error: "Demande introuvable" });
+    }
+    if (request.status !== "pending") {
+      return res
+        .status(400)
+        .json({ error: "Cette demande a déjà été traitée." });
     }
 
     console.log("Méthodes disponibles sur Wallet :", Object.keys(Wallet));
