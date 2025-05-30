@@ -50,7 +50,12 @@ export default function QrCodeScanner() {
       const decryptRes = await axios.post(
         `${API_BASE_URL}/decrypt-qr`,
         { encryptedData: data },
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       const walletData = decryptRes.data.walletData;

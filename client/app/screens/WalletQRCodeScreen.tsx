@@ -88,10 +88,12 @@ const WalletQRCodeScreen = () => {
 
   const handleGenerateQRCode = async (wallet: Wallet) => {
     try {
+      const token = await AsyncStorage.getItem("jwtToken");
       const response = await fetch(`${API_BASE_URL}/generate-qr`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ wallet }),
       });
@@ -117,10 +119,12 @@ const WalletQRCodeScreen = () => {
     }
 
     try {
+      const token = await AsyncStorage.getItem("jwtToken");
       const response = await fetch(`${API_BASE_URL}/wallets/addMoney`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           walletId: selectedWallet.id,

@@ -7,7 +7,7 @@ const logConnection = async (req, res, next) => {
       method: req.method,
       path: req.originalUrl,
       ip: req.ip,
-      userAgent: req.headers['user-agent']
+      userAgent: req.headers["user-agent"],
     };
 
     await db.collection("api-logs").add(logEntry);

@@ -39,8 +39,15 @@ export default function ManualPaymentFormScreen() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        const token = await AsyncStorage.getItem("jwtToken");
         const res = await axios.get(
-          `${API_BASE_URL}/users/getByIndex/${userId}`
+          `${API_BASE_URL}/users/getByIndex/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
         );
         setUserInfo(res.data);
       } catch (err) {
@@ -105,6 +112,12 @@ export default function ManualPaymentFormScreen() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.replace("/screens/HomeScreen")}
+      >
+        <Text style={styles.backButtonText}>← Retour à l'accueil</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Créer une demande de paiement</Text>
       {userInfo && (
         <View style={{ marginBottom: 20 }}>
@@ -152,4 +165,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
+  backButton: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: "#4682B4",
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  backButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });

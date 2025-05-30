@@ -306,4 +306,28 @@ describe("paymentRequestController", () => {
       error: "Cette demande a déjà été traitée.",
     });
   });
+  it("devrait retourner les demandes en attente de l'utilisateur", async () => {
+    const req = {
+      user: { id: 6 },
+    };
+    const res = {
+      json: jest.fn(),
+      status: jest.fn(() => res),
+    };
+
+    const mockRequests = [
+      { id: 1, user_id: 6, status: "pending" },
+      { id: 2, user_id: 6, status: "pending" },
+    ];
+
+    PaymentRequest.findAll = jest.fn().mockResolvedValue(mockRequests);
+
+    const { getPending } = require("../controllers/paymentRequestController");
+    await getPending(req, res);
+
+    expect(PaymentRequest.findAll).toHaveBeenCalledWith({
+      where: { user_id: 6, status: "pending" },
+    });
+    expect(res.json).toHaveBeenCalledWith(mockRequests);
+  });
 });

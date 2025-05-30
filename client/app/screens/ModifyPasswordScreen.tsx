@@ -50,7 +50,7 @@ export default function ModifyPasswordScreen() {
             try {
               const token = await AsyncStorage.getItem("jwtToken");
               const response = await axios.post(
-                `${API_BASE_URL}users/changePassword`,
+                `${API_BASE_URL}/users/changePassword`,
                 {
                   oldPassword,
                   newPassword,
@@ -65,7 +65,7 @@ export default function ModifyPasswordScreen() {
 
               if (response.status === 200) {
                 Alert.alert("Succès", "Mot de passe modifié avec succès !");
-                router.back();
+                router.replace("/screens/ProfileScreen");
               } else {
                 Alert.alert("Erreur", "Échec du changement de mot de passe.");
               }
