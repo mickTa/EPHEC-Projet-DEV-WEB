@@ -12,8 +12,8 @@ module.exports.generateWalletQRCode = async (wallet) => {
       organizerId: wallet.organizerId,
       eventId: wallet.eventId,
       amount: wallet.amount,
-      timestamp: Date.now(),
-      expiresAt: Date.now() + 60 * 60 * 1000,
+      timestamp: wallet.timestamp || Date.now(),
+      expiresAt: wallet.expiresAt || Date.now() + 60 * 60 * 1000,
     };
 
     // Serialize the data
@@ -56,7 +56,9 @@ module.exports.generateWalletQRCode = async (wallet) => {
       width: 300,
     });
 
-    return qrCode;
+    return {qrCode,
+    payload: securedPayload,
+    };
   } catch (error) {
     console.error("Secure QR Code Generation Error:", error);
     throw new Error("Failed to generate secure QR code");
